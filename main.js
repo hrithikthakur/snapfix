@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, clipboard, nativeImage } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, clipboard, nativeImage, Notification, screen } = require('electron');
 const path = require('path');
 require('dotenv').config();
 
@@ -95,6 +95,11 @@ function createTray() {
 
 async function handleGlobalFix() {
   try {
+    // Hide main window if it's visible to prevent window switching
+    if (mainWindow && mainWindow.isVisible()) {
+      mainWindow.hide();
+    }
+
     // Get text from clipboard
     const clipboardText = clipboard.readText();
     
@@ -106,27 +111,66 @@ async function handleGlobalFix() {
     }
 
     // Show popup window for processing
-    if (!popupWindow) {
-      popupWindow = new BrowserWindow({
-        width: 500,
-        height: 300,
-        frame: true,
-        alwaysOnTop: true,
-        webPreferences: {
-          contextIsolation: true,
-          nodeIntegration: false,
-          preload: path.join(__dirname, 'preload.js')
-        }
-      });
+    if (popupWindow) {
+      popupWindow.destroy();
     }
 
-    popupWindow.loadFile('popup.html');
-    popupWindow.show();
-    popupWindow.focus();
+    // Get screen dimensions for centering
+    const primaryDisplay = screen.getPrimaryDisplay();
+    const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
+    
+    const popupWidth = 500;
+    const popupHeight = 400;
+    const x = Math.round((screenWidth - popupWidth) / 2);
+    const y = Math.round((screenHeight - popupHeight) / 2);
 
-    // Send text to popup window for processing
+    popupWindow = new BrowserWindow({
+      width: popupWidth,
+      height: popupHeight,
+      x: x,
+      y: y,
+      frame: false, // Frameless for overlay feel
+      alwaysOnTop: true,
+      resizable: false,
+      skipTaskbar: true, // Don't show in task switcher
+      focusable: true, // Must be focusable for interaction
+      transparent: false,
+      hasShadow: true,
+      show: false, // Don't show immediately
+      webPreferences: {
+        contextIsolation: true,
+        nodeIntegration: false,
+        preload: path.join(__dirname, 'preload.js')
+      }
+    });
+
+    popupWindow.loadFile('popup.html');
+    
+    // Show the popup as an overlay
+    if (process.platform === 'darwin') {
+      // macOS: use setVisibleOnAllWorkspaces and showInactive to prevent app activation
+      popupWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+      popupWindow.setSkipTaskbar(true);
+      popupWindow.showInactive(); // Show without activating
+    } else {
+      // Windows/Linux: show normally
+      popupWindow.show();
+    }
+
+    // Send text to popup window for processing after it's fully loaded
+    // Use a small delay to ensure the listener is set up
     popupWindow.webContents.once('did-finish-load', () => {
-      popupWindow.webContents.send('process-text', clipboardText);
+      // Wait a bit for the DOM and event listeners to be ready
+      setTimeout(() => {
+        if (popupWindow && !popupWindow.isDestroyed()) {
+          popupWindow.webContents.send('process-text', clipboardText);
+        }
+      }, 100);
+    });
+
+    // Clean up when window is closed
+    popupWindow.on('closed', () => {
+      popupWindow = null;
     });
 
   } catch (error) {
@@ -137,12 +181,9 @@ async function handleGlobalFix() {
 
 function showNotification(title, body) {
   // Simple notification (works on macOS, Windows, Linux)
-  if (process.platform === 'darwin') {
-    // macOS notification
-    const { Notification } = require('electron');
+  if (Notification.isSupported()) {
     new Notification({ title, body }).show();
   } else {
-    // For other platforms, we could show a dialog or use a notification library
     console.log(`${title}: ${body}`);
   }
 }
@@ -171,9 +212,36 @@ ipcMain.handle('close-popup', () => {
   return true;
 });
 
+// Handle making window focusable when user interacts
+ipcMain.handle('make-window-focusable', () => {
+  if (popupWindow && !popupWindow.isDestroyed()) {
+    popupWindow.setFocusable(true);
+    popupWindow.focus();
+    return true;
+  }
+  return false;
+});
+
 app.whenReady().then(() => {
+  // On macOS, use accessory activation policy to prevent app activation
+  // This allows the app to show windows without activating and switching apps
+  if (process.platform === 'darwin') {
+    try {
+      // Set activation policy to accessory (doesn't appear in dock, doesn't activate)
+      app.setActivationPolicy('accessory');
+    } catch (e) {
+      // Fallback if setActivationPolicy fails
+      console.log('Could not set activation policy:', e);
+    }
+  }
+
   createWindow();
   createTray();
+  
+  // Hide main window initially so it doesn't show when app starts
+  if (mainWindow) {
+    mainWindow.hide();
+  }
 
   // Register global shortcut for grammar fix (Cmd+Shift+G / Ctrl+Shift+G)
   const ret = globalShortcut.register('CommandOrControl+Shift+G', () => {

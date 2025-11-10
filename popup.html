@@ -15,13 +15,47 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
         padding: 20px;
         background: #f5f5f5;
+        margin: 0;
       }
 
       .container {
         background: white;
-        border-radius: 8px;
+        border-radius: 12px;
         padding: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        border: 1px solid #ccc;
+        -webkit-app-region: no-drag; /* Allow dragging if needed */
+      }
+
+      .title-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        -webkit-app-region: drag; /* Allow window dragging */
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #999;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        -webkit-app-region: no-drag;
+      }
+
+      .close-btn:hover {
+        background: #f0f0f0;
+        color: #333;
       }
 
       h2 {
@@ -40,6 +74,10 @@
         font-family: inherit;
         resize: vertical;
         margin-bottom: 15px;
+      }
+
+      textarea[readonly] {
+        background: #f9f9f9;
       }
 
       .buttons {
@@ -105,21 +143,26 @@
   </head>
   <body>
     <div class="container">
-      <h2>GrammrFix</h2>
+      <div class="title-bar">
+        <h2 style="margin: 0; font-size: 16px; font-weight: 600;">GrammrFix</h2>
+        <button class="close-btn" id="titleCloseBtn" title="Close">×</button>
+      </div>
       <div id="status" class="status loading">Processing...</div>
-      <textarea id="outputText" readonly></textarea>
+      <textarea id="outputText" readonly placeholder="Corrected text will appear here..."></textarea>
       <div class="buttons">
         <button id="copyButton" class="primary" disabled>Copy to Clipboard</button>
         <button id="closeButton" class="secondary">Close</button>
       </div>
+      <div style="margin-top: 10px; font-size: 11px; color: #666;">
+        Tip: You can edit the text above before copying
+      </div>
     </div>
 
     <script>
-      const { ipcRenderer } = require('electron');
       let apiKey = '';
       let correctedText = '';
 
-      // Load API key
+      // Load API key and set up listener
       window.addEventListener('DOMContentLoaded', async () => {
         try {
           apiKey = await window.electronAPI.getApiKey();
@@ -127,20 +170,29 @@
             showError('API key not configured');
             return;
           }
+
+          // Listen for text to process
+          window.electronAPI.onProcessText(async (text) => {
+            if (!text || !text.trim()) {
+              showError('No text to process');
+              return;
+            }
+
+            document.getElementById('outputText').value = text;
+            await fixGrammar(text);
+          });
+
+          // Make window focusable when user clicks anywhere
+          let madeFocusable = false;
+          document.addEventListener('click', async (e) => {
+            if (!madeFocusable) {
+              madeFocusable = true;
+              await window.electronAPI.makeWindowFocusable();
+            }
+          }, { once: false });
         } catch (error) {
           showError('Error loading API key: ' + error.message);
         }
-      });
-
-      // Listen for text to process
-      ipcRenderer.on('process-text', async (event, text) => {
-        if (!text || !text.trim()) {
-          showError('No text to process');
-          return;
-        }
-
-        document.getElementById('outputText').value = text;
-        await fixGrammar(text);
       });
 
       async function fixGrammar(text) {
@@ -158,6 +210,8 @@
           statusDiv.textContent = 'Typos fixed successfully!';
           statusDiv.className = 'status success';
           copyButton.disabled = false;
+          // Make textarea editable after processing
+          outputTextarea.readOnly = false;
         } catch (error) {
           showError('Error: ' + error.message);
         }
@@ -263,21 +317,44 @@
       // Copy button
       document.getElementById('copyButton').addEventListener('click', async () => {
         if (correctedText) {
-          await window.electronAPI.setClipboard(correctedText);
-          const statusDiv = document.getElementById('status');
-          statusDiv.textContent = 'Copied to clipboard!';
-          statusDiv.className = 'status success';
-          
-          // Close after a short delay
-          setTimeout(() => {
-            window.electronAPI.closePopup();
-          }, 1000);
+          try {
+            await window.electronAPI.setClipboard(correctedText);
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = 'Copied to clipboard! You can now paste it anywhere.';
+            statusDiv.className = 'status success';
+            
+            // Auto-close after 2 seconds
+            setTimeout(() => {
+              if (window.electronAPI && window.electronAPI.closePopup) {
+                window.electronAPI.closePopup();
+              }
+            }, 2000);
+          } catch (error) {
+            showError('Failed to copy to clipboard: ' + error.message);
+          }
         }
       });
 
       // Close button
       document.getElementById('closeButton').addEventListener('click', () => {
-        window.electronAPI.closePopup();
+        if (window.electronAPI && window.electronAPI.closePopup) {
+          window.electronAPI.closePopup();
+        }
+      });
+
+      // Title bar close button
+      document.getElementById('titleCloseBtn').addEventListener('click', () => {
+        if (window.electronAPI && window.electronAPI.closePopup) {
+          window.electronAPI.closePopup();
+        }
+      });
+
+      // Allow manual editing of the text before copying
+      document.getElementById('outputText').addEventListener('input', (e) => {
+        correctedText = e.target.value;
+        if (correctedText.trim()) {
+          document.getElementById('copyButton').disabled = false;
+        }
       });
     </script>
   </body>
