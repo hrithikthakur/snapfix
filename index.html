@@ -55,7 +55,9 @@
   </head>
   <body>
     <h1>GrammrFix</h1>
-    <div class="reload-hint">Press Cmd+R (Mac) or Ctrl+R (Windows/Linux) to reload</div>
+    <div class="reload-hint">
+      Press <strong>Cmd+Enter</strong> (Mac) or <strong>Ctrl+Enter</strong> (Windows/Linux) to fix grammar
+    </div>
     <textarea
       id="inputText"
       placeholder="Type or paste text here..."
@@ -255,6 +257,24 @@
       }
 
       document.getElementById('fixButton').addEventListener('click', fixGrammar);
+
+      // Keyboard shortcut: Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux)
+      document.addEventListener('keydown', (e) => {
+        // Check if Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux) is pressed
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+          // Prevent default behavior (like submitting a form)
+          e.preventDefault();
+          
+          // Check if button is not disabled
+          const fixButton = document.getElementById('fixButton');
+          if (!fixButton.disabled) {
+            fixGrammar();
+          }
+        }
+      });
+
+      // Also allow Shift+Enter to work normally in textarea (for new lines)
+      // This is handled by default, so no need to prevent it
     </script>
   </body>
 </html>

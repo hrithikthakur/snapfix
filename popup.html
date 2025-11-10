@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrammrFix - Processing</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+
+      .container {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        margin-bottom: 15px;
+        color: #333;
+        font-size: 18px;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        margin-bottom: 15px;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      button.primary {
+        background: #1976d2;
+        color: white;
+      }
+
+      button.primary:hover {
+        background: #1565c0;
+      }
+
+      button.secondary {
+        background: #e0e0e0;
+        color: #333;
+      }
+
+      button.secondary:hover {
+        background: #d0d0d0;
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .status {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+
+      .status.loading {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .status.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      .status.error {
+        background: #ffebee;
+        color: #c62828;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>GrammrFix</h2>
+      <div id="status" class="status loading">Processing...</div>
+      <textarea id="outputText" readonly></textarea>
+      <div class="buttons">
+        <button id="copyButton" class="primary" disabled>Copy to Clipboard</button>
+        <button id="closeButton" class="secondary">Close</button>
+      </div>
+    </div>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+      let apiKey = '';
+      let correctedText = '';
+
+      // Load API key
+      window.addEventListener('DOMContentLoaded', async () => {
+        try {
+          apiKey = await window.electronAPI.getApiKey();
+          if (!apiKey) {
+            showError('API key not configured');
+            return;
+          }
+        } catch (error) {
+          showError('Error loading API key: ' + error.message);
+        }
+      });
+
+      // Listen for text to process
+      ipcRenderer.on('process-text', async (event, text) => {
+        if (!text || !text.trim()) {
+          showError('No text to process');
+          return;
+        }
+
+        document.getElementById('outputText').value = text;
+        await fixGrammar(text);
+      });
+
+      async function fixGrammar(text) {
+        const statusDiv = document.getElementById('status');
+        const outputTextarea = document.getElementById('outputText');
+        const copyButton = document.getElementById('copyButton');
+
+        try {
+          statusDiv.textContent = 'Fixing typos...';
+          statusDiv.className = 'status loading';
+
+          correctedText = await callGeminiAPI(text, apiKey);
+          outputTextarea.value = correctedText;
+
+          statusDiv.textContent = 'Typos fixed successfully!';
+          statusDiv.className = 'status success';
+          copyButton.disabled = false;
+        } catch (error) {
+          showError('Error: ' + error.message);
+        }
+      }
+
+      async function callGeminiAPI(text, apiKey) {
+        const prompt = `Fix spelling only. Keep wording/structure. Return corrected text:\n\n${text}`;
+
+        const modelConfigs = [
+          { version: 'v1beta', model: 'gemini-2.5-flash-lite' },
+          { version: 'v1beta', model: 'gemini-2.5-flash' },
+          { version: 'v1beta', model: 'gemini-1.5-flash' },
+        ];
+
+        const REQUEST_TIMEOUT = 6000;
+        let lastError = null;
+
+        for (const config of modelConfigs) {
+          try {
+            const url = `https://generativelanguage.googleapis.com/${config.version}/models/${config.model}:generateContent?key=${apiKey}`;
+            
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+            try {
+              const estimatedOutputTokens = Math.ceil(text.length * 1.1 / 4);
+              const maxTokens = Math.min(Math.max(estimatedOutputTokens, 50), 512);
+
+              const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  contents: [
+                    {
+                      parts: [
+                        {
+                          text: prompt,
+                        },
+                      ],
+                    },
+                  ],
+                  generationConfig: {
+                    temperature: 0,
+                    maxOutputTokens: maxTokens,
+                    topP: 0.7,
+                    topK: 10,
+                  },
+                }),
+                signal: controller.signal,
+              });
+
+              clearTimeout(timeoutId);
+
+              if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                lastError = new Error(
+                  errorData.error?.message ||
+                    `API request failed with status ${response.status}`
+                );
+                continue;
+              }
+
+              const data = await response.json();
+
+              if (
+                !data.candidates ||
+                !data.candidates[0] ||
+                !data.candidates[0].content ||
+                !data.candidates[0].content.parts ||
+                !data.candidates[0].content.parts[0]
+              ) {
+                lastError = new Error('Unexpected response format from API');
+                continue;
+              }
+
+              return data.candidates[0].content.parts[0].text.trim();
+            } catch (fetchError) {
+              clearTimeout(timeoutId);
+              if (fetchError.name === 'AbortError') {
+                lastError = new Error(`Request timeout after ${REQUEST_TIMEOUT / 1000}s`);
+              } else {
+                lastError = fetchError;
+              }
+              continue;
+            }
+          } catch (error) {
+            lastError = error;
+            continue;
+          }
+        }
+
+        throw lastError || new Error('Failed to call Gemini API');
+      }
+
+      function showError(message) {
+        const statusDiv = document.getElementById('status');
+        statusDiv.textContent = message;
+        statusDiv.className = 'status error';
+      }
+
+      // Copy button
+      document.getElementById('copyButton').addEventListener('click', async () => {
+        if (correctedText) {
+          await window.electronAPI.setClipboard(correctedText);
+          const statusDiv = document.getElementById('status');
+          statusDiv.textContent = 'Copied to clipboard!';
+          statusDiv.className = 'status success';
+          
+          // Close after a short delay
+          setTimeout(() => {
+            window.electronAPI.closePopup();
+          }, 1000);
+        }
+      });
+
+      // Close button
+      document.getElementById('closeButton').addEventListener('click', () => {
+        window.electronAPI.closePopup();
+      });
+    </script>
+  </body>
+</html>
+
