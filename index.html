@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrammrFix</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 20px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 200px;
+        padding: 8px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+
+      button {
+        margin-top: 12px;
+        padding: 8px 12px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .status {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .error {
+        color: #d32f2f;
+      }
+
+      .loading {
+        color: #1976d2;
+      }
+
+      .reload-hint {
+        font-size: 11px;
+        color: #999;
+        margin-top: 8px;
+        font-style: italic;
+      }
+
+    </style>
+  </head>
+  <body>
+    <h1>GrammrFix</h1>
+    <div class="reload-hint">Press Cmd+R (Mac) or Ctrl+R (Windows/Linux) to reload</div>
+    <textarea
+      id="inputText"
+      placeholder="Type or paste text here..."
+    ></textarea>
+    <br />
+    <button id="fixButton" type="button">Fix Grammar</button>
+    <div id="status" class="status"></div>
+
+    <script>
+      let apiKey = '';
+      // Cache the working model for faster subsequent requests
+      let workingModel = null;
+      try {
+        const cached = localStorage.getItem('workingGeminiModel');
+        if (cached) {
+          workingModel = JSON.parse(cached);
+        }
+      } catch (e) {
+        // Ignore parse errors
+      }
+
+      // Initialize on page load
+      window.addEventListener('DOMContentLoaded', async () => {
+        // Load API key from .env file via Electron
+        try {
+          apiKey = await window.electronAPI.getApiKey();
+          if (!apiKey) {
+            document.getElementById('status').textContent = 'Error: GEMINI_API_KEY not found in .env file';
+            document.getElementById('status').className = 'status error';
+          }
+        } catch (error) {
+          document.getElementById('status').textContent = `Error loading API key: ${error.message}`;
+          document.getElementById('status').className = 'status error';
+        }
+      });
+
+      async function fixGrammar() {
+        const textarea = document.getElementById('inputText');
+        const fixButton = document.getElementById('fixButton');
+        const statusDiv = document.getElementById('status');
+
+        const text = textarea.value.trim();
+
+        if (!text) {
+          statusDiv.textContent = 'Please enter some text to fix.';
+          statusDiv.className = 'status error';
+          return;
+        }
+
+        if (!apiKey) {
+          statusDiv.textContent = 'Error: API key not configured. Please set GEMINI_API_KEY in .env file.';
+          statusDiv.className = 'status error';
+          return;
+        }
+
+        // Disable button and show loading
+        fixButton.disabled = true;
+        statusDiv.textContent = 'Fixing typos...';
+        statusDiv.className = 'status loading';
+
+        // Status update callback
+        const startTime = Date.now();
+        let lastUpdateTime = 0;
+        const updateStatus = (message) => {
+          const now = Date.now();
+          // Throttle updates to reduce DOM overhead (update max once per 200ms)
+          if (now - lastUpdateTime > 200 || message) {
+            const elapsed = ((now - startTime) / 1000).toFixed(1);
+            statusDiv.textContent = message ? `${message} (${elapsed}s)` : `Fixing typos... (${elapsed}s)`;
+            statusDiv.className = 'status loading';
+            lastUpdateTime = now;
+          }
+        };
+
+        try {
+          const corrected = await callGeminiAPI(text, apiKey, updateStatus);
+          const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+          textarea.value = corrected;
+          statusDiv.textContent = `Typos fixed successfully! (${totalTime}s)`;
+          statusDiv.className = 'status';
+        } catch (error) {
+          statusDiv.textContent = `Error: ${error.message}`;
+          statusDiv.className = 'status error';
+        } finally {
+          fixButton.disabled = false;
+        }
+      }
+
+      async function callGeminiAPI(text, apiKey, statusCallback) {
+        // Ultra-short prompt for maximum speed
+        const prompt = `Fix spelling only. Keep wording/structure. Return corrected text:\n\n${text}`;
+
+        // Optimized model list for Pro subscribers - fastest models first
+        // Gemini 2.5 Flash-Lite is the fastest, then 2.5 Flash
+        const modelConfigs = workingModel 
+          ? [workingModel]
+          : [
+              { version: 'v1beta', model: 'gemini-2.5-flash-lite' }, // Fastest model
+              { version: 'v1beta', model: 'gemini-2.5-flash' },      // Very fast, good quality
+              { version: 'v1beta', model: 'gemini-1.5-flash' },      // Fallback
+            ];
+
+        const REQUEST_TIMEOUT = 6000; // 6 seconds timeout (Flash models should respond faster)
+        let lastError = null;
+
+        for (const config of modelConfigs) {
+          try {
+            const url = `https://generativelanguage.googleapis.com/${config.version}/models/${config.model}:generateContent?key=${apiKey}`;
+            
+            // Create AbortController for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+            try {
+              // Calculate approximate output tokens (input length + 10% buffer for speed)
+              const estimatedOutputTokens = Math.ceil(text.length * 1.1 / 4); // Rough estimate: 4 chars per token
+              const maxTokens = Math.min(Math.max(estimatedOutputTokens, 50), 512); // Reduced max for faster response
+
+              const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  contents: [
+                    {
+                      parts: [
+                        {
+                          text: prompt,
+                        },
+                      ],
+                    },
+                  ],
+                  generationConfig: {
+                    temperature: 0, // Zero temperature for fastest, most deterministic responses
+                    maxOutputTokens: maxTokens, // Minimize tokens for speed
+                    topP: 0.7, // Lower for faster generation
+                    topK: 10, // Fewer choices = faster generation
+                  },
+                }),
+                signal: controller.signal,
+              });
+
+              clearTimeout(timeoutId);
+
+              if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                lastError = new Error(
+                  errorData.error?.message ||
+                    `API request failed with status ${response.status}`
+                );
+                // Remove failed model from cache
+                if (workingModel && workingModel.model === config.model && workingModel.version === config.version) {
+                  workingModel = null;
+                  localStorage.removeItem('workingGeminiModel');
+                }
+                continue;
+              }
+
+              const data = await response.json();
+
+              if (
+                !data.candidates ||
+                !data.candidates[0] ||
+                !data.candidates[0].content ||
+                !data.candidates[0].content.parts ||
+                !data.candidates[0].content.parts[0]
+              ) {
+                lastError = new Error('Unexpected response format from API');
+                continue;
+              }
+
+              // Cache the working model for next time
+              if (!workingModel) {
+                workingModel = config;
+                localStorage.setItem('workingGeminiModel', JSON.stringify(config));
+              }
+
+              return data.candidates[0].content.parts[0].text.trim();
+            } catch (fetchError) {
+              clearTimeout(timeoutId);
+              if (fetchError.name === 'AbortError') {
+                lastError = new Error(`Request timeout after ${REQUEST_TIMEOUT / 1000}s`);
+              } else {
+                lastError = fetchError;
+              }
+              continue;
+            }
+          } catch (error) {
+            lastError = error;
+            continue;
+          }
+        }
+
+        // If all models failed, throw the last error
+        throw lastError || new Error('Failed to call Gemini API');
+      }
+
+      document.getElementById('fixButton').addEventListener('click', fixGrammar);
+    </script>
+  </body>
+</html>
