@@ -154,7 +154,7 @@
         <button id="closeButton" class="secondary">Close</button>
       </div>
       <div style="margin-top: 10px; font-size: 11px; color: #666;">
-        Tip: You can edit the text above before copying
+        Tip: Edit text before copying • Press Escape to close
       </div>
     </div>
 
@@ -314,23 +314,26 @@
         statusDiv.className = 'status error';
       }
 
-      // Copy button
+      // Copy button - auto-close after copying
       document.getElementById('copyButton').addEventListener('click', async () => {
         if (correctedText) {
           try {
             await window.electronAPI.setClipboard(correctedText);
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = 'Copied to clipboard! You can now paste it anywhere.';
-            statusDiv.className = 'status success';
-            
-            // Auto-close after 2 seconds
-            setTimeout(() => {
-              if (window.electronAPI && window.electronAPI.closePopup) {
-                window.electronAPI.closePopup();
-              }
-            }, 2000);
+            // Close immediately after successful copy
+            if (window.electronAPI && window.electronAPI.closePopup) {
+              window.electronAPI.closePopup();
+            }
           } catch (error) {
             showError('Failed to copy to clipboard: ' + error.message);
+          }
+        }
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (window.electronAPI && window.electronAPI.closePopup) {
+            window.electronAPI.closePopup();
           }
         }
       });

@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Build files
+dist/
+build/
+*.log
+
+# Native modules (will be built during packaging)
+native/macOS/build/
+native/Windows/bin/
+native/Windows/obj/
+
+# Development files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation (optional - remove if you want to include)
+*.md
+!README.md
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.pem
+*.key
+

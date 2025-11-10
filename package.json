@@ -4,14 +4,81 @@
   "description": "Simple Electron grammar fixer prototype",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build:native": "node-gyp rebuild --directory=native/macOS || echo 'Native build failed, using fallback methods'",
+    "install:native": "npm run build:native || echo 'Native build skipped'",
+    "rebuild": "electron-rebuild -f -w textBridge || echo 'Rebuild failed, using fallback methods'",
+    "postinstall": "npm run install:native || echo 'Native build skipped - app will use fallback methods'",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:dir": "electron-builder --dir",
+    "dist": "electron-builder --publish=never"
   },
   "author": "",
   "license": "MIT",
+  "build": {
+    "appId": "com.grammrfix.app",
+    "productName": "GrammrFix",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extendInfo": {
+        "NSHighResolutionCapable": true,
+        "NSSupportsAutomaticGraphicsSwitching": true,
+        "LSMinimumSystemVersion": "10.13.0"
+      }
+    },
+    "files": [
+      "**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/node_modules/.bin",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
+      "!native/macOS/build/**",
+      "!native/Windows/bin/**",
+      "!native/Windows/obj/**",
+      "!.env"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    }
+  },
   "dependencies": {
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "node-addon-api": "^7.0.0",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
-    "electron": "^30.0.0"
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9",
+    "node-gyp": "^9.4.0"
   }
 }
