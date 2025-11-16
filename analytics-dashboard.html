@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapFix Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            padding: 20px;
+            color: #1d1d1f;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #1d1d1f;
+        }
+        
+        .subtitle {
+            color: #86868b;
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #86868b;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        
+        .stat-change {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        .stat-change.positive {
+            color: #34c759;
+        }
+        
+        .stat-change.negative {
+            color: #ff3b30;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f7;
+        }
+        
+        .metric-label {
+            color: #86868b;
+        }
+        
+        .metric-value {
+            font-weight: 600;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .badge.danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .load-button {
+            background: #007aff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .load-button:hover {
+            background: #0051d5;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box p {
+            margin: 4px 0;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SnapFix Analytics Dashboard</h1>
+        <p class="subtitle">Product metrics and user behavior insights</p>
+        
+        <div class="info-box">
+            <p><strong>How to use:</strong></p>
+            <p>1. Generate a report in the app: <code>analytics.generateReport()</code></p>
+            <p>2. Load the report file below (usually in ~/Library/Application Support/GrammrFix/analytics/report-YYYY-MM-DD.json)</p>
+        </div>
+        
+        <button class="load-button" onclick="document.getElementById('fileInput').click()">
+            Load Analytics Report
+        </button>
+        <input type="file" id="fileInput" class="file-input" accept=".json" onchange="loadReport(event)">
+        
+        <div id="dashboard" style="display: none;">
+            <!-- Usage Metrics -->
+            <div class="section">
+                <h2 class="section-title">Usage Metrics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Sessions</div>
+                        <div class="stat-value" id="totalSessions">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Shortcut Activations</div>
+                        <div class="stat-value" id="totalShortcutActivations">-</div>
+                        <div class="stat-change" id="activationRate">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Grammar Fixes</div>
+                        <div class="stat-value" id="totalGrammarFixes">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Daily Usage</div>
+                        <div class="stat-value" id="avgDailyUsage">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Today's Usage</div>
+                        <div class="stat-value" id="todayUsage">-</div>
+                        <div class="stat-change" id="powerUserBadge"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Power User Days</div>
+                        <div class="stat-value" id="totalPowerUserDays">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Failure Rates -->
+            <div class="section">
+                <h2 class="section-title">Failure Analysis</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">AI Failure Rate</div>
+                        <div class="stat-value" id="aiFailureRate">-</div>
+                        <div class="stat-change" id="aiFailureStatus"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Replacement Failure Rate</div>
+                        <div class="stat-value" id="replacementFailureRate">-</div>
+                        <div class="stat-change" id="replacementFailureStatus"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Failures</div>
+                        <div class="stat-value" id="totalFailures">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Today's Failures</div>
+                        <div class="stat-value" id="todayFailures">-</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Failure Breakdown</div>
+                    <canvas id="failureChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Permission Metrics -->
+            <div class="section">
+                <h2 class="section-title">Permission Metrics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Permission Denial Rate</div>
+                        <div class="stat-value" id="permissionDenialRate">-</div>
+                        <div class="stat-change" id="permissionStatus"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Permission Denied</div>
+                        <div class="stat-value" id="permissionDeniedCount">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Permission Granted</div>
+                        <div class="stat-value" id="permissionGrantedCount">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Has Permissions</div>
+                        <div class="stat-value" id="hasPermissions">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Method Usage -->
+            <div class="section">
+                <h2 class="section-title">Method Usage</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Native Mode Usage</div>
+                        <div class="stat-value" id="nativeModeRate">-</div>
+                        <div class="stat-change">Total: <span id="nativeModeCount">-</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Clipboard Mode Usage</div>
+                        <div class="stat-value" id="clipboardModeRate">-</div>
+                        <div class="stat-change">Total: <span id="clipboardModeCount">-</span></div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Method Usage Comparison</div>
+                    <canvas id="methodChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Text Length Distribution -->
+            <div class="section">
+                <h2 class="section-title">Text Length Distribution</h2>
+                <div class="chart-container">
+                    <div class="chart-title">Text Length Usage</div>
+                    <canvas id="textLengthChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="metric-row">
+                        <span class="metric-label">Small (&lt; 50 chars)</span>
+                        <span class="metric-value" id="textSmall">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Medium (50-200 chars)</span>
+                        <span class="metric-value" id="textMedium">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Large (200-500 chars)</span>
+                        <span class="metric-value" id="textLarge">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">XLarge (&gt; 500 chars)</span>
+                        <span class="metric-value" id="textXLarge">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Avg Text Length (Today)</span>
+                        <span class="metric-value" id="avgTextLength">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Onboarding -->
+            <div class="section">
+                <h2 class="section-title">Onboarding</h2>
+                <div class="chart-container">
+                    <div class="metric-row">
+                        <span class="metric-label">Onboarding Completed</span>
+                        <span class="metric-value" id="onboardingCompleted">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">First Launch</span>
+                        <span class="metric-value" id="onboardingFirstLaunch">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">First Shortcut</span>
+                        <span class="metric-value" id="onboardingFirstShortcut">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">First Success</span>
+                        <span class="metric-value" id="onboardingFirstSuccess">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">First Permission</span>
+                        <span class="metric-value" id="onboardingFirstPermission">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let data = null;
+        let failureChart = null;
+        let methodChart = null;
+        let textLengthChart = null;
+        
+        function loadReport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    data = JSON.parse(e.target.result);
+                    renderDashboard();
+                } catch (error) {
+                    alert('Error parsing JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function renderDashboard() {
+            if (!data) return;
+            
+            document.getElementById('dashboard').style.display = 'block';
+            
+            // Usage metrics
+            document.getElementById('totalSessions').textContent = data.totalSessions || 0;
+            document.getElementById('totalShortcutActivations').textContent = data.totalShortcutActivations || 0;
+            document.getElementById('totalGrammarFixes').textContent = data.totalGrammarFixes || 0;
+            document.getElementById('avgDailyUsage').textContent = data.avgDailyUsage || '0';
+            document.getElementById('todayUsage').textContent = data.todayUsage || 0;
+            document.getElementById('totalPowerUserDays').textContent = data.totalPowerUserDays || 0;
+            
+            // Activation rate
+            const activationRate = data.totalSessions > 0 
+                ? ((data.totalShortcutActivations / data.totalSessions) * 100).toFixed(1)
+                : 0;
+            document.getElementById('activationRate').textContent = `${activationRate}% activation rate`;
+            document.getElementById('activationRate').className = activationRate >= 50 ? 'stat-change positive' : 'stat-change negative';
+            
+            // Power user badge
+            if (data.isPowerUserToday) {
+                document.getElementById('powerUserBadge').innerHTML = '<span class="badge success">Power User Today!</span>';
+            }
+            
+            // Failure rates
+            document.getElementById('aiFailureRate').textContent = data.aiFailureRate || '0%';
+            document.getElementById('replacementFailureRate').textContent = data.replacementFailureRate || '0%';
+            document.getElementById('totalFailures').textContent = data.totalFailures || 0;
+            document.getElementById('todayFailures').textContent = data.todayFailures || 0;
+            
+            // Failure status
+            const aiFailureNum = parseFloat(data.aiFailureRate) || 0;
+            document.getElementById('aiFailureStatus').textContent = aiFailureNum < 5 ? '✓ Good' : '⚠️ Needs attention';
+            document.getElementById('aiFailureStatus').className = aiFailureNum < 5 ? 'stat-change positive' : 'stat-change negative';
+            
+            const replacementFailureNum = parseFloat(data.replacementFailureRate) || 0;
+            document.getElementById('replacementFailureStatus').textContent = replacementFailureNum < 10 ? '✓ Good' : '⚠️ Needs attention';
+            document.getElementById('replacementFailureStatus').className = replacementFailureNum < 10 ? 'stat-change positive' : 'stat-change negative';
+            
+            // Permission metrics
+            document.getElementById('permissionDenialRate').textContent = data.permissionDenialRate || '0%';
+            document.getElementById('permissionDeniedCount').textContent = data.permissionDeniedCount || 0;
+            document.getElementById('permissionGrantedCount').textContent = data.permissionGrantedCount || 0;
+            document.getElementById('hasPermissions').textContent = data.hasPermissions ? 'Yes' : 'No';
+            
+            const permissionDenialNum = parseFloat(data.permissionDenialRate) || 0;
+            document.getElementById('permissionStatus').textContent = permissionDenialNum < 30 ? '✓ Good' : '⚠️ High denial rate';
+            document.getElementById('permissionStatus').className = permissionDenialNum < 30 ? 'stat-change positive' : 'stat-change negative';
+            
+            // Method usage
+            document.getElementById('nativeModeRate').textContent = data.nativeModeRate || '0%';
+            document.getElementById('clipboardModeRate').textContent = data.clipboardModeRate || '0%';
+            document.getElementById('nativeModeCount').textContent = data.nativeModeCount || 0;
+            document.getElementById('clipboardModeCount').textContent = data.clipboardModeCount || 0;
+            
+            // Text length
+            document.getElementById('textSmall').textContent = data.textLengthPercentages?.small || '0%';
+            document.getElementById('textMedium').textContent = data.textLengthPercentages?.medium || '0%';
+            document.getElementById('textLarge').textContent = data.textLengthPercentages?.large || '0%';
+            document.getElementById('textXLarge').textContent = data.textLengthPercentages?.xlarge || '0%';
+            document.getElementById('avgTextLength').textContent = data.avgTextLength ? `${data.avgTextLength} chars` : '-';
+            
+            // Onboarding
+            document.getElementById('onboardingCompleted').textContent = data.onboardingCompleted ? 'Yes' : 'No';
+            document.getElementById('onboardingFirstLaunch').textContent = data.onboardingSteps?.firstLaunch ? '✓' : '✗';
+            document.getElementById('onboardingFirstShortcut').textContent = data.onboardingSteps?.firstShortcut ? '✓' : '✗';
+            document.getElementById('onboardingFirstSuccess').textContent = data.onboardingSteps?.firstSuccess ? '✓' : '✗';
+            document.getElementById('onboardingFirstPermission').textContent = data.onboardingSteps?.firstPermission ? '✓' : '✗';
+            
+            // Render charts
+            renderCharts();
+        }
+        
+        function renderCharts() {
+            // Failure chart
+            if (failureChart) failureChart.destroy();
+            const failureCtx = document.getElementById('failureChart').getContext('2d');
+            failureChart = new Chart(failureCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['AI Failures', 'Replacement Failures', 'Successes'],
+                    datasets: [{
+                        data: [
+                            data.totalAIFailures || 0,
+                            data.totalReplacementFailures || 0,
+                            (data.totalGrammarFixes || 0) - (data.totalFailures || 0)
+                        ],
+                        backgroundColor: ['#ff3b30', '#ff9500', '#34c759']
+                    }]
+                }
+            });
+            
+            // Method chart
+            if (methodChart) methodChart.destroy();
+            const methodCtx = document.getElementById('methodChart').getContext('2d');
+            methodChart = new Chart(methodCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Native Mode', 'Clipboard Mode'],
+                    datasets: [{
+                        label: 'Usage Count',
+                        data: [data.nativeModeCount || 0, data.clipboardModeCount || 0],
+                        backgroundColor: ['#007aff', '#5856d6']
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+            
+            // Text length chart
+            if (textLengthChart) textLengthChart.destroy();
+            const textLengthCtx = document.getElementById('textLengthChart').getContext('2d');
+            textLengthChart = new Chart(textLengthCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Small (<50)', 'Medium (50-200)', 'Large (200-500)', 'XLarge (>500)'],
+                    datasets: [{
+                        data: [
+                            data.textLengthDistribution?.small || 0,
+                            data.textLengthDistribution?.medium || 0,
+                            data.textLengthDistribution?.large || 0,
+                            data.textLengthDistribution?.xlarge || 0
+                        ],
+                        backgroundColor: ['#34c759', '#007aff', '#ff9500', '#ff3b30']
+                    }]
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

@@ -5,68 +5,1280 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GrammrFix</title>
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
       body {
-        font-family: Arial, Helvetica, sans-serif;
-        margin: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+        min-height: 100vh;
+        color: #1d1d1f;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Main app content */
+      #mainApp {
+        transition: opacity 0.3s ease;
+      }
+
+      #mainApp.hidden {
+        display: none;
+      }
+
+      /* Onboarding styles */
+      #onboarding {
+        display: none;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 60px 20px 40px;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      #onboarding.active {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        animation: fadeInUp 0.6s ease;
+      }
+
+      .step-content.centered {
+        text-align: center;
+        padding: 60px 48px;
+      }
+
+      .logo-container {
+        margin-bottom: 40px;
+      }
+
+      .logo-glow {
+        font-size: 80px;
+        animation: sparkle 2s ease-in-out infinite;
+        filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.5));
+      }
+
+      @keyframes sparkle {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.9; }
+      }
+
+      .hero-title {
+        font-size: 42px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 20px 0;
+        letter-spacing: -1px;
+        line-height: 1.2;
+      }
+
+      .hero-subtitle {
+        font-size: 20px;
+        color: #86868b;
+        margin: 0;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+
+      .step-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 50px;
+        position: relative;
+      }
+
+      .step-indicator::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: calc(100% - 40px);
+        height: 2px;
+        background: #e5e5ea;
+        z-index: 0;
+      }
+
+      .step-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #d2d2d7;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        z-index: 1;
+        border: 3px solid white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .step-dot.active {
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        width: 40px;
+        height: 12px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+      }
+
+      .step-dot.completed {
+        background: #4caf50;
+        width: 12px;
+        height: 12px;
+      }
+
+      .onboarding-step {
+        display: none;
+        animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .onboarding-step.active {
+        display: block;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .step-content {
+        background: white;
+        border-radius: 20px;
+        padding: 48px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        margin-bottom: 32px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .step-content:hover {
+        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      }
+
+      .step-content h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1d1d1f;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .step-content h2::before {
+        content: '';
+        width: 4px;
+        height: 28px;
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        border-radius: 2px;
+      }
+
+      .step-content p {
+        font-size: 17px;
+        color: #515154;
+        line-height: 1.6;
+        margin-bottom: 24px;
+      }
+
+      .step-content ul {
+        list-style: none;
+        padding: 0;
+        margin: 28px 0;
+      }
+
+      .step-content li {
+        padding: 16px 0;
+        padding-left: 40px;
+        position: relative;
+        font-size: 17px;
+        color: #515154;
+        line-height: 1.5;
+        transition: transform 0.2s ease;
+      }
+
+      .step-content li:hover {
+        transform: translateX(4px);
+      }
+
+      .step-content li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        color: white;
+        font-weight: bold;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+      }
+
+      .keyboard-shortcut {
+        background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+        border-radius: 16px;
+        padding: 32px;
+        margin: 28px 0;
+        text-align: center;
+        font-family: 'SF Mono', Monaco, monospace;
+        border: 2px solid #e5e5ea;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      }
+
+      .keyboard-shortcut kbd {
+        background: white;
+        border: 2px solid #d2d2d7;
+        border-radius: 8px;
+        padding: 12px 18px;
+        margin: 0 6px;
+        font-size: 16px;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 1px 0 rgba(255,255,255,0.8) inset;
+        transition: all 0.2s ease;
+      }
+
+      .keyboard-shortcut kbd:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.8) inset;
+      }
+
+      .keyboard-shortcut .plus {
+        color: #86868b;
+        font-size: 20px;
+        margin: 0 8px;
+        font-weight: 300;
+      }
+
+      .onboarding-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 0 4px;
+      }
+
+      .onboarding-button {
+        padding: 14px 28px;
+        font-size: 17px;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .onboarding-button.primary {
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        color: white;
+        flex: 1;
+        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+      }
+
+      .onboarding-button.primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      .onboarding-button.primary:hover::before {
+        left: 100%;
+      }
+
+      .onboarding-button.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(0, 122, 255, 0.4);
+      }
+
+      .onboarding-button.primary:active {
+        transform: translateY(0);
+      }
+
+      .onboarding-button.secondary {
+        background: #f5f5f7;
+        color: #1d1d1f;
+        border: 2px solid transparent;
+      }
+
+      .onboarding-button.secondary:hover {
+        background: #e5e5ea;
+        border-color: #d2d2d7;
+      }
+
+      .onboarding-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+
+      .skip-link {
+        color: #86868b;
+        text-decoration: none;
+        font-size: 15px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        font-weight: 500;
+      }
+
+      .skip-link:hover {
+        color: #1d1d1f;
+      }
+
+      .step-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .permission-button {
+        width: 100%;
+        margin-top: 24px;
+        padding: 16px 28px;
+        font-size: 17px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+      }
+
+      .permission-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(0, 122, 255, 0.4);
+      }
+
+      /* Demo Section Styles */
+      .demo-section {
+        margin: 32px 0;
+      }
+
+      .demo-label {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin-bottom: 12px;
+      }
+
+      .demo-text-container {
+        background: #f5f5f7;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        border: 2px dashed #d2d2d7;
+        transition: all 0.3s ease;
+      }
+
+      .demo-text-container.highlighted {
+        border-color: #007aff;
+        background: #e3f2fd;
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+      }
+
+      .demo-text {
+        font-size: 17px;
+        line-height: 1.6;
+        color: #1d1d1f;
+        padding: 12px;
+        background: white;
+        border-radius: 8px;
+        min-height: 80px;
+        cursor: text;
+        user-select: text;
+        transition: all 0.3s ease;
+      }
+
+      .demo-text:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #007aff;
+      }
+
+      .demo-text.fixed {
+        background: #e8f5e9;
+        border: 2px solid #4caf50;
+      }
+
+      .keyboard-shortcut-large {
+        text-align: center;
+        margin: 24px 0;
+      }
+
+      .keyboard-shortcut-large kbd {
+        background: white;
+        border: 2px solid #d2d2d7;
+        border-radius: 10px;
+        padding: 16px 24px;
+        margin: 0 8px;
+        font-size: 20px;
+        font-weight: 600;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 2px 0 rgba(255,255,255,0.8) inset;
+        transition: all 0.2s ease;
+        display: inline-block;
+        min-width: 80px;
+      }
+
+      .keyboard-shortcut-large kbd:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15), 0 2px 0 rgba(255,255,255,0.8) inset;
+      }
+
+      .keyboard-shortcut-large .plus {
+        color: #86868b;
+        font-size: 24px;
+        margin: 0 12px;
+        font-weight: 300;
+      }
+
+      .demo-button {
+        width: 100%;
+        padding: 16px 28px;
+        font-size: 17px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+        margin-top: 20px;
+      }
+
+      .demo-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(0, 122, 255, 0.4);
+      }
+
+      .demo-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .demo-status {
+        text-align: center;
+        margin-top: 16px;
+        padding: 12px;
+        border-radius: 10px;
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .demo-success {
+        font-size: 17px;
+        font-weight: 600;
+        color: #2e7d32;
+        background: #e8f5e9;
+        padding: 12px 24px;
+        border-radius: 10px;
+        display: inline-block;
+      }
+
+      /* Permissions Visual */
+      .permissions-visual {
+        text-align: center;
+        margin: 32px 0;
+        padding: 32px;
+        background: #f5f5f7;
+        border-radius: 16px;
+      }
+
+      .settings-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+      }
+
+      .settings-path {
+        font-size: 15px;
+        color: #515154;
+        font-family: 'SF Mono', Monaco, monospace;
+        padding: 12px 20px;
+        background: white;
+        border-radius: 8px;
+        display: inline-block;
+        border: 1px solid #e5e5ea;
+      }
+
+      /* Checklist */
+      .checklist {
+        margin: 32px 0;
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        background: #f5f5f7;
+        border-radius: 12px;
+        font-size: 17px;
+        color: #515154;
+        transition: all 0.3s ease;
+      }
+
+      .checklist-item.completed {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      .check-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #d2d2d7;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+      }
+
+      .checklist-item.completed .check-icon {
+        background: #4caf50;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+      }
+
+      /* Main App Styling */
+      #mainApp {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 60px 20px 40px;
+        animation: fadeInUp 0.6s ease;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .app-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .app-header h1 {
+        font-size: 42px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 12px 0;
+        letter-spacing: -0.5px;
+      }
+
+      .app-header .subtitle {
+        font-size: 17px;
+        color: #86868b;
+        margin: 0;
+      }
+
+      .app-container {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .app-container:hover {
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      }
+
+      .input-section {
+        margin-bottom: 24px;
+      }
+
+      .input-label {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin-bottom: 8px;
       }
 
       textarea {
         width: 100%;
-        height: 200px;
-        padding: 8px;
+        height: 220px;
+        padding: 16px;
         box-sizing: border-box;
         font-size: 16px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        border: 2px solid #e5e5ea;
+        border-radius: 12px;
+        background: #fafafa;
+        color: #1d1d1f;
+        resize: vertical;
+        transition: all 0.2s ease;
+        line-height: 1.6;
       }
 
-      button {
-        margin-top: 12px;
-        padding: 8px 12px;
-        font-size: 16px;
+      textarea:focus {
+        outline: none;
+        border-color: #007aff;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+      }
+
+      textarea::placeholder {
+        color: #86868b;
+      }
+
+      .button-container {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .fix-button {
+        flex: 1;
+        padding: 14px 28px;
+        font-size: 17px;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
         cursor: pointer;
+        transition: all 0.2s ease;
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        position: relative;
+        overflow: hidden;
       }
 
-      button:disabled {
+      .fix-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      .fix-button:hover::before {
+        left: 100%;
+      }
+
+      .fix-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
+      }
+
+      .fix-button:active {
+        transform: translateY(0);
+      }
+
+      .fix-button:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+      }
+
+      .fix-button:disabled::before {
+        display: none;
       }
 
       .status {
-        margin-top: 12px;
-        font-size: 14px;
-        color: #666;
+        margin-top: 20px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
       }
 
-      .error {
-        color: #d32f2f;
+      .status::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
       }
 
-      .loading {
-        color: #1976d2;
+      .status.success {
+        background: #e8f5e9;
+        color: #2e7d32;
       }
 
-      .reload-hint {
-        font-size: 11px;
-        color: #999;
-        margin-top: 8px;
-        font-style: italic;
+      .status.success::before {
+        background: #4caf50;
+      }
+
+      .status.error {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .status.error::before {
+        background: #f44336;
+      }
+
+      .status.loading {
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+
+      .status.loading::before {
+        background: #2196f3;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .hint {
+        margin-top: 16px;
+        padding: 12px 16px;
+        background: #f5f5f7;
+        border-radius: 10px;
+        font-size: 13px;
+        color: #86868b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .hint-icon {
+        font-size: 16px;
+      }
+
+      .shortcut-hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin: 0 4px;
+      }
+
+      .shortcut-hint kbd {
+        background: white;
+        border: 1px solid #d2d2d7;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 12px;
+        font-family: 'SF Mono', Monaco, monospace;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
       }
 
     </style>
   </head>
   <body>
-    <h1>GrammrFix</h1>
-    <div class="reload-hint">
-      Press <strong>Cmd+Enter</strong> (Mac) or <strong>Ctrl+Enter</strong> (Windows/Linux) to fix grammar
+    <!-- Onboarding Wizard -->
+    <div id="onboarding">
+      <div class="step-indicator">
+        <div class="step-dot active" data-step="0"></div>
+        <div class="step-dot" data-step="1"></div>
+        <div class="step-dot" data-step="2"></div>
+        <div class="step-dot" data-step="3"></div>
+      </div>
+
+      <!-- Screen 1: Welcome / Value Promise -->
+      <div class="onboarding-step active" data-step="0">
+        <div class="step-content centered">
+          <div class="logo-container">
+            <div class="logo-glow">⚡</div>
+          </div>
+          <h1 class="hero-title">Write smarter in one keypress</h1>
+          <p class="hero-subtitle">Snapfix fixes your text anywhere on your Mac with lightning speed.</p>
+        </div>
+        <div class="onboarding-actions">
+          <button class="onboarding-button primary" onclick="nextStep()">Get Started</button>
+        </div>
+      </div>
+
+      <!-- Screen 2: The Core Mechanic (Interactive Demo) -->
+      <div class="onboarding-step" data-step="1">
+        <div class="step-content">
+          <h2>Your magic shortcut</h2>
+          <p>Press <strong>⌥ Space</strong> (Alt+Space) to fix selected text instantly.</p>
+          
+          <div class="demo-section">
+            <p class="demo-label">Try it now:</p>
+            <div class="demo-text-container" id="demoTextContainer">
+              <div class="demo-text" id="demoText" contenteditable="true">
+                I have alot of work to do tomorow. This is a test sentance with some erors.
+              </div>
+            </div>
+            <div class="keyboard-shortcut-large">
+              <kbd>⌥</kbd>
+              <span class="plus">+</span>
+              <kbd>Space</kbd>
+            </div>
+            <div id="demoStatus" class="demo-status" style="display: none;">
+              <span class="demo-success">✓ Fixed!</span>
+            </div>
+            <button class="demo-button" id="tryDemoButton" onclick="tryDemo()">
+              Try it now
+            </button>
+          </div>
+        </div>
+        <div class="onboarding-actions">
+          <button class="onboarding-button secondary" onclick="previousStep()">Previous</button>
+          <button class="onboarding-button primary" id="demoNextButton" onclick="nextStep()" disabled>
+            Continue
+          </button>
+        </div>
+      </div>
+
+      <!-- Screen 3: Permissions (macOS only, conditional) -->
+      <div class="onboarding-step" data-step="2" id="permissionsStep">
+        <div class="step-content">
+          <h2>Enable permissions to fix text everywhere</h2>
+          <p>Snapfix needs Accessibility permissions to replace text in other apps.</p>
+          
+          <div class="permissions-visual">
+            <div class="settings-icon">⚙️</div>
+            <div class="settings-path">
+              System Settings → Privacy & Security → Accessibility
+            </div>
+          </div>
+          
+          <button class="permission-button" onclick="openSystemSettings()">
+            Open System Settings
+          </button>
+          
+          <button class="onboarding-button secondary" onclick="skipPermissions()" style="width: 100%; margin-top: 12px;">
+            I'll do this later
+          </button>
+        </div>
+        <div class="onboarding-actions">
+          <button class="onboarding-button secondary" onclick="previousStep()">Previous</button>
+          <button class="onboarding-button primary" onclick="nextStep()">Continue</button>
+        </div>
+      </div>
+
+      <!-- Screen 4: Final Setup / Habit Formation -->
+      <div class="onboarding-step" data-step="3">
+        <div class="step-content">
+          <h2>You're all set</h2>
+          <p>Select text in any app and press <strong>⌥ Space</strong> to fix it instantly.</p>
+          
+          <div class="checklist">
+            <div class="checklist-item" id="checklist1">
+              <span class="check-icon">✓</span>
+              <span>Tried your first correction</span>
+            </div>
+            <div class="checklist-item" id="checklist2">
+              <span class="check-icon">✓</span>
+              <span>Shortcut learned</span>
+            </div>
+            <div class="checklist-item" id="checklist3">
+              <span class="check-icon">✓</span>
+              <span>Ready to use</span>
+            </div>
+          </div>
+        </div>
+        <div class="onboarding-actions">
+          <button class="onboarding-button primary" onclick="completeOnboarding()" style="width: 100%;">
+            Start Using Snapfix
+          </button>
+        </div>
+      </div>
     </div>
-    <textarea
-      id="inputText"
-      placeholder="Type or paste text here..."
-    ></textarea>
-    <br />
-    <button id="fixButton" type="button">Fix Grammar</button>
-    <div id="status" class="status"></div>
+
+    <!-- Main App Content -->
+    <div id="mainApp" class="hidden">
+      <div class="app-header">
+        <h1>SnapFix</h1>
+        <p class="subtitle">AI-powered grammar and spelling correction</p>
+      </div>
+
+      <div class="app-container">
+        <div class="input-section">
+          <label class="input-label" for="inputText">Text to Fix</label>
+          <textarea
+            id="inputText"
+            placeholder="Type or paste your text here...&#10;&#10;Example: 'I have alot of work to do tomorow.'"
+          ></textarea>
+        </div>
+
+        <div class="button-container">
+          <button id="fixButton" class="fix-button" type="button">
+            <span id="buttonText">Fix Grammar</span>
+          </button>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div class="hint">
+          <span class="hint-icon">💡</span>
+          <span>
+            Quick tip: Press 
+            <span class="shortcut-hint">
+              <kbd>⌘</kbd> + <kbd>Enter</kbd>
+            </span>
+            (Mac) or 
+            <span class="shortcut-hint">
+              <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
+            </span>
+            (Windows/Linux) to fix grammar instantly
+          </span>
+        </div>
+      </div>
+    </div>
 
     <script>
+      // Onboarding state
+      let currentStep = 0;
+      const totalSteps = 4;
+      let demoTextFixed = false;
+
+      // Check if onboarding is completed
+      // Set to always return false so onboarding shows every time
+      function isOnboardingCompleted() {
+        return false; // Always show onboarding
+        // To restore original behavior, uncomment the line below:
+        // return localStorage.getItem('onboardingCompleted') === 'true';
+      }
+
+      // Reset onboarding (for testing/debugging)
+      function resetOnboarding() {
+        localStorage.removeItem('onboardingCompleted');
+        localStorage.removeItem('onboardingCompletedDate');
+        localStorage.removeItem('onboardingSkipped');
+        console.log('Onboarding reset - reload the page to see it again');
+        // Reload to show onboarding
+        location.reload();
+      }
+
+      // Expose reset function to window for debugging
+      window.resetOnboarding = resetOnboarding;
+
+      // Initialize onboarding
+      function initOnboarding() {
+        const onboardingEl = document.getElementById('onboarding');
+        const mainAppEl = document.getElementById('mainApp');
+        
+        if (!onboardingEl || !mainAppEl) {
+          console.error('Onboarding or main app elements not found');
+          return;
+        }
+
+        const isCompleted = isOnboardingCompleted();
+        console.log('Onboarding completed status:', isCompleted);
+        console.log('localStorage value:', localStorage.getItem('onboardingCompleted'));
+
+        if (isCompleted) {
+          // Show main app
+          onboardingEl.classList.remove('active');
+          mainAppEl.classList.remove('hidden');
+          return;
+        }
+
+        // Show onboarding
+        onboardingEl.classList.add('active');
+        mainAppEl.classList.add('hidden');
+        
+        // Initialize checklist
+        updateChecklist();
+        
+        // Add keyboard listener for demo step
+        setupDemoKeyboardListener();
+        
+        // Track onboarding started
+        if (window.electronAPI && window.electronAPI.trackEvent) {
+          window.electronAPI.trackEvent('onboarding_started');
+          window.electronAPI.trackEvent('onboarding_step_viewed', { step: 1, step_name: 'welcome' });
+        }
+      }
+
+      // Setup keyboard listener for demo step
+      function setupDemoKeyboardListener() {
+        document.addEventListener('keydown', function(e) {
+          // Only handle Alt+Space on demo step (step 1)
+          if (currentStep === 1 && (e.altKey || e.metaKey) && e.code === 'Space') {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const demoText = document.getElementById('demoText');
+            if (demoText && window.getSelection().toString().length > 0) {
+              // Text is selected, trigger demo
+              if (!demoTextFixed) {
+                tryDemo();
+              }
+            }
+          }
+        });
+      }
+
+      // Navigate to next step
+      function nextStep() {
+        if (currentStep < totalSteps - 1) {
+          // Track step completion
+          if (window.electronAPI && window.electronAPI.trackEvent) {
+            window.electronAPI.trackEvent('onboarding_step_completed', { 
+              step: currentStep + 1, 
+              step_name: getStepName(currentStep)
+            });
+          }
+
+          currentStep++;
+          updateStepDisplay();
+
+          // Update checklist based on progress
+          updateChecklist();
+
+          // Track new step view
+          if (window.electronAPI && window.electronAPI.trackEvent) {
+            window.electronAPI.trackEvent('onboarding_step_viewed', { 
+              step: currentStep + 1, 
+              step_name: getStepName(currentStep)
+            });
+          }
+        }
+      }
+
+      // Update checklist based on progress
+      function updateChecklist() {
+        // Checklist item 1: Tried first correction (completed if demo was done)
+        if (demoTextFixed) {
+          document.getElementById('checklist1').classList.add('completed');
+        }
+
+        // Checklist item 2: Shortcut learned (completed after step 2)
+        if (currentStep >= 2) {
+          document.getElementById('checklist2').classList.add('completed');
+        }
+
+        // Checklist item 3: Ready to use (completed on final step)
+        if (currentStep >= 3) {
+          document.getElementById('checklist3').classList.add('completed');
+        }
+      }
+
+      // Navigate to previous step
+      function previousStep() {
+        if (currentStep > 0) {
+          currentStep--;
+          updateStepDisplay();
+
+          // Track step view
+          if (window.electronAPI && window.electronAPI.trackEvent) {
+            window.electronAPI.trackEvent('onboarding_step_viewed', { 
+              step: currentStep + 1, 
+              step_name: getStepName(currentStep)
+            });
+          }
+        }
+      }
+
+      // Get step name
+      function getStepName(step) {
+        const names = ['welcome', 'keyboard_shortcut', 'permissions', 'how_to_use'];
+        return names[step] || 'unknown';
+      }
+
+      // Update step display
+      function updateStepDisplay() {
+        // Update step indicators
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          dot.classList.remove('active', 'completed');
+          if (index < currentStep) {
+            // Mark previous steps as completed
+            dot.classList.add('completed');
+          } else if (index === currentStep) {
+            // Mark current step as active
+            dot.classList.add('active');
+          }
+        });
+
+        // Update step content
+        document.querySelectorAll('.onboarding-step').forEach((step, index) => {
+          if (index === currentStep) {
+            step.classList.add('active');
+          } else {
+            step.classList.remove('active');
+          }
+        });
+      }
+
+      // Complete onboarding
+      function completeOnboarding() {
+        // Track completion
+        if (window.electronAPI && window.electronAPI.trackEvent) {
+          window.electronAPI.trackEvent('onboarding_step_completed', { 
+            step: currentStep + 1, 
+            step_name: getStepName(currentStep)
+          });
+          window.electronAPI.trackEvent('onboarding_completed', {
+            completion_date: new Date().toISOString(),
+            total_steps: totalSteps
+          });
+        }
+
+        // Mark as completed
+        localStorage.setItem('onboardingCompleted', 'true');
+        localStorage.setItem('onboardingCompletedDate', new Date().toISOString());
+
+        // Hide onboarding and show main app
+        document.getElementById('onboarding').classList.remove('active');
+        document.getElementById('mainApp').classList.remove('hidden');
+      }
+
+      // Skip onboarding
+      function skipOnboarding() {
+        if (window.electronAPI && window.electronAPI.trackEvent) {
+          window.electronAPI.trackEvent('onboarding_skipped', {
+            step: currentStep + 1,
+            skipped_at: new Date().toISOString()
+          });
+        }
+
+        // Mark as completed (skipped)
+        localStorage.setItem('onboardingCompleted', 'true');
+        localStorage.setItem('onboardingSkipped', 'true');
+
+        // Hide onboarding and show main app
+        document.getElementById('onboarding').classList.remove('active');
+        document.getElementById('mainApp').classList.remove('hidden');
+      }
+
+      // Open system settings
+      async function openSystemSettings() {
+        if (window.electronAPI && window.electronAPI.openSystemSettings) {
+          await window.electronAPI.openSystemSettings();
+        } else {
+          // Fallback: show message
+          alert('Please go to System Settings > Privacy & Security > Accessibility and enable SnapFix');
+        }
+      }
+
+      // Skip permissions
+      function skipPermissions() {
+        // Mark permissions as skipped (for analytics)
+        if (window.electronAPI && window.electronAPI.trackEvent) {
+          window.electronAPI.trackEvent('onboarding_permissions_skipped');
+        }
+        // Continue to next step
+        nextStep();
+      }
+
+      // Interactive demo function
+      async function tryDemo() {
+        const demoText = document.getElementById('demoText');
+        const demoContainer = document.getElementById('demoTextContainer');
+        const demoButton = document.getElementById('tryDemoButton');
+        const demoStatus = document.getElementById('demoStatus');
+        const demoNextButton = document.getElementById('demoNextButton');
+        
+        if (demoTextFixed) {
+          // Reset demo
+          demoText.textContent = 'I have alot of work to do tomorow. This is a test sentance with some erors.';
+          demoText.classList.remove('fixed');
+          demoContainer.classList.remove('highlighted');
+          demoStatus.style.display = 'none';
+          demoButton.textContent = 'Try it now';
+          demoNextButton.disabled = true;
+          demoTextFixed = false;
+          return;
+        }
+
+        // Disable button
+        demoButton.disabled = true;
+        demoButton.textContent = 'Fixing...';
+        
+        // Highlight the text
+        demoContainer.classList.add('highlighted');
+        
+        // Select all text
+        const range = document.createRange();
+        range.selectNodeContents(demoText);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Track demo attempt
+        if (window.electronAPI && window.electronAPI.trackEvent) {
+          window.electronAPI.trackEvent('onboarding_demo_attempted');
+        }
+
+        try {
+          // Get API key
+          const apiKey = await window.electronAPI.getApiKey();
+          if (!apiKey) {
+            throw new Error('API key not configured');
+          }
+
+          // Fix the text using the same API call
+          const originalText = demoText.textContent;
+          const correctedText = await callGeminiAPI(originalText, apiKey, () => {});
+
+          // Update text with animation
+          setTimeout(() => {
+            demoText.textContent = correctedText;
+            demoText.classList.add('fixed');
+            demoStatus.style.display = 'block';
+            demoButton.textContent = 'Try again';
+            demoButton.disabled = false;
+            demoNextButton.disabled = false;
+            demoTextFixed = true;
+
+            // Mark checklist item as completed
+            document.getElementById('checklist1').classList.add('completed');
+
+            // Track demo success
+            if (window.electronAPI && window.electronAPI.trackEvent) {
+              window.electronAPI.trackEvent('onboarding_demo_completed');
+            }
+          }, 500);
+
+        } catch (error) {
+          demoButton.textContent = 'Try it now';
+          demoButton.disabled = false;
+          demoContainer.classList.remove('highlighted');
+          alert('Demo failed: ' + error.message + '\n\nMake sure GEMINI_API_KEY is set in your .env file.');
+        }
+      }
+
       let apiKey = '';
       // Cache the working model for faster subsequent requests
       let workingModel = null;
@@ -81,22 +1293,51 @@
 
       // Initialize on page load
       window.addEventListener('DOMContentLoaded', async () => {
+        // Initialize onboarding first
+        initOnboarding();
+
+        // Track window opened
+        if (window.electronAPI && window.electronAPI.trackEvent) {
+          window.electronAPI.trackEvent('renderer_window_opened');
+        }
+
+        // Setup skip link
+        document.getElementById('skipOnboarding').addEventListener('click', (e) => {
+          e.preventDefault();
+          skipOnboarding();
+        });
+
         // Load API key from .env file via Electron
         try {
           apiKey = await window.electronAPI.getApiKey();
           if (!apiKey) {
-            document.getElementById('status').textContent = 'Error: GEMINI_API_KEY not found in .env file';
-            document.getElementById('status').className = 'status error';
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = 'Error: GEMINI_API_KEY not found in .env file';
+            statusDiv.className = 'status error';
+            statusDiv.style.display = 'flex';
+            
+            // Track API key missing
+            if (window.electronAPI && window.electronAPI.trackEvent) {
+              window.electronAPI.trackEvent('api_key_missing');
+            }
           }
         } catch (error) {
-          document.getElementById('status').textContent = `Error loading API key: ${error.message}`;
-          document.getElementById('status').className = 'status error';
+          const statusDiv = document.getElementById('status');
+          statusDiv.textContent = `Error loading API key: ${error.message}`;
+          statusDiv.className = 'status error';
+          statusDiv.style.display = 'flex';
+          
+          // Track API key error
+          if (window.electronAPI && window.electronAPI.trackEvent) {
+            window.electronAPI.trackEvent('api_key_error', { error: error.message });
+          }
         }
       });
 
       async function fixGrammar() {
         const textarea = document.getElementById('inputText');
         const fixButton = document.getElementById('fixButton');
+        const buttonText = document.getElementById('buttonText');
         const statusDiv = document.getElementById('status');
 
         const text = textarea.value.trim();
@@ -104,22 +1345,39 @@
         if (!text) {
           statusDiv.textContent = 'Please enter some text to fix.';
           statusDiv.className = 'status error';
+          statusDiv.style.display = 'flex';
+          
+          // Track empty text attempt
+          if (window.electronAPI && window.electronAPI.trackEvent) {
+            window.electronAPI.trackEvent('grammar_fix_empty_text');
+          }
           return;
         }
 
         if (!apiKey) {
           statusDiv.textContent = 'Error: API key not configured. Please set GEMINI_API_KEY in .env file.';
           statusDiv.className = 'status error';
+          statusDiv.style.display = 'flex';
           return;
+        }
+
+        // Track grammar fix attempt
+        const startTime = Date.now();
+        if (window.electronAPI && window.electronAPI.trackEvent) {
+          window.electronAPI.trackEvent('grammar_fix_attempted', {
+            text_length: text.length,
+            method: 'renderer_window'
+          });
         }
 
         // Disable button and show loading
         fixButton.disabled = true;
+        buttonText.textContent = 'Fixing...';
         statusDiv.textContent = 'Fixing typos...';
         statusDiv.className = 'status loading';
+        statusDiv.style.display = 'flex';
 
         // Status update callback
-        const startTime = Date.now();
         let lastUpdateTime = 0;
         const updateStatus = (message) => {
           const now = Date.now();
@@ -128,6 +1386,7 @@
             const elapsed = ((now - startTime) / 1000).toFixed(1);
             statusDiv.textContent = message ? `${message} (${elapsed}s)` : `Fixing typos... (${elapsed}s)`;
             statusDiv.className = 'status loading';
+            statusDiv.style.display = 'flex';
             lastUpdateTime = now;
           }
         };
@@ -135,12 +1394,40 @@
         try {
           const corrected = await callGeminiAPI(text, apiKey, updateStatus);
           const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+          const responseTime = Date.now() - startTime;
+          
           textarea.value = corrected;
-          statusDiv.textContent = `Typos fixed successfully! (${totalTime}s)`;
-          statusDiv.className = 'status';
+          statusDiv.textContent = `✓ Fixed successfully in ${totalTime}s`;
+          statusDiv.className = 'status success';
+          statusDiv.style.display = 'flex';
+          buttonText.textContent = 'Fix Grammar';
+          
+          // Track successful grammar fix
+          if (window.electronAPI && window.electronAPI.trackEvent) {
+            window.electronAPI.trackEvent('grammar_fix_succeeded', {
+              text_length: text.length,
+              response_time: responseTime,
+              method: 'renderer_window',
+              changes_made: corrected !== text
+            });
+          }
         } catch (error) {
-          statusDiv.textContent = `Error: ${error.message}`;
+          const responseTime = Date.now() - startTime;
+          statusDiv.textContent = `✗ Error: ${error.message}`;
           statusDiv.className = 'status error';
+          statusDiv.style.display = 'flex';
+          buttonText.textContent = 'Fix Grammar';
+          
+          // Track grammar fix error
+          if (window.electronAPI && window.electronAPI.trackEvent) {
+            window.electronAPI.trackEvent('grammar_fix_failed', {
+              error_type: error.name || 'unknown_error',
+              error_message: error.message,
+              text_length: text.length,
+              response_time: responseTime,
+              method: 'renderer_window'
+            });
+          }
         } finally {
           fixButton.disabled = false;
         }
@@ -256,7 +1543,13 @@
         throw lastError || new Error('Failed to call Gemini API');
       }
 
-      document.getElementById('fixButton').addEventListener('click', fixGrammar);
+      document.getElementById('fixButton').addEventListener('click', () => {
+        // Track button click
+        if (window.electronAPI && window.electronAPI.trackEvent) {
+          window.electronAPI.trackEvent('fix_button_clicked', { method: 'button' });
+        }
+        fixGrammar();
+      });
 
       // Keyboard shortcut: Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux)
       document.addEventListener('keydown', (e) => {
@@ -268,6 +1561,13 @@
           // Check if button is not disabled
           const fixButton = document.getElementById('fixButton');
           if (!fixButton.disabled) {
+            // Track keyboard shortcut usage
+            if (window.electronAPI && window.electronAPI.trackEvent) {
+              window.electronAPI.trackEvent('fix_button_clicked', { 
+                method: 'keyboard_shortcut',
+                shortcut: e.metaKey ? 'Cmd+Enter' : 'Ctrl+Enter'
+              });
+            }
             fixGrammar();
           }
         }

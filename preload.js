@@ -11,6 +11,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('process-text', (event, text) => {
       callback(text);
     });
-  }
+  },
+  // Analytics API
+  trackEvent: (eventName, properties) => ipcRenderer.invoke('analytics-track', eventName, properties),
+  identifyUser: (userProperties) => ipcRenderer.invoke('analytics-identify', userProperties),
+  // System settings
+  openSystemSettings: () => ipcRenderer.invoke('open-system-settings')
 });
 

@@ -5,6 +5,7 @@ const fs = require('fs');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
+const analytics = require('./analytics');
 
 // Load .env file from multiple possible locations
 function loadEnvFile() {
@@ -52,9 +53,33 @@ const undoStack = [];
 const MAX_UNDO_ITEMS = 10;
 
 function createWindow() {
+  // Try to load app icon
+  const iconPaths = [
+    path.join(__dirname, 'assets', 'icons', 'snapfix_logo.png'),
+    // path.join(__dirname, 'snapfix_logo.png'),
+    // path.join(__dirname, 'snapfix-logo.png'),
+    // path.join(__dirname, 'snapfix-icon.png'),
+  ];
+  
+  let appIcon = null;
+  for (const iconPath of iconPaths) {
+    try {
+      if (fs.existsSync(iconPath)) {
+        appIcon = nativeImage.createFromPath(iconPath);
+        if (!appIcon.isEmpty()) {
+          console.log('Loaded app icon from:', iconPath);
+          break;
+        }
+      }
+    } catch (e) {
+      continue;
+    }
+  }
+
   mainWindow = new BrowserWindow({
     width: 600,
     height: 500,
+    icon: appIcon && !appIcon.isEmpty() ? appIcon : undefined, // Set window icon
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -163,21 +188,94 @@ function openAccessibilitySettings() {
 
 function createTray() {
   // Create a simple tray icon
-  const iconPath = path.join(__dirname, 'icon.png');
+  // Try multiple icon paths (PNG works better for tray icons than .icns)
+  // On macOS, tray icons should be PNG files, preferably 16x16 or 22x22 for retina
+  const iconPaths = [
+    path.join(__dirname, 'assets', 'icons', 'snapfix_tray_light.png'),
+    path.join(__dirname, 'snapfix_logo.png'),
+    path.join(__dirname, 'snapfix-logo.png'),
+    path.join(__dirname, 'snapfix-icon.png'),
+    path.join(__dirname, 'assets', 'icons', 'snapfix_logo.icns'),
+    path.join(__dirname, 'icon.png'),
+  ];
+  
   let trayIcon = null;
   
+  // Try each icon path until one works
+  for (const iconPath of iconPaths) {
+    try {
+      if (fs.existsSync(iconPath)) {
+        trayIcon = nativeImage.createFromPath(iconPath);
+        if (!trayIcon.isEmpty()) {
+          console.log('Loaded tray icon from:', iconPath);
+          const originalSize = trayIcon.getSize();
+          console.log('Original icon size:', originalSize.width, 'x', originalSize.height);
+          
+          // Resize to appropriate size for tray (22x22 for retina, 16x16 for standard)
+          // macOS tray icons work best at these sizes
+          if (originalSize.width > 16 || originalSize.height > 16) {
+            trayIcon = trayIcon.resize({ width: 16, height: 16 });
+            console.log('Resized tray icon to 16x16');
+          }
+          break;
+        } else {
+          console.warn('Icon file exists but is empty:', iconPath);
+        }
+      } else {
+        console.log('Icon file not found:', iconPath);
+      }
+    } catch (e) {
+      console.error('Error loading icon from', iconPath, ':', e.message);
+      // Try next path
+      continue;
+    }
+  }
+  
+  // If no icon loaded, create a simple template image
+  if (!trayIcon || trayIcon.isEmpty()) {
+    console.error('No tray icon found! Creating fallback icon');
+    // Create a simple 16x16 monochrome icon for macOS tray
+    // This is a minimal fallback - you should add a proper icon file
+    try {
+      // Try to create a simple template image
+      const size = 16;
+      const image = nativeImage.createEmpty();
+      // For macOS, we need a template image (monochrome)
+      // Since we can't easily create one programmatically without canvas,
+      // we'll just use an empty icon and log a warning
+      trayIcon = nativeImage.createEmpty();
+      console.error('Using empty tray icon - tray will not be visible!');
+      console.error('Please ensure snapfix_tray_light.png exists in assets/icons/');
+    } catch (e) {
+      trayIcon = nativeImage.createEmpty();
+    }
+  }
+  
+  // On macOS, DON'T set template image if the icon is colored
+  // Template images should be monochrome (black/white)
+  // Only set template if you have a monochrome icon
+  // For now, we'll skip setTemplateImage to see if the icon shows
+  // if (process.platform === 'darwin' && trayIcon && !trayIcon.isEmpty()) {
+  //   try {
+  //     trayIcon.setTemplateImage(true);
+  //   } catch (e) {
+  //     console.warn('Could not set template image:', e.message);
+  //   }
+  // }
+
   try {
-    // Try to load icon, if it doesn't exist, create a simple one
-    trayIcon = nativeImage.createFromPath(iconPath);
-    if (trayIcon.isEmpty()) {
-      throw new Error('Icon not found');
+    tray = new Tray(trayIcon);
+    console.log('Tray created successfully');
+    
+    // Make sure tray is visible
+    if (tray) {
+      tray.setToolTip('SnapFix - Press Alt+Space to fix grammar');
+      console.log('Tray tooltip set');
     }
   } catch (e) {
-    // Create a simple 16x16 icon programmatically
-    trayIcon = nativeImage.createEmpty();
+    console.error('Failed to create tray:', e.message);
+    console.error('Error details:', e);
   }
-
-  tray = new Tray(trayIcon.isEmpty() ? nativeImage.createEmpty() : trayIcon);
   
   const contextMenu = Menu.buildFromTemplate([
     {
@@ -759,6 +857,22 @@ ipcMain.handle('get-api-key', () => {
 // Handle text processing request
 ipcMain.handle('process-text', async (event, text) => {
   return text; // Return text to be processed in renderer
+});
+
+// Handle analytics tracking from renderer
+ipcMain.handle('analytics-track', async (event, eventName, properties = {}) => {
+  analytics.track(eventName, properties);
+});
+
+// Handle analytics identify from renderer
+ipcMain.handle('analytics-identify', async (event, userProperties = {}) => {
+  analytics.identify(userProperties);
+});
+
+// Handle opening system settings
+ipcMain.handle('open-system-settings', async () => {
+  openAccessibilitySettings();
+  return true;
 });
 
 // Handle setting clipboard with corrected text (for popup window if needed)

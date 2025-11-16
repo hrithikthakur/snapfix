@@ -1,0 +1,74 @@
+{
+  // Disable inline AI suggestions (Cursor's inline autocomplete)
+  "editor.inlineSuggest.enabled": false,
+  
+  // Disable all autocomplete/suggestions
+  "editor.quickSuggestions": {
+    "other": "off",
+    "comments": "off",
+    "strings": "off"
+  },
+  
+  // Disable suggestions on trigger characters
+  "editor.suggestOnTriggerCharacters": false,
+  
+  // Disable word-based suggestions
+  "editor.wordBasedSuggestions": "off",
+  
+  // Disable parameter hints
+  "editor.parameterHints.enabled": false,
+  
+  // Disable hover information
+  "editor.hover.enabled": false,
+  
+  // Disable accept suggestion on enter
+  "editor.acceptSuggestionOnEnter": "off",
+  
+  // Disable accept suggestion on commit character
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  
+  // Disable snippet suggestions
+  "editor.snippetSuggestions": "none",
+  
+  // Disable tab completion
+  "editor.tabCompletion": "off",
+  
+  // Disable suggest selection
+  "editor.suggestSelection": "first",
+  
+  // Disable all IntelliSense features
+  "editor.quickSuggestionsDelay": 1000,
+  
+  // Cursor-specific: Disable AI completions (gray inline text)
+  "cursor.completions.enabled": false,
+  "cursor.tab.enabled": false,
+  "cursor.cpp.disabledLanguages": ["*"],
+  "cursor.general.enableAutoComplete": false,
+  
+  // Additional Cursor AI settings
+  "cursor.ai.enabled": false,
+  "cursor.autocomplete.enabled": false,
+  
+  // Disable all language-specific features
+  "[javascript]": {
+    "editor.quickSuggestions": {
+      "other": "off",
+      "comments": "off",
+      "strings": "off"
+    }
+  },
+  "[typescript]": {
+    "editor.quickSuggestions": {
+      "other": "off",
+      "comments": "off",
+      "strings": "off"
+    }
+  },
+  "[json]": {
+    "editor.quickSuggestions": {
+      "other": "off",
+      "comments": "off",
+      "strings": "off"
+    }
+  }
+}

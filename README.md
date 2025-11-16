@@ -53,7 +53,7 @@ When running the app with `npm start`, it will appear as **"Electron"** in Syste
 4. Click on **Accessibility**
 5. Click the lock icon (🔒) at the bottom to make changes (enter password)
 6. **Look for "Electron" in the list** - this is your GrammrFix app
-   - The app appears as "Electron" because it's running via the Electron framework
+   - The app appears as "Electron" because it's ruInstrument the app with analytics (PostHog, Mixpanel, or barebones logging).nning via the Electron framework
    - If you build a proper macOS app, it will show as "GrammrFix"
 7. Toggle the switch next to **"Electron"** to enable it (switch turns blue/green)
 8. Quit and restart the app for permissions to take effect

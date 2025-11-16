@@ -19,7 +19,9 @@
   "build": {
     "appId": "com.grammrfix.app",
     "productName": "GrammrFix",
+    "icon": "assets/icons/snapfix_logo.icns",
     "mac": {
+      "icon": "assets/icons/snapfix_logo.icns",
       "category": "public.app-category.productivity",
       "target": [
         {
@@ -73,7 +75,10 @@
   "dependencies": {
     "dotenv": "^17.2.3",
     "node-addon-api": "^7.0.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "node-machine-id": "^1.1.12",
+    "posthog-js": "^1.293.0",
+    "posthog-node": "^5.11.2"
   },
   "devDependencies": {
     "electron": "^30.0.0",
