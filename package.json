@@ -4,11 +4,14 @@
   "description": "Simple Electron grammar fixer prototype",
   "main": "main.js",
   "scripts": {
+    "prestart": "npm run build:onboarding",
     "start": "electron .",
     "build:native": "node-gyp rebuild --directory=native/macOS || echo 'Native build failed, using fallback methods'",
     "install:native": "npm run build:native || echo 'Native build skipped'",
     "rebuild": "electron-rebuild -f -w textBridge || echo 'Rebuild failed, using fallback methods'",
     "postinstall": "npm run install:native || echo 'Native build skipped - app will use fallback methods'",
+    "build:onboarding": "rollup -c onboarding/rollup.config.js",
+    "watch:onboarding": "rollup -c onboarding/rollup.config.js -w",
     "build": "electron-builder",
     "build:mac": "electron-builder --mac",
     "build:dir": "electron-builder --dir",
@@ -81,9 +84,15 @@
     "posthog-node": "^5.11.2"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "electron": "^30.0.0",
     "electron-builder": "^24.13.3",
     "electron-rebuild": "^3.2.9",
-    "node-gyp": "^9.4.0"
+    "node-gyp": "^9.4.0",
+    "rollup": "^4.53.2",
+    "rollup-plugin-css-only": "^4.5.5",
+    "rollup-plugin-svelte": "^7.2.3",
+    "svelte": "^5.43.8"
   }
 }

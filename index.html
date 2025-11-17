@@ -9,6 +9,10 @@
         box-sizing: border-box;
       }
 
+      html, body {
+        height: 100%;
+      }
+
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         margin: 0;
@@ -32,15 +36,19 @@
       /* Onboarding styles */
       #onboarding {
         display: none;
+        width: 100%;
         max-width: 680px;
         margin: 0 auto;
-        padding: 60px 20px 40px;
+        padding: clamp(16px, 4vh, 32px) clamp(16px, 4vw, 24px) clamp(12px, 3vh, 24px);
         opacity: 0;
         visibility: hidden;
+        min-height: 100vh;
+        height: 100vh;
       }
 
       #onboarding.active {
-        display: block;
+        display: flex;
+        flex-direction: column;
         opacity: 1;
         visibility: visible;
         animation: fadeInUp 0.6s ease;
@@ -48,15 +56,15 @@
 
       .step-content.centered {
         text-align: center;
-        padding: 60px 48px;
+        padding: clamp(24px, 6vh, 48px) clamp(20px, 6vw, 48px);
       }
 
       .logo-container {
-        margin-bottom: 40px;
+        margin-bottom: clamp(12px, 4vh, 28px);
       }
 
       .logo-glow {
-        font-size: 80px;
+        font-size: clamp(40px, 9vw, 64px);
         animation: sparkle 2s ease-in-out infinite;
         filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.5));
       }
@@ -67,31 +75,31 @@
       }
 
       .hero-title {
-        font-size: 42px;
+        font-size: clamp(28px, 4vw, 38px);
         font-weight: 700;
         background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        margin: 0 0 20px 0;
+        margin: 0 0 16px 0;
         letter-spacing: -1px;
         line-height: 1.2;
       }
 
       .hero-subtitle {
-        font-size: 20px;
+        font-size: clamp(16px, 3vw, 18px);
         color: #86868b;
         margin: 0;
         font-weight: 400;
-        line-height: 1.5;
+        line-height: 1.4;
       }
 
       .step-indicator {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 50px;
+        gap: clamp(8px, 2vw, 16px);
+        margin-bottom: clamp(12px, 4vh, 24px);
         position: relative;
       }
 
@@ -135,11 +143,17 @@
 
       .onboarding-step {
         display: none;
+        height: 100%;
         animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1 1 auto;
+        min-height: 0;
+        gap: 12px;
       }
 
       .onboarding-step.active {
-        display: block;
+        display: flex;
       }
 
       @keyframes slideIn {
@@ -156,10 +170,14 @@
       .step-content {
         background: white;
         border-radius: 20px;
-        padding: 48px;
+        padding: clamp(18px, 4vh, 32px);
         box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-        margin-bottom: 32px;
+        margin-bottom: 16px;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
       }
 
       .step-content:hover {
@@ -167,10 +185,10 @@
       }
 
       .step-content h2 {
-        font-size: 28px;
+        font-size: clamp(22px, 3vw, 26px);
         font-weight: 700;
         color: #1d1d1f;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -179,29 +197,29 @@
       .step-content h2::before {
         content: '';
         width: 4px;
-        height: 28px;
+        height: 24px;
         background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
         border-radius: 2px;
       }
 
       .step-content p {
-        font-size: 17px;
+        font-size: 16px;
         color: #515154;
         line-height: 1.6;
-        margin-bottom: 24px;
+        margin-bottom: 12px;
       }
 
       .step-content ul {
         list-style: none;
         padding: 0;
-        margin: 28px 0;
+        margin: 12px 0;
       }
 
       .step-content li {
-        padding: 16px 0;
-        padding-left: 40px;
+        padding: 10px 0;
+        padding-left: 32px;
         position: relative;
-        font-size: 17px;
+        font-size: 16px;
         color: #515154;
         line-height: 1.5;
         transition: transform 0.2s ease;
@@ -215,8 +233,8 @@
         content: "✓";
         position: absolute;
         left: 0;
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
         color: white;
         font-weight: bold;
@@ -231,8 +249,8 @@
       .keyboard-shortcut {
         background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
         border-radius: 16px;
-        padding: 32px;
-        margin: 28px 0;
+        padding: 20px;
+        margin: 16px 0;
         text-align: center;
         font-family: 'SF Mono', Monaco, monospace;
         border: 2px solid #e5e5ea;
@@ -243,9 +261,9 @@
         background: white;
         border: 2px solid #d2d2d7;
         border-radius: 8px;
-        padding: 12px 18px;
-        margin: 0 6px;
-        font-size: 16px;
+        padding: 10px 16px;
+        margin: 0 4px;
+        font-size: 15px;
         font-weight: 600;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 1px 0 rgba(255,255,255,0.8) inset;
         transition: all 0.2s ease;
@@ -258,7 +276,7 @@
 
       .keyboard-shortcut .plus {
         color: #86868b;
-        font-size: 20px;
+        font-size: 18px;
         margin: 0 8px;
         font-weight: 300;
       }
@@ -267,13 +285,15 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
         padding: 0 4px;
+        flex-wrap: wrap;
+        margin-top: auto;
       }
 
       .onboarding-button {
-        padding: 14px 28px;
-        font-size: 17px;
+        padding: 12px 22px;
+        font-size: 16px;
         font-weight: 600;
         border: none;
         border-radius: 12px;
@@ -352,9 +372,9 @@
 
       .permission-button {
         width: 100%;
-        margin-top: 24px;
-        padding: 16px 28px;
-        font-size: 17px;
+        margin-top: 12px;
+        padding: 14px 20px;
+        font-size: 16px;
         font-weight: 600;
         background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
         color: white;
@@ -372,21 +392,21 @@
 
       /* Demo Section Styles */
       .demo-section {
-        margin: 32px 0;
+        margin: 16px 0;
       }
 
       .demo-label {
         font-size: 15px;
         font-weight: 600;
         color: #1d1d1f;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
       }
 
       .demo-text-container {
         background: #f5f5f7;
         border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 24px;
+        padding: 14px;
+        margin-bottom: 14px;
         border: 2px dashed #d2d2d7;
         transition: all 0.3s ease;
       }
@@ -398,13 +418,13 @@
       }
 
       .demo-text {
-        font-size: 17px;
+        font-size: 16px;
         line-height: 1.6;
         color: #1d1d1f;
-        padding: 12px;
+        padding: 10px;
         background: white;
         border-radius: 8px;
-        min-height: 80px;
+        min-height: 64px;
         cursor: text;
         user-select: text;
         transition: all 0.3s ease;
@@ -422,21 +442,21 @@
 
       .keyboard-shortcut-large {
         text-align: center;
-        margin: 24px 0;
+        margin: 12px 0;
       }
 
       .keyboard-shortcut-large kbd {
         background: white;
         border: 2px solid #d2d2d7;
         border-radius: 10px;
-        padding: 16px 24px;
-        margin: 0 8px;
-        font-size: 20px;
+        padding: 10px 16px;
+        margin: 0 4px;
+        font-size: 16px;
         font-weight: 600;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1), 0 2px 0 rgba(255,255,255,0.8) inset;
         transition: all 0.2s ease;
         display: inline-block;
-        min-width: 80px;
+        min-width: 56px;
       }
 
       .keyboard-shortcut-large kbd:hover {
@@ -446,15 +466,15 @@
 
       .keyboard-shortcut-large .plus {
         color: #86868b;
-        font-size: 24px;
-        margin: 0 12px;
+        font-size: 20px;
+        margin: 0 8px;
         font-weight: 300;
       }
 
       .demo-button {
         width: 100%;
-        padding: 16px 28px;
-        font-size: 17px;
+        padding: 12px 20px;
+        font-size: 16px;
         font-weight: 600;
         background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
         color: white;
@@ -463,7 +483,7 @@
         cursor: pointer;
         transition: all 0.2s ease;
         box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
-        margin-top: 20px;
+        margin-top: 12px;
       }
 
       .demo-button:hover {
@@ -479,8 +499,8 @@
 
       .demo-status {
         text-align: center;
-        margin-top: 16px;
-        padding: 12px;
+        margin-top: 10px;
+        padding: 10px;
         border-radius: 10px;
         animation: slideDown 0.3s ease;
       }
@@ -497,11 +517,11 @@
       }
 
       .demo-success {
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 600;
         color: #2e7d32;
         background: #e8f5e9;
-        padding: 12px 24px;
+        padding: 10px 18px;
         border-radius: 10px;
         display: inline-block;
       }
@@ -509,22 +529,22 @@
       /* Permissions Visual */
       .permissions-visual {
         text-align: center;
-        margin: 32px 0;
-        padding: 32px;
+        margin: 20px 0;
+        padding: 20px;
         background: #f5f5f7;
-        border-radius: 16px;
+        border-radius: 14px;
       }
 
       .settings-icon {
-        font-size: 64px;
-        margin-bottom: 16px;
+        font-size: 48px;
+        margin-bottom: 12px;
       }
 
       .settings-path {
-        font-size: 15px;
+        font-size: 14px;
         color: #515154;
         font-family: 'SF Mono', Monaco, monospace;
-        padding: 12px 20px;
+        padding: 10px 16px;
         background: white;
         border-radius: 8px;
         display: inline-block;
@@ -533,18 +553,18 @@
 
       /* Checklist */
       .checklist {
-        margin: 32px 0;
+        margin: 20px 0;
       }
 
       .checklist-item {
         display: flex;
         align-items: center;
-        gap: 16px;
-        padding: 16px 20px;
-        margin-bottom: 12px;
+        gap: 12px;
+        padding: 12px 16px;
+        margin-bottom: 10px;
         background: #f5f5f7;
         border-radius: 12px;
-        font-size: 17px;
+        font-size: 15px;
         color: #515154;
         transition: all 0.3s ease;
       }
@@ -555,8 +575,8 @@
       }
 
       .check-icon {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
         background: #d2d2d7;
         color: white;
@@ -809,124 +829,119 @@
         box-shadow: 0 1px 2px rgba(0,0,0,0.1);
       }
 
+      @media (max-height: 640px) {
+        #onboarding {
+          padding: 20px 16px 16px;
+        }
+
+        .step-indicator {
+          margin-bottom: 16px;
+        }
+
+        .step-content {
+          padding: 20px;
+          border-radius: 16px;
+        }
+
+        .step-content.centered {
+          padding: 24px 16px;
+        }
+
+        .onboarding-actions {
+          gap: 8px;
+        }
+
+        .onboarding-button {
+          flex: 1 1 100%;
+          padding: 10px 16px;
+        }
+
+        .keyboard-shortcut kbd,
+        .keyboard-shortcut-large kbd {
+          padding: 10px 14px;
+        }
+
+        .keyboard-shortcut-large {
+          margin: 12px 0;
+        }
+
+        .step-content h2 {
+          font-size: 20px;
+        }
+
+        .step-content p,
+        .demo-label,
+        .settings-path {
+          font-size: 14px;
+        }
+
+        .demo-text {
+          min-height: 56px;
+        }
+
+        .permissions-visual {
+          padding: 16px;
+        }
+
+        .checklist-item {
+          padding: 10px 14px;
+        }
+
+        .hero-title {
+          font-size: clamp(24px, 4vw, 30px);
+        }
+
+        .hero-subtitle {
+          font-size: 15px;
+        }
+
+        .logo-glow {
+          font-size: clamp(40px, 10vw, 56px);
+        }
+
+        .demo-section {
+          margin: 16px 0;
+        }
+
+        .permission-button {
+          padding: 12px 16px;
+        }
+      }
+
+      @media (max-height: 560px) {
+        .step-content {
+          padding: 18px;
+        }
+
+        .logo-container {
+          margin-bottom: 16px;
+        }
+
+        .keyboard-shortcut-large kbd {
+          min-width: auto;
+          padding: 10px 14px;
+        }
+
+        .demo-button,
+        .permission-button,
+        .onboarding-button {
+          padding: 10px 14px;
+        }
+
+        .checklist {
+          margin: 12px 0;
+        }
+      }
+
     </style>
+    <link rel="stylesheet" href="./onboarding/dist/onboarding.css" />
   </head>
   <body>
-    <!-- Onboarding Wizard -->
-    <div id="onboarding">
-      <div class="step-indicator">
-        <div class="step-dot active" data-step="0"></div>
-        <div class="step-dot" data-step="1"></div>
-        <div class="step-dot" data-step="2"></div>
-        <div class="step-dot" data-step="3"></div>
-      </div>
-
-      <!-- Screen 1: Welcome / Value Promise -->
-      <div class="onboarding-step active" data-step="0">
-        <div class="step-content centered">
-          <div class="logo-container">
-            <div class="logo-glow">⚡</div>
-          </div>
-          <h1 class="hero-title">Write smarter in one keypress</h1>
-          <p class="hero-subtitle">Snapfix fixes your text anywhere on your Mac with lightning speed.</p>
-        </div>
-        <div class="onboarding-actions">
-          <button class="onboarding-button primary" onclick="nextStep()">Get Started</button>
-        </div>
-      </div>
-
-      <!-- Screen 2: The Core Mechanic (Interactive Demo) -->
-      <div class="onboarding-step" data-step="1">
-        <div class="step-content">
-          <h2>Your magic shortcut</h2>
-          <p>Press <strong>⌥ Space</strong> (Alt+Space) to fix selected text instantly.</p>
-          
-          <div class="demo-section">
-            <p class="demo-label">Try it now:</p>
-            <div class="demo-text-container" id="demoTextContainer">
-              <div class="demo-text" id="demoText" contenteditable="true">
-                I have alot of work to do tomorow. This is a test sentance with some erors.
-              </div>
-            </div>
-            <div class="keyboard-shortcut-large">
-              <kbd>⌥</kbd>
-              <span class="plus">+</span>
-              <kbd>Space</kbd>
-            </div>
-            <div id="demoStatus" class="demo-status" style="display: none;">
-              <span class="demo-success">✓ Fixed!</span>
-            </div>
-            <button class="demo-button" id="tryDemoButton" onclick="tryDemo()">
-              Try it now
-            </button>
-          </div>
-        </div>
-        <div class="onboarding-actions">
-          <button class="onboarding-button secondary" onclick="previousStep()">Previous</button>
-          <button class="onboarding-button primary" id="demoNextButton" onclick="nextStep()" disabled>
-            Continue
-          </button>
-        </div>
-      </div>
-
-      <!-- Screen 3: Permissions (macOS only, conditional) -->
-      <div class="onboarding-step" data-step="2" id="permissionsStep">
-        <div class="step-content">
-          <h2>Enable permissions to fix text everywhere</h2>
-          <p>Snapfix needs Accessibility permissions to replace text in other apps.</p>
-          
-          <div class="permissions-visual">
-            <div class="settings-icon">⚙️</div>
-            <div class="settings-path">
-              System Settings → Privacy & Security → Accessibility
-            </div>
-          </div>
-          
-          <button class="permission-button" onclick="openSystemSettings()">
-            Open System Settings
-          </button>
-          
-          <button class="onboarding-button secondary" onclick="skipPermissions()" style="width: 100%; margin-top: 12px;">
-            I'll do this later
-          </button>
-        </div>
-        <div class="onboarding-actions">
-          <button class="onboarding-button secondary" onclick="previousStep()">Previous</button>
-          <button class="onboarding-button primary" onclick="nextStep()">Continue</button>
-        </div>
-      </div>
-
-      <!-- Screen 4: Final Setup / Habit Formation -->
-      <div class="onboarding-step" data-step="3">
-        <div class="step-content">
-          <h2>You're all set</h2>
-          <p>Select text in any app and press <strong>⌥ Space</strong> to fix it instantly.</p>
-          
-          <div class="checklist">
-            <div class="checklist-item" id="checklist1">
-              <span class="check-icon">✓</span>
-              <span>Tried your first correction</span>
-            </div>
-            <div class="checklist-item" id="checklist2">
-              <span class="check-icon">✓</span>
-              <span>Shortcut learned</span>
-            </div>
-            <div class="checklist-item" id="checklist3">
-              <span class="check-icon">✓</span>
-              <span>Ready to use</span>
-            </div>
-          </div>
-        </div>
-        <div class="onboarding-actions">
-          <button class="onboarding-button primary" onclick="completeOnboarding()" style="width: 100%;">
-            Start Using Snapfix
-          </button>
-        </div>
-      </div>
-    </div>
+    <!-- Onboarding Wizard (rendered via React) -->
+    <div id="onboarding"></div>
 
     <!-- Main App Content -->
-    <div id="mainApp" class="hidden">
+    <div id="mainApp">
       <div class="app-header">
         <h1>SnapFix</h1>
         <p class="subtitle">AI-powered grammar and spelling correction</p>
@@ -967,370 +982,42 @@
     </div>
 
     <script>
-      // Onboarding state
-      let currentStep = 0;
-      const totalSteps = 4;
-      let demoTextFixed = false;
-
-      // Check if onboarding is completed
-      // Set to always return false so onboarding shows every time
-      function isOnboardingCompleted() {
-        return false; // Always show onboarding
-        // To restore original behavior, uncomment the line below:
-        // return localStorage.getItem('onboardingCompleted') === 'true';
-      }
-
-      // Reset onboarding (for testing/debugging)
-      function resetOnboarding() {
-        localStorage.removeItem('onboardingCompleted');
-        localStorage.removeItem('onboardingCompletedDate');
-        localStorage.removeItem('onboardingSkipped');
-        console.log('Onboarding reset - reload the page to see it again');
-        // Reload to show onboarding
-        location.reload();
-      }
-
-      // Expose reset function to window for debugging
-      window.resetOnboarding = resetOnboarding;
-
-      // Initialize onboarding
-      function initOnboarding() {
-        const onboardingEl = document.getElementById('onboarding');
-        const mainAppEl = document.getElementById('mainApp');
-        
-        if (!onboardingEl || !mainAppEl) {
-          console.error('Onboarding or main app elements not found');
-          return;
-        }
-
-        const isCompleted = isOnboardingCompleted();
-        console.log('Onboarding completed status:', isCompleted);
-        console.log('localStorage value:', localStorage.getItem('onboardingCompleted'));
-
-        if (isCompleted) {
-          // Show main app
-          onboardingEl.classList.remove('active');
-          mainAppEl.classList.remove('hidden');
-          return;
-        }
-
-        // Show onboarding
-        onboardingEl.classList.add('active');
-        mainAppEl.classList.add('hidden');
-        
-        // Initialize checklist
-        updateChecklist();
-        
-        // Add keyboard listener for demo step
-        setupDemoKeyboardListener();
-        
-        // Track onboarding started
-        if (window.electronAPI && window.electronAPI.trackEvent) {
-          window.electronAPI.trackEvent('onboarding_started');
-          window.electronAPI.trackEvent('onboarding_step_viewed', { step: 1, step_name: 'welcome' });
-        }
-      }
-
-      // Setup keyboard listener for demo step
-      function setupDemoKeyboardListener() {
-        document.addEventListener('keydown', function(e) {
-          // Only handle Alt+Space on demo step (step 1)
-          if (currentStep === 1 && (e.altKey || e.metaKey) && e.code === 'Space') {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const demoText = document.getElementById('demoText');
-            if (demoText && window.getSelection().toString().length > 0) {
-              // Text is selected, trigger demo
-              if (!demoTextFixed) {
-                tryDemo();
-              }
-            }
-          }
-        });
-      }
-
-      // Navigate to next step
-      function nextStep() {
-        if (currentStep < totalSteps - 1) {
-          // Track step completion
-          if (window.electronAPI && window.electronAPI.trackEvent) {
-            window.electronAPI.trackEvent('onboarding_step_completed', { 
-              step: currentStep + 1, 
-              step_name: getStepName(currentStep)
-            });
-          }
-
-          currentStep++;
-          updateStepDisplay();
-
-          // Update checklist based on progress
-          updateChecklist();
-
-          // Track new step view
-          if (window.electronAPI && window.electronAPI.trackEvent) {
-            window.electronAPI.trackEvent('onboarding_step_viewed', { 
-              step: currentStep + 1, 
-              step_name: getStepName(currentStep)
-            });
-          }
-        }
-      }
-
-      // Update checklist based on progress
-      function updateChecklist() {
-        // Checklist item 1: Tried first correction (completed if demo was done)
-        if (demoTextFixed) {
-          document.getElementById('checklist1').classList.add('completed');
-        }
-
-        // Checklist item 2: Shortcut learned (completed after step 2)
-        if (currentStep >= 2) {
-          document.getElementById('checklist2').classList.add('completed');
-        }
-
-        // Checklist item 3: Ready to use (completed on final step)
-        if (currentStep >= 3) {
-          document.getElementById('checklist3').classList.add('completed');
-        }
-      }
-
-      // Navigate to previous step
-      function previousStep() {
-        if (currentStep > 0) {
-          currentStep--;
-          updateStepDisplay();
-
-          // Track step view
-          if (window.electronAPI && window.electronAPI.trackEvent) {
-            window.electronAPI.trackEvent('onboarding_step_viewed', { 
-              step: currentStep + 1, 
-              step_name: getStepName(currentStep)
-            });
-          }
-        }
-      }
-
-      // Get step name
-      function getStepName(step) {
-        const names = ['welcome', 'keyboard_shortcut', 'permissions', 'how_to_use'];
-        return names[step] || 'unknown';
-      }
-
-      // Update step display
-      function updateStepDisplay() {
-        // Update step indicators
-        document.querySelectorAll('.step-dot').forEach((dot, index) => {
-          dot.classList.remove('active', 'completed');
-          if (index < currentStep) {
-            // Mark previous steps as completed
-            dot.classList.add('completed');
-          } else if (index === currentStep) {
-            // Mark current step as active
-            dot.classList.add('active');
-          }
-        });
-
-        // Update step content
-        document.querySelectorAll('.onboarding-step').forEach((step, index) => {
-          if (index === currentStep) {
-            step.classList.add('active');
-          } else {
-            step.classList.remove('active');
-          }
-        });
-      }
-
-      // Complete onboarding
-      function completeOnboarding() {
-        // Track completion
-        if (window.electronAPI && window.electronAPI.trackEvent) {
-          window.electronAPI.trackEvent('onboarding_step_completed', { 
-            step: currentStep + 1, 
-            step_name: getStepName(currentStep)
-          });
-          window.electronAPI.trackEvent('onboarding_completed', {
-            completion_date: new Date().toISOString(),
-            total_steps: totalSteps
-          });
-        }
-
-        // Mark as completed
-        localStorage.setItem('onboardingCompleted', 'true');
-        localStorage.setItem('onboardingCompletedDate', new Date().toISOString());
-
-        // Hide onboarding and show main app
-        document.getElementById('onboarding').classList.remove('active');
-        document.getElementById('mainApp').classList.remove('hidden');
-      }
-
-      // Skip onboarding
-      function skipOnboarding() {
-        if (window.electronAPI && window.electronAPI.trackEvent) {
-          window.electronAPI.trackEvent('onboarding_skipped', {
-            step: currentStep + 1,
-            skipped_at: new Date().toISOString()
-          });
-        }
-
-        // Mark as completed (skipped)
-        localStorage.setItem('onboardingCompleted', 'true');
-        localStorage.setItem('onboardingSkipped', 'true');
-
-        // Hide onboarding and show main app
-        document.getElementById('onboarding').classList.remove('active');
-        document.getElementById('mainApp').classList.remove('hidden');
-      }
-
-      // Open system settings
-      async function openSystemSettings() {
-        if (window.electronAPI && window.electronAPI.openSystemSettings) {
-          await window.electronAPI.openSystemSettings();
-        } else {
-          // Fallback: show message
-          alert('Please go to System Settings > Privacy & Security > Accessibility and enable SnapFix');
-        }
-      }
-
-      // Skip permissions
-      function skipPermissions() {
-        // Mark permissions as skipped (for analytics)
-        if (window.electronAPI && window.electronAPI.trackEvent) {
-          window.electronAPI.trackEvent('onboarding_permissions_skipped');
-        }
-        // Continue to next step
-        nextStep();
-      }
-
-      // Interactive demo function
-      async function tryDemo() {
-        const demoText = document.getElementById('demoText');
-        const demoContainer = document.getElementById('demoTextContainer');
-        const demoButton = document.getElementById('tryDemoButton');
-        const demoStatus = document.getElementById('demoStatus');
-        const demoNextButton = document.getElementById('demoNextButton');
-        
-        if (demoTextFixed) {
-          // Reset demo
-          demoText.textContent = 'I have alot of work to do tomorow. This is a test sentance with some erors.';
-          demoText.classList.remove('fixed');
-          demoContainer.classList.remove('highlighted');
-          demoStatus.style.display = 'none';
-          demoButton.textContent = 'Try it now';
-          demoNextButton.disabled = true;
-          demoTextFixed = false;
-          return;
-        }
-
-        // Disable button
-        demoButton.disabled = true;
-        demoButton.textContent = 'Fixing...';
-        
-        // Highlight the text
-        demoContainer.classList.add('highlighted');
-        
-        // Select all text
-        const range = document.createRange();
-        range.selectNodeContents(demoText);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-
-        // Track demo attempt
-        if (window.electronAPI && window.electronAPI.trackEvent) {
-          window.electronAPI.trackEvent('onboarding_demo_attempted');
-        }
-
-        try {
-          // Get API key
-          const apiKey = await window.electronAPI.getApiKey();
-          if (!apiKey) {
-            throw new Error('API key not configured');
-          }
-
-          // Fix the text using the same API call
-          const originalText = demoText.textContent;
-          const correctedText = await callGeminiAPI(originalText, apiKey, () => {});
-
-          // Update text with animation
-          setTimeout(() => {
-            demoText.textContent = correctedText;
-            demoText.classList.add('fixed');
-            demoStatus.style.display = 'block';
-            demoButton.textContent = 'Try again';
-            demoButton.disabled = false;
-            demoNextButton.disabled = false;
-            demoTextFixed = true;
-
-            // Mark checklist item as completed
-            document.getElementById('checklist1').classList.add('completed');
-
-            // Track demo success
-            if (window.electronAPI && window.electronAPI.trackEvent) {
-              window.electronAPI.trackEvent('onboarding_demo_completed');
-            }
-          }, 500);
-
-        } catch (error) {
-          demoButton.textContent = 'Try it now';
-          demoButton.disabled = false;
-          demoContainer.classList.remove('highlighted');
-          alert('Demo failed: ' + error.message + '\n\nMake sure GEMINI_API_KEY is set in your .env file.');
-        }
-      }
-
       let apiKey = '';
-      // Cache the working model for faster subsequent requests
       let workingModel = null;
+
       try {
         const cached = localStorage.getItem('workingGeminiModel');
         if (cached) {
           workingModel = JSON.parse(cached);
         }
-      } catch (e) {
-        // Ignore parse errors
+      } catch (error) {
+        // Ignore invalid cache entries
       }
 
-      // Initialize on page load
-      window.addEventListener('DOMContentLoaded', async () => {
-        // Initialize onboarding first
-        initOnboarding();
-
-        // Track window opened
-        if (window.electronAPI && window.electronAPI.trackEvent) {
-          window.electronAPI.trackEvent('renderer_window_opened');
+      function trackEvent(name, payload = {}) {
+        if (window?.electronAPI?.trackEvent) {
+          window.electronAPI.trackEvent(name, payload);
         }
+      }
 
-        // Setup skip link
-        document.getElementById('skipOnboarding').addEventListener('click', (e) => {
-          e.preventDefault();
-          skipOnboarding();
-        });
+      window.addEventListener('DOMContentLoaded', async () => {
+        trackEvent('renderer_window_opened');
 
-        // Load API key from .env file via Electron
         try {
-          apiKey = await window.electronAPI.getApiKey();
+          apiKey = await window.electronAPI?.getApiKey();
           if (!apiKey) {
             const statusDiv = document.getElementById('status');
             statusDiv.textContent = 'Error: GEMINI_API_KEY not found in .env file';
             statusDiv.className = 'status error';
             statusDiv.style.display = 'flex';
-            
-            // Track API key missing
-            if (window.electronAPI && window.electronAPI.trackEvent) {
-              window.electronAPI.trackEvent('api_key_missing');
-            }
+            trackEvent('api_key_missing');
           }
         } catch (error) {
           const statusDiv = document.getElementById('status');
           statusDiv.textContent = `Error loading API key: ${error.message}`;
           statusDiv.className = 'status error';
           statusDiv.style.display = 'flex';
-          
-          // Track API key error
-          if (window.electronAPI && window.electronAPI.trackEvent) {
-            window.electronAPI.trackEvent('api_key_error', { error: error.message });
-          }
+          trackEvent('api_key_error', { error: error.message });
         }
       });
 
@@ -1543,6 +1230,8 @@
         throw lastError || new Error('Failed to call Gemini API');
       }
 
+      window.snapfixCallGemini = callGeminiAPI;
+
       document.getElementById('fixButton').addEventListener('click', () => {
         // Track button click
         if (window.electronAPI && window.electronAPI.trackEvent) {
@@ -1576,5 +1265,6 @@
       // Also allow Shift+Enter to work normally in textarea (for new lines)
       // This is handled by default, so no need to prevent it
     </script>
+    <script defer src="./onboarding/dist/onboarding.js"></script>
   </body>
 </html>
