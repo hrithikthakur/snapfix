@@ -77,8 +77,8 @@ function createWindow() {
   }
 
   mainWindow = new BrowserWindow({
-    width: 600,
-    height: 500,
+    width: 1200,
+    height: 900,
     icon: appIcon && !appIcon.isEmpty() ? appIcon : undefined, // Set window icon
     webPreferences: {
       contextIsolation: true,
@@ -886,6 +886,14 @@ ipcMain.handle('close-popup', () => {
   if (popupWindow && !popupWindow.isDestroyed()) {
     popupWindow.close(); // Close instead of hide for proper cleanup
     popupWindow = null;
+  }
+  return true;
+});
+
+// Handle closing main window (for onboarding completion)
+ipcMain.handle('close-window', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.hide();
   }
   return true;
 });

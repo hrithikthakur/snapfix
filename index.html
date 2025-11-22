@@ -17,33 +17,53 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         margin: 0;
         padding: 0;
-        background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+        background: #0f0f23;
         min-height: 100vh;
         color: #1d1d1f;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        position: relative;
       }
 
-      /* Main app content */
-      #mainApp {
-        transition: opacity 0.3s ease;
-      }
-
-      #mainApp.hidden {
-        display: none;
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), transparent),
+          radial-gradient(ellipse 60% 80% at 90% 120%, rgba(0, 122, 255, 0.2), transparent),
+          radial-gradient(ellipse 100% 100% at 10% 80%, rgba(88, 86, 214, 0.15), transparent),
+          linear-gradient(135deg, #0a0a1f 0%, #0f0f23 50%, #1a0f2e 100%);
+        z-index: -2;
       }
 
       /* Onboarding styles */
+      /* Background info panel */
+      .background-info {
+        max-width: 640px;
+        margin: 24px auto 0;
+        padding: 16px 20px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        color: #515154;
+        font-size: 15px;
+        line-height: 1.5;
+      }
       #onboarding {
         display: none;
         width: 100%;
-        max-width: 680px;
+        max-width: 720px;
         margin: 0 auto;
-        padding: clamp(16px, 4vh, 32px) clamp(16px, 4vw, 24px) clamp(12px, 3vh, 24px);
+        padding: clamp(24px, 4vh, 40px) clamp(20px, 4vw, 32px) clamp(20px, 3vh, 32px);
         opacity: 0;
         visibility: hidden;
-        min-height: 100vh;
         height: 100vh;
+        position: relative;
+        overflow: hidden;
       }
 
       #onboarding.active {
@@ -51,47 +71,215 @@
         flex-direction: column;
         opacity: 1;
         visibility: visible;
-        animation: fadeInUp 0.6s ease;
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      .step-content.centered {
-        text-align: center;
-        padding: clamp(24px, 6vh, 48px) clamp(20px, 6vw, 48px);
+      .step-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: clamp(16px, 3vh, 28px);
+        position: relative;
+        padding: 12px 0;
+        flex-shrink: 0;
       }
 
-      .logo-container {
-        margin-bottom: clamp(12px, 4vh, 28px);
+      .step-indicator::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: calc(100% - 80px);
+        height: 3px;
+        background: linear-gradient(90deg, 
+          rgba(255, 255, 255, 0.1) 0%, 
+          rgba(0, 122, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0.1) 100%
+        );
+        border-radius: 2px;
+        z-index: 0;
       }
 
-      .logo-glow {
-        font-size: clamp(40px, 9vw, 64px);
-        animation: sparkle 2s ease-in-out infinite;
-        filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.5));
+      .step-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        z-index: 1;
+        border: 3px solid rgba(15, 15, 35, 0.8);
+        backdrop-filter: blur(10px);
       }
 
-      @keyframes sparkle {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.9; }
-      }
-
-      .hero-title {
-        font-size: clamp(28px, 4vw, 38px);
-        font-weight: 700;
+      .step-dot.active {
         background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        width: 48px;
+        border-radius: 8px;
+        box-shadow: 
+          0 4px 20px rgba(0, 122, 255, 0.5),
+          0 0 40px rgba(88, 86, 214, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        border-color: rgba(15, 15, 35, 0.5);
+      }
+
+      .step-dot.completed {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      }
+
+      .onboarding-step {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        min-height: 0;
+        gap: 20px;
+        animation: slideInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .onboarding-step.active {
+        display: flex;
+      }
+
+      @keyframes slideInScale {
+        from {
+          opacity: 0;
+          transform: translateX(20px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+        }
+      }
+
+      .onboarding-content {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        flex: 1;
+        justify-content: center;
+        min-height: 0;
+        overflow-y: auto;
+      }
+
+      .step-title {
+        font-size: clamp(24px, 4vw, 32px);
+        font-weight: 700;
+        background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         margin: 0 0 16px 0;
-        letter-spacing: -1px;
+        letter-spacing: -0.5px;
         line-height: 1.2;
       }
 
+      .step-description {
+        font-size: clamp(15px, 2.5vw, 17px);
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0 0 24px 0;
+        line-height: 1.6;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .onboarding-info {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 32px;
+        margin: 20px 0;
+        text-align: left;
+        width: 100%;
+        max-width: 500px;
+      }
+
+      .onboarding-info p {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0 0 16px 0;
+        font-size: 16px;
+      }
+
+      .onboarding-info ol {
+        color: rgba(255, 255, 255, 0.7);
+        padding-left: 24px;
+        margin: 16px 0;
+        line-height: 1.8;
+      }
+
+      .onboarding-info li {
+        margin-bottom: 8px;
+      }
+
+      .onboarding-info strong {
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+
+      .logo-container {
+        margin-bottom: 0;
+      }
+
+      .logo-glow {
+        font-size: clamp(52px, 10vw, 80px);
+        animation: logoGlow 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 60px rgba(0, 122, 255, 0.4));
+        position: relative;
+      }
+
+      @keyframes logoGlow {
+        0%, 100% {
+          transform: scale(1) rotate(0deg);
+          filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 60px rgba(0, 122, 255, 0.4));
+        }
+        50% {
+          transform: scale(1.08) rotate(2deg);
+          filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 80px rgba(0, 122, 255, 0.6));
+        }
+      }
+
+      .hero-title {
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 800;
+        background: linear-gradient(135deg, 
+          #ffffff 0%, 
+          #e0e7ff 30%, 
+          #c7d2fe 60%,
+          #a5b4fc 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 20px 0;
+        letter-spacing: -1.5px;
+        line-height: 1.1;
+        text-shadow: 0 0 60px rgba(255, 255, 255, 0.1);
+      }
+
       .hero-subtitle {
-        font-size: clamp(16px, 3vw, 18px);
-        color: #86868b;
-        margin: 0;
+        font-size: clamp(16px, 3vw, 20px);
+        color: rgba(255, 255, 255, 0.65);
+        margin: 0 0 32px 0;
         font-weight: 400;
-        line-height: 1.4;
+        line-height: 1.5;
       }
 
       .step-indicator {
@@ -168,16 +356,23 @@
       }
 
       .step-content {
-        background: white;
-        border-radius: 20px;
-        padding: clamp(18px, 4vh, 32px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-        margin-bottom: 16px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 28px;
+        padding: clamp(28px, 5vh, 48px);
+        box-shadow: 
+          0 20px 60px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          0 0 0 1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        position: relative;
+        overflow: hidden;
       }
 
       .step-content:hover {
@@ -185,13 +380,16 @@
       }
 
       .step-content h2 {
-        font-size: clamp(22px, 3vw, 26px);
+        font-size: clamp(24px, 4vw, 32px);
         font-weight: 700;
-        color: #1d1d1f;
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
+        background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0 0 16px 0;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+        position: relative;
       }
 
       .step-content h2::before {
@@ -203,10 +401,11 @@
       }
 
       .step-content p {
-        font-size: 16px;
-        color: #515154;
+        font-size: clamp(15px, 2.5vw, 17px);
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0 0 20px 0;
         line-height: 1.6;
-        margin-bottom: 12px;
+        position: relative;
       }
 
       .step-content ul {
@@ -247,37 +446,48 @@
       }
 
       .keyboard-shortcut {
-        background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
-        border-radius: 16px;
-        padding: 20px;
-        margin: 16px 0;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 24px;
+        margin: 24px 0;
         text-align: center;
         font-family: 'SF Mono', Monaco, monospace;
-        border: 2px solid #e5e5ea;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: 
+          0 10px 40px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
       }
 
       .keyboard-shortcut kbd {
-        background: white;
-        border: 2px solid #d2d2d7;
-        border-radius: 8px;
-        padding: 10px 16px;
-        margin: 0 4px;
-        font-size: 15px;
-        font-weight: 600;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 1px 0 rgba(255,255,255,0.8) inset;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 14px 20px;
+        margin: 0 6px;
+        font-size: 18px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.95);
+        box-shadow: 
+          0 4px 12px rgba(0, 0, 0, 0.3),
+          0 1px 0 rgba(255, 255, 255, 0.2) inset,
+          0 -1px 0 rgba(0, 0, 0, 0.2) inset;
         transition: all 0.2s ease;
+        display: inline-block;
       }
 
       .keyboard-shortcut kbd:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.8) inset;
+        box-shadow: 
+          0 6px 20px rgba(0, 0, 0, 0.4),
+          0 1px 0 rgba(255, 255, 255, 0.3) inset;
       }
 
       .keyboard-shortcut .plus {
-        color: #86868b;
-        font-size: 18px;
-        margin: 0 8px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 20px;
+        margin: 0 10px;
         font-weight: 300;
       }
 
@@ -285,10 +495,15 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 12px;
+        gap: 14px;
         padding: 0 4px;
         flex-wrap: wrap;
         margin-top: auto;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        flex-shrink: 0;
       }
 
       .onboarding-button {
@@ -307,7 +522,10 @@
         background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
         color: white;
         flex: 1;
-        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+        box-shadow: 
+          0 8px 24px rgba(0, 122, 255, 0.4),
+          0 0 40px rgba(88, 86, 214, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
       }
 
       .onboarding-button.primary::before {
@@ -351,17 +569,63 @@
         transform: none !important;
       }
 
+      .onboarding-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 0 4px;
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 600;
+      }
+
+      .logo-mark {
+        font-size: 24px;
+        animation: float 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.6));
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+      }
+
+      .header-title {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-weight: 700;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
       .skip-link {
-        color: #86868b;
-        text-decoration: none;
-        font-size: 15px;
-        cursor: pointer;
-        transition: color 0.2s ease;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
         font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
       }
 
       .skip-link:hover {
-        color: #1d1d1f;
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.95);
+        transform: translateY(-1px);
       }
 
       .step-icon {
@@ -373,21 +637,23 @@
       .permission-button {
         width: 100%;
         margin-top: 12px;
-        padding: 14px 20px;
-        font-size: 16px;
+        padding: 12px 20px;
+        font-size: 15px;
         font-weight: 600;
-        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
-        color: white;
-        border: none;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 12px;
         cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
 
       .permission-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 24px rgba(0, 122, 255, 0.4);
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-1px);
       }
 
       /* Demo Section Styles */
@@ -529,26 +795,41 @@
       /* Permissions Visual */
       .permissions-visual {
         text-align: center;
-        margin: 20px 0;
-        padding: 20px;
-        background: #f5f5f7;
-        border-radius: 14px;
+        margin: 28px 0;
+        padding: 28px;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        box-shadow: 
+          0 10px 40px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
       }
 
       .settings-icon {
-        font-size: 48px;
-        margin-bottom: 12px;
+        font-size: 56px;
+        margin-bottom: 16px;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        animation: rotate 20s linear infinite;
+      }
+
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
       }
 
       .settings-path {
         font-size: 14px;
-        color: #515154;
+        color: rgba(255, 255, 255, 0.8);
         font-family: 'SF Mono', Monaco, monospace;
-        padding: 10px 16px;
-        background: white;
-        border-radius: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
         display: inline-block;
-        border: 1px solid #e5e5ea;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        font-weight: 500;
       }
 
       /* Checklist */
@@ -592,6 +873,32 @@
       .checklist-item.completed .check-icon {
         background: #4caf50;
         box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+      }
+
+      .snackbar {
+        display: none;
+        margin-top: 16px;
+        padding: 14px 20px;
+        border-radius: 14px;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: center;
+        backdrop-filter: blur(20px);
+        border: 1px solid;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.4s ease;
+      }
+
+      .snackbar.error {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+
+      .snackbar.info {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border-color: rgba(59, 130, 246, 0.3);
       }
 
       /* Main App Styling */
@@ -934,55 +1241,76 @@
       }
 
     </style>
-    <link rel="stylesheet" href="./onboarding/dist/onboarding.css" />
   </head>
   <body>
-    <!-- Onboarding Wizard (rendered via React) -->
-    <div id="onboarding"></div>
-
-    <!-- Main App Content -->
-    <div id="mainApp">
-      <div class="app-header">
-        <h1>SnapFix</h1>
-        <p class="subtitle">AI-powered grammar and spelling correction</p>
+    <!-- Simple 2-Screen Onboarding -->
+    <div id="onboarding">
+      <div class="step-indicator">
+        <div class="step-dot active" data-step="0"></div>
+        <div class="step-dot" data-step="1"></div>
       </div>
 
-      <div class="app-container">
-        <div class="input-section">
-          <label class="input-label" for="inputText">Text to Fix</label>
-          <textarea
-            id="inputText"
-            placeholder="Type or paste your text here...&#10;&#10;Example: 'I have alot of work to do tomorow.'"
-          ></textarea>
+      <!-- Screen 1: Intro with Shortcut -->
+      <section class="onboarding-step active" data-step="0">
+        <div class="onboarding-content">
+          <div class="logo-container">
+            <div class="logo-glow">⚡</div>
+          </div>
+          <h1 class="hero-title">Welcome to SnapFix</h1>
+          <p class="hero-subtitle">Fix your text anywhere with one simple shortcut</p>
+          
+          <div class="keyboard-shortcut">
+            <kbd>⌥</kbd>
+            <span class="plus">+</span>
+            <kbd>Space</kbd>
+          </div>
+          
+          <p style="margin-top: 24px; font-size: 16px; color: rgba(255, 255, 255, 0.7); text-align: center;">
+            Press <strong>⌥ Space</strong> (Alt+Space) to fix selected text instantly in any app.
+          </p>
+          
+          <div class="onboarding-info" style="margin-top: 32px;">
+            <ol>
+              <li>Select any text in any app</li>
+              <li>Press <strong>⌥ Space</strong> (Alt+Space)</li>
+              <li>Your text is fixed instantly!</li>
+            </ol>
+          </div>
         </div>
-
-        <div class="button-container">
-          <button id="fixButton" class="fix-button" type="button">
-            <span id="buttonText">Fix Grammar</span>
-          </button>
+        <div class="onboarding-actions">
+          <button class="onboarding-button primary" onclick="goToNextStep()">Continue</button>
         </div>
+      </section>
 
-        <div id="status" class="status" style="display: none;"></div>
-
-        <div class="hint">
-          <span class="hint-icon">💡</span>
-          <span>
-            Quick tip: Press 
-            <span class="shortcut-hint">
-              <kbd>⌘</kbd> + <kbd>Enter</kbd>
-            </span>
-            (Mac) or 
-            <span class="shortcut-hint">
-              <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
-            </span>
-            (Windows/Linux) to fix grammar instantly
-          </span>
+      <!-- Screen 2: Permissions -->
+      <section class="onboarding-step" data-step="1">
+        <div class="onboarding-content">
+          <h2 class="step-title">Enable permissions</h2>
+          <p class="step-description">SnapFix needs Accessibility permissions to replace text in other apps.</p>
+          
+          <div class="permissions-visual">
+            <div class="settings-icon">⚙️</div>
+            <div class="settings-path">System Settings → Privacy & Security → Accessibility</div>
+          </div>
+          
+          <button class="permission-button" onclick="openSystemSettings()">Open System Settings</button>
         </div>
-      </div>
+        <div class="onboarding-actions">
+          <button class="onboarding-button secondary" onclick="goToPrevStep()">Previous</button>
+          <button class="onboarding-button primary" onclick="completeOnboarding()">Complete Setup</button>
+        </div>
+      </section>
+
+      <div class="snackbar" id="snackbar"></div>
+    </div>
+
+    <div class="background-info">
+      SnapFix runs quietly in the background. Select text anywhere and press 
+      <strong>Alt + Space (⌥ Space on macOS)</strong> to fix it instantly. Use the tray icon to manage
+      permissions or quit the app.
     </div>
 
     <script>
-      let apiKey = '';
       let workingModel = null;
 
       try {
@@ -992,132 +1320,6 @@
         }
       } catch (error) {
         // Ignore invalid cache entries
-      }
-
-      function trackEvent(name, payload = {}) {
-        if (window?.electronAPI?.trackEvent) {
-          window.electronAPI.trackEvent(name, payload);
-        }
-      }
-
-      window.addEventListener('DOMContentLoaded', async () => {
-        trackEvent('renderer_window_opened');
-
-        try {
-          apiKey = await window.electronAPI?.getApiKey();
-          if (!apiKey) {
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = 'Error: GEMINI_API_KEY not found in .env file';
-            statusDiv.className = 'status error';
-            statusDiv.style.display = 'flex';
-            trackEvent('api_key_missing');
-          }
-        } catch (error) {
-          const statusDiv = document.getElementById('status');
-          statusDiv.textContent = `Error loading API key: ${error.message}`;
-          statusDiv.className = 'status error';
-          statusDiv.style.display = 'flex';
-          trackEvent('api_key_error', { error: error.message });
-        }
-      });
-
-      async function fixGrammar() {
-        const textarea = document.getElementById('inputText');
-        const fixButton = document.getElementById('fixButton');
-        const buttonText = document.getElementById('buttonText');
-        const statusDiv = document.getElementById('status');
-
-        const text = textarea.value.trim();
-
-        if (!text) {
-          statusDiv.textContent = 'Please enter some text to fix.';
-          statusDiv.className = 'status error';
-          statusDiv.style.display = 'flex';
-          
-          // Track empty text attempt
-          if (window.electronAPI && window.electronAPI.trackEvent) {
-            window.electronAPI.trackEvent('grammar_fix_empty_text');
-          }
-          return;
-        }
-
-        if (!apiKey) {
-          statusDiv.textContent = 'Error: API key not configured. Please set GEMINI_API_KEY in .env file.';
-          statusDiv.className = 'status error';
-          statusDiv.style.display = 'flex';
-          return;
-        }
-
-        // Track grammar fix attempt
-        const startTime = Date.now();
-        if (window.electronAPI && window.electronAPI.trackEvent) {
-          window.electronAPI.trackEvent('grammar_fix_attempted', {
-            text_length: text.length,
-            method: 'renderer_window'
-          });
-        }
-
-        // Disable button and show loading
-        fixButton.disabled = true;
-        buttonText.textContent = 'Fixing...';
-        statusDiv.textContent = 'Fixing typos...';
-        statusDiv.className = 'status loading';
-        statusDiv.style.display = 'flex';
-
-        // Status update callback
-        let lastUpdateTime = 0;
-        const updateStatus = (message) => {
-          const now = Date.now();
-          // Throttle updates to reduce DOM overhead (update max once per 200ms)
-          if (now - lastUpdateTime > 200 || message) {
-            const elapsed = ((now - startTime) / 1000).toFixed(1);
-            statusDiv.textContent = message ? `${message} (${elapsed}s)` : `Fixing typos... (${elapsed}s)`;
-            statusDiv.className = 'status loading';
-            statusDiv.style.display = 'flex';
-            lastUpdateTime = now;
-          }
-        };
-
-        try {
-          const corrected = await callGeminiAPI(text, apiKey, updateStatus);
-          const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
-          const responseTime = Date.now() - startTime;
-          
-          textarea.value = corrected;
-          statusDiv.textContent = `✓ Fixed successfully in ${totalTime}s`;
-          statusDiv.className = 'status success';
-          statusDiv.style.display = 'flex';
-          buttonText.textContent = 'Fix Grammar';
-          
-          // Track successful grammar fix
-          if (window.electronAPI && window.electronAPI.trackEvent) {
-            window.electronAPI.trackEvent('grammar_fix_succeeded', {
-              text_length: text.length,
-              response_time: responseTime,
-              method: 'renderer_window',
-              changes_made: corrected !== text
-            });
-          }
-        } catch (error) {
-          const responseTime = Date.now() - startTime;
-          statusDiv.textContent = `✗ Error: ${error.message}`;
-          statusDiv.className = 'status error';
-          statusDiv.style.display = 'flex';
-          buttonText.textContent = 'Fix Grammar';
-          
-          // Track grammar fix error
-          if (window.electronAPI && window.electronAPI.trackEvent) {
-            window.electronAPI.trackEvent('grammar_fix_failed', {
-              error_type: error.name || 'unknown_error',
-              error_message: error.message,
-              text_length: text.length,
-              response_time: responseTime,
-              method: 'renderer_window'
-            });
-          }
-        } finally {
-          fixButton.disabled = false;
-        }
       }
 
       async function callGeminiAPI(text, apiKey, statusCallback) {
@@ -1134,7 +1336,7 @@
               { version: 'v1beta', model: 'gemini-1.5-flash' },      // Fallback
             ];
 
-        const REQUEST_TIMEOUT = 6000; // 6 seconds timeout (Flash models should respond faster)
+        const REQUEST_TIMEOUT = 6000; //6 seconds timeout (Flash models should respond faster)
         let lastError = null;
 
         for (const config of modelConfigs) {
@@ -1231,40 +1433,130 @@
       }
 
       window.snapfixCallGemini = callGeminiAPI;
-
-      document.getElementById('fixButton').addEventListener('click', () => {
-        // Track button click
-        if (window.electronAPI && window.electronAPI.trackEvent) {
-          window.electronAPI.trackEvent('fix_button_clicked', { method: 'button' });
-        }
-        fixGrammar();
+      window.addEventListener('DOMContentLoaded', () => {
+        window.electronAPI?.trackEvent?.('renderer_window_opened');
       });
+    </script>
+    <script>
+      // Simple 2-Screen Onboarding
+      let currentStep = 0;
+      const TOTAL_STEPS = 2;
 
-      // Keyboard shortcut: Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux)
-      document.addEventListener('keydown', (e) => {
-        // Check if Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux) is pressed
-        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-          // Prevent default behavior (like submitting a form)
-          e.preventDefault();
+      document.addEventListener('DOMContentLoaded', () => {
+        const onboardingEl = document.getElementById('onboarding');
+        if (onboardingEl) {
+          onboardingEl.classList.add('active');
+          window.snapfixOnboardingMounted = true;
           
-          // Check if button is not disabled
-          const fixButton = document.getElementById('fixButton');
-          if (!fixButton.disabled) {
-            // Track keyboard shortcut usage
-            if (window.electronAPI && window.electronAPI.trackEvent) {
-              window.electronAPI.trackEvent('fix_button_clicked', { 
-                method: 'keyboard_shortcut',
-                shortcut: e.metaKey ? 'Cmd+Enter' : 'Ctrl+Enter'
-              });
-            }
-            fixGrammar();
+          // Clear any persisted flags
+          localStorage.removeItem('onboardingCompleted');
+          localStorage.removeItem('onboardingCompletedDate');
+          localStorage.removeItem('onboardingSkipped');
+          
+          // Track start
+          if (window.electronAPI?.trackEvent) {
+            window.electronAPI.trackEvent('onboarding_started');
+            window.electronAPI.trackEvent('onboarding_step_viewed', { step: 1, step_name: 'intro' });
           }
         }
       });
 
-      // Also allow Shift+Enter to work normally in textarea (for new lines)
-      // This is handled by default, so no need to prevent it
+      function goToNextStep() {
+        if (currentStep >= TOTAL_STEPS - 1) {
+          completeOnboarding();
+          return;
+        }
+
+        if (window.electronAPI?.trackEvent) {
+          const stepNames = ['intro', 'permissions'];
+          window.electronAPI.trackEvent('onboarding_step_completed', {
+            step: currentStep + 1,
+            step_name: stepNames[currentStep],
+          });
+        }
+
+        currentStep += 1;
+        updateStepDisplay();
+
+        if (window.electronAPI?.trackEvent) {
+          const stepNames = ['intro', 'permissions'];
+          window.electronAPI.trackEvent('onboarding_step_viewed', {
+            step: currentStep + 1,
+            step_name: stepNames[currentStep],
+          });
+        }
+      }
+
+      function goToPrevStep() {
+        if (currentStep === 0) return;
+        currentStep -= 1;
+        updateStepDisplay();
+      }
+
+      function updateStepDisplay() {
+        // Update step visibility
+        document.querySelectorAll('.onboarding-step').forEach((step, index) => {
+          if (index === currentStep) {
+            step.classList.add('active');
+          } else {
+            step.classList.remove('active');
+          }
+        });
+
+        // Update step indicators
+        document.querySelectorAll('.step-dot').forEach((dot, index) => {
+          if (index < currentStep) {
+            dot.classList.add('completed');
+            dot.classList.remove('active');
+          } else if (index === currentStep) {
+            dot.classList.add('active');
+            dot.classList.remove('completed');
+          } else {
+            dot.classList.remove('active', 'completed');
+          }
+        });
+      }
+
+      async function openSystemSettings() {
+        if (window.electronAPI?.trackEvent) {
+          window.electronAPI.trackEvent('onboarding_permissions_opened');
+        }
+        if (window?.electronAPI?.openSystemSettings) {
+          await window.electronAPI.openSystemSettings();
+        } else {
+          showSnackbar('info', 'Open System Settings > Privacy & Security > Accessibility');
+        }
+      }
+
+      function completeOnboarding() {
+        const timestamp = new Date().toISOString();
+
+        if (window.electronAPI?.trackEvent) {
+          window.electronAPI.trackEvent('onboarding_completed', {
+            completion_date: timestamp,
+            total_steps: TOTAL_STEPS,
+          });
+        }
+
+        // Close the window
+        if (window?.electronAPI?.closeWindow) {
+          window.electronAPI.closeWindow();
+        } else {
+          window.close();
+        }
+      }
+
+      function showSnackbar(severity, message) {
+        const snackbar = document.getElementById('snackbar');
+        if (snackbar) {
+          snackbar.textContent = message;
+          snackbar.className = `snackbar ${severity}`;
+          snackbar.style.display = 'block';
+          setTimeout(() => {
+            snackbar.style.display = 'none';
+          }, 5000);
+        }
+      }
     </script>
-    <script defer src="./onboarding/dist/onboarding.js"></script>
   </body>
 </html>

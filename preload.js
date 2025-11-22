@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getApiKey: () => ipcRenderer.invoke('get-api-key'),
   setClipboard: (text) => ipcRenderer.invoke('set-clipboard', text),
   closePopup: () => ipcRenderer.invoke('close-popup'),
+  closeWindow: () => ipcRenderer.invoke('close-window'),
   makeWindowFocusable: () => ipcRenderer.invoke('make-window-focusable'),
   onProcessText: (callback) => {
     // Remove all existing listeners to avoid duplicates
