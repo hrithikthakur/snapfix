@@ -83,10 +83,15 @@ function createWindow() {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      webSecurity: true
     }
   });
 
+  // Disable cache to ensure fresh loads during development
+  mainWindow.webContents.session.clearCache();
+  mainWindow.webContents.session.clearStorageData();
+  
   mainWindow.loadFile('index.html');
 
   // Register keyboard shortcuts for reload
@@ -852,6 +857,33 @@ function showNotification(title, body) {
 // Handle API key request from renderer
 ipcMain.handle('get-api-key', () => {
   return process.env.GEMINI_API_KEY || '';
+});
+
+// Handle saving API key
+ipcMain.handle('save-api-key', async (event, apiKey) => {
+  if (!apiKey || apiKey.trim().length === 0) {
+    return { success: false, error: 'API key cannot be empty' };
+  }
+
+  try {
+    // Save to user data directory (most reliable location)
+    const userDataPath = app.getPath('userData');
+    const envPath = path.join(userDataPath, '.env');
+    
+    // Create .env file with the API key
+    const envContent = `GEMINI_API_KEY=${apiKey.trim()}\n`;
+    fs.writeFileSync(envPath, envContent, 'utf8');
+    
+    // Reload environment variables
+    require('dotenv').config({ path: envPath });
+    process.env.GEMINI_API_KEY = apiKey.trim();
+    
+    console.log('API key saved to:', envPath);
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving API key:', error);
+    return { success: false, error: error.message };
+  }
 });
 
 // Handle text processing request

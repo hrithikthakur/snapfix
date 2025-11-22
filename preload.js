@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   getApiKey: () => ipcRenderer.invoke('get-api-key'),
+  saveApiKey: (apiKey) => ipcRenderer.invoke('save-api-key', apiKey),
   setClipboard: (text) => ipcRenderer.invoke('set-clipboard', text),
   closePopup: () => ipcRenderer.invoke('close-popup'),
   closeWindow: () => ipcRenderer.invoke('close-window'),
