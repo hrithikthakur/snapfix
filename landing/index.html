@@ -1,247 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SnapFix - System-wide grammar and spelling correction powered by Google's Gemini AI. Works across all applications.">
-    <title>SnapFix - AI-Powered Grammar Correction</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>SnapFix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Fix typos in any app on macOS with a single shortcut. Powered by your own Gemini API key.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="./assets/snapfix_favicon.ico" />
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --text-light: #666666;
+      --accent: #000000;
+      --accent-hover: #333333;
+      --border: #eaeaea;
+      --radius: 12px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Reset & Base */
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button { border: none; background: none; font-family: inherit; }
+
+    /* Layout */
+    .main-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 0;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .btn-download {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .btn-download:hover { opacity: 1; }
+
+    /* Hero */
+    .hero {
+      padding: 60px 0 80px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      line-height: 1.1;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      margin: 0 0 24px;
+      color: var(--text);
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 480px;
+      margin: 0 auto 48px;
+      font-weight: 400;
+    }
+
+    /* Demo Window */
+    .demo-container {
+      margin: 0 auto 48px;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .demo-window {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.12);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      text-align: left;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .demo-dots {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .demo-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f0f0f0;
+    }
+    .demo-dots span:nth-child(1) { background: #ff5f56; }
+    .demo-dots span:nth-child(2) { background: #ffbd2e; }
+    .demo-dots span:nth-child(3) { background: #27c93f; }
+
+    .demo-text {
+      font-family: var(--font);
+      font-size: 1.1rem;
+      color: var(--text);
+      position: relative;
+      display: inline;
+      white-space: pre-wrap;
+    }
+
+    .demo-text.highlight {
+      background-color: rgba(37, 99, 235, 0.1);
+      color: #2563eb;
+      border-radius: 4px;
+    }
+
+    .demo-caption {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      opacity: 0.8;
+    }
+
+    .key-hint {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: var(--text);
+      border: 1px solid #e0e0e0;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 99px;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary.large {
+      padding: 14px 32px;
+      font-size: 1.05rem;
+    }
+
+    .meta-text {
+      display: block;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* Features */
+    .features {
+      padding: 60px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+    }
+
+    .feature-item h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 8px;
+    }
+
+    .feature-item p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Download / Footer */
+    .download-section {
+      padding: 80px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .download-card h2 {
+      font-size: 1.8rem;
+      margin: 0 0 32px;
+      letter-spacing: -0.03em;
+    }
+
+    .os-req {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .links {
+      margin-top: 48px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .links a:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero-title { font-size: 2.5rem; }
+      .hero-subtitle { font-size: 1rem; }
+      .feature-list { grid-template-columns: 1fr; gap: 32px; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
-                        <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <defs>
-                            <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#6366F1"/>
-                                <stop offset="1" stop-color="#8B5CF6"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <span class="logo-text">SnapFix</span>
-                </div>
-                <div class="nav-links">
-                    <a href="#features">Features</a>
-                    <a href="#how-it-works">How It Works</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+
+  <main class="main-wrapper">
+    
+    <!-- Minimal Header -->
+    <header class="header">
+      <a href="index.html" class="logo-container" style="text-decoration: none; color: inherit;">
+        <img src="./assets/snapfix_logo_onboarding.png" alt="SnapFix Logo" class="logo-img">
+        <div class="logo">SnapFix</div>
+      </a>
+      <a href="#download" class="btn-download">Get SnapFix</a>
+    </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <span class="badge-icon">✨</span>
-                    <span>Powered by Google Gemini AI</span>
-                </div>
-                <h1 class="hero-title">
-                    Fix Grammar & Spelling
-                    <span class="gradient-text">Anywhere, Anytime</span>
-                </h1>
-                <p class="hero-description">
-                    System-wide grammar correction that works across all your applications. 
-                    Select text, press a shortcut, and watch it get fixed instantly.
-                </p>
-                <div class="hero-cta">
-                    <a href="#download" class="btn-large btn-primary">
-                        <span>Get Started Free</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
-                    <a href="#how-it-works" class="btn-large btn-secondary">
-                        <span>See How It Works</span>
-                    </a>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">System-Wide</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">⚡</div>
-                        <div class="stat-label">Lightning Fast</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">🔒</div>
-                        <div class="stat-label">Privacy Focused</div>
-                    </div>
-                </div>
+      <div class="hero-content">
+        <h1 class="hero-title">Fix typos. Instantly.</h1>
+       
+        
+        <!-- Dynamic Demo -->
+        <div class="demo-container">
+          <div class="demo-window">
+            <div class="demo-dots">
+              <span></span><span></span><span></span>
             </div>
-            <div class="hero-visual">
-                <div class="demo-window">
-                    <div class="demo-window-header">
-                        <div class="demo-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <div class="demo-title">Any Application</div>
-                    </div>
-                    <div class="demo-content">
-                        <div class="demo-text original">
-                            <span class="demo-label">Before:</span>
-                            <p>"This is a sentance with erors that need to be fix."</p>
-                        </div>
-                        <div class="demo-arrow">↓</div>
-                        <div class="demo-text corrected">
-                            <span class="demo-label">After:</span>
-                            <p>"This is a sentence with errors that need to be fixed."</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="demo-text" id="demo-text">
+              Writing emails is hrad when you make mistaks...
             </div>
+            <div class="demo-cursor"></div>
+          </div>
+          <div class="demo-caption">
+            <span class="key-hint">⌥ + Space</span> to fix
+          </div>
         </div>
+
+        <div class="hero-cta">
+          <a href="#download" class="btn-primary download-btn">Download for macOS</a>
+          <span class="meta-text">Free to use with your own <a href="https://aistudio.google.com/app/apikey" target="_blank" style="text-decoration: underline; color: inherit;">Gemini API Key</a></span>
+        </div>
+      </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Why Choose SnapFix?</h2>
-                <p class="section-description">Everything you need for perfect writing, everywhere you work.</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3 class="feature-title">Works Everywhere</h3>
-                    <p class="feature-description">Fix grammar in any application, browsers, text editors, email clients, and more. No need to switch apps.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title">Lightning Fast</h3>
-                    <p class="feature-description">Powered by Gemini 2.5 Flash for instant corrections. Get results in milliseconds, not seconds.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⌨️</div>
-                    <h3 class="feature-title">Global Shortcut</h3>
-                    <p class="feature-description">Press Cmd+Shift+G (Mac) or Ctrl+Shift+G (Windows) from anywhere. No app switching required.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <h3 class="feature-title">Auto-Replace</h3>
-                    <p class="feature-description">Selected text is automatically replaced in place. No copying, no pasting, just instant fixes.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3 class="feature-title">Privacy First</h3>
-                    <p class="feature-description">Only fixes typos and grammar. No content rewriting, no data storage, no tracking.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3 class="feature-title">Background Operation</h3>
-                    <p class="feature-description">Runs quietly in your system tray. No popups, no interruptions, just there when you need it.</p>
-                </div>
-            </div>
+    <!-- Value Props (Minimal List) -->
+    <section class="features">
+      <div class="feature-list">
+        <div class="feature-item">
+          <h3>Any App</h3>
+          <p>Works in Notes, Slack, Chrome, Xcode, and everywhere else you type.</p>
         </div>
-    </section>
-
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="how-it-works">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">How It Works</h2>
-                <p class="section-description">Three simple steps to perfect writing.</p>
-            </div>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3 class="step-title">Select Text</h3>
-                        <p class="step-description">Highlight any text in any application - your browser, text editor, email, or anywhere else.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3 class="step-title">Press Shortcut</h3>
-                        <p class="step-description">Press Cmd+Shift+G (Mac) or Ctrl+Shift+G (Windows/Linux) to trigger the correction.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3 class="step-title">Get Fixed Text</h3>
-                        <p class="step-description">Watch your text get corrected instantly and replaced automatically. That's it!</p>
-                    </div>
-                </div>
-            </div>
+        <div class="feature-item">
+          <h3>Privacy First</h3>
+          <p>Your text goes directly to Gemini. No middleman servers. No data storage.</p>
         </div>
+        <div class="feature-item">
+          <h3>Your Key</h3>
+          <p>Bring your own free Gemini API key. You control the usage.</p>
+        </div>
+      </div>
     </section>
 
     <!-- Download Section -->
-    <section id="download" class="download">
-        <div class="container">
-            <div class="download-content">
-                <h2 class="download-title">Coming Soon</h2>
-                <p class="download-description">Mac version launching in 2 days</p>
-                <div class="coming-soon-card">
-                    <div class="coming-soon-icon">🍎</div>
-                    <h3 class="coming-soon-platform">macOS Version</h3>
-                    <p class="coming-soon-message">We're putting the finishing touches on the Mac version. Check back soon!</p>
-                    <div class="countdown-badge">
-                        <span>Launching in 2 days</span>
-                    </div>
-                </div>
-                <div class="download-note">
-                    <p>💡 <strong>Note:</strong> You'll need a free Gemini API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a> to get started.</p>
-                </div>
-            </div>
+    <section id="download" class="download-section">
+      <div class="download-card">
+        <h2>Ready to clear the squiggles?</h2>
+        <div class="download-actions">
+          <a href="https://github.com/hrithikthakur/snapfix/releases/latest/download/SnapFix.dmg" class="btn-primary large download-btn">Download for macOS</a>
         </div>
+            
+        <div class="links">
+           <a href="https://aistudio.google.com/app/api-keys" target="_blank">Get Gemini API Key</a> •
+           <a href="docs/terms.html">Terms</a> •
+           <a href="docs/privacy.html">Privacy</a> •
+           <a href="https://buymeacoffee.com/hrithik.loves.eng" target="_blank">Patreon</a>
+        </div>
+      </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <div class="logo">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
-                            <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <defs>
-                                <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#6366F1"/>
-                                    <stop offset="1" stop-color="#8B5CF6"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <span class="logo-text">SnapFix</span>
-                    </div>
-                    <p class="footer-tagline">Perfect writing, everywhere you work.</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4 class="footer-heading">Product</h4>
-                        <a href="#features">Features</a>
-                        <a href="#how-it-works">How It Works</a>
-                        <a href="#download">Download</a>
-                    </div>
-                    <div class="footer-column">
-                        <h4 class="footer-heading">Resources</h4>
-                        <a href="https://makersuite.google.com/app/apikey" target="_blank">Get API Key</a>
-                        <a href="docs/privacy.html" target="_blank">Privacy Policy</a>
-                        <a href="docs/terms.html" target="_blank">Terms of Service</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 SnapFix. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+  </main>
 
-    <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const textElement = document.getElementById('demo-text');
+      const demoWindow = document.querySelector('.demo-window');
+      const keyHint = document.querySelector('.key-hint');
+      
+      const originalText = "Writing emails is hrad when you make mistaks...";
+      const correctedText = "Writing emails is hard when you make mistakes.";
+      
+      let isCorrected = false;
+      
+      // OS Detection Logic
+      const detectOS = () => {
+        const platform = navigator.platform.toLowerCase();
+        const userAgent = navigator.userAgent.toLowerCase();
+        
+        if (platform.includes('mac') || userAgent.includes('mac')) {
+          return 'mac';
+        } else if (platform.includes('win') || userAgent.includes('win')) {
+          return 'windows';
+        } else if (platform.includes('linux') || userAgent.includes('linux')) {
+          return 'linux';
+        }
+        return 'other';
+      };
+
+      const updateForOS = () => {
+        const os = detectOS();
+        if (os !== 'mac') {
+          const btns = document.querySelectorAll('.download-btn');
+          btns.forEach(btn => {
+            btn.textContent = "Join Waitlist (macOS Only)";
+            // Generic mailto or placeholder link since no waitlist URL exists yet
+            btn.href = "mailto:?subject=SnapFix Waitlist Request&body=I'm interested in SnapFix for " + os;
+            btn.style.background = "#666"; // De-emphasize
+          });
+          
+          const reqText = document.querySelector('.os-req');
+          if (reqText) {
+            reqText.textContent = `Currently available for macOS. ${os.charAt(0).toUpperCase() + os.slice(1)} support coming soon.`;
+          }
+        }
+      };
+
+      // Run detection
+      updateForOS();
+      
+      const typeEffect = async () => {
+        // Reset
+        if (!textElement) return;
+        
+        textElement.textContent = originalText;
+        textElement.classList.remove('highlight');
+        keyHint.style.transform = "scale(1)";
+        keyHint.style.background = "#f0f0f0";
+        keyHint.style.color = "var(--text)";
+        
+        await wait(1500);
+        
+        // Highlight (simulate selection)
+        textElement.classList.add('highlight');
+        await wait(1000);
+        
+        // Simulate Key Press Visual
+        keyHint.style.transition = "all 0.1s";
+        keyHint.style.transform = "scale(0.9)";
+        keyHint.style.background = "#333";
+        keyHint.style.color = "#fff";
+        
+        await wait(150);
+        
+        keyHint.style.transform = "scale(1)";
+        keyHint.style.background = "#f0f0f0";
+        keyHint.style.color = "var(--text)";
+
+        // Simulate "Snap" - maybe a small scale bump
+        if (demoWindow) {
+          demoWindow.style.transform = "scale(0.99)";
+          setTimeout(() => demoWindow.style.transform = "scale(1)", 100);
+        }
+        
+        // Fix text immediately after "keypress"
+        textElement.textContent = correctedText;
+        textElement.classList.remove('highlight');
+        
+        // Wait before looping
+        await wait(3000);
+        
+        typeEffect();
+      };
+      
+      // Helper
+      function wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+      
+      // Start loop
+      typeEffect();
+    });
+  </script>
 </body>
 </html>
-

@@ -1,4 +1,4 @@
-# GrammrFix
+# SnapFix
 
 A system-wide grammar and spelling correction tool that works across all applications using Google's Gemini AI.
 
@@ -36,10 +36,10 @@ For the app to automatically replace text, you need to grant accessibility permi
 
 ### ⚠️ Important: App Name in System Settings
 
-When running the app with `npm start`, it will appear as **"Electron"** in System Settings (not "GrammrFix"). This is normal when running Electron apps in development mode.
+When running the app with `npm start`, it will appear as **"Electron"** in System Settings (not "SnapFix"). This is normal when running Electron apps in development mode.
 
 ### Quick Method:
-1. Right-click the GrammrFix icon in your menu bar (top right)
+1. Right-click the SnapFix icon in your menu bar (top right)
 2. Click **"Grant Accessibility Permissions"**
 3. This will open System Settings directly to the Accessibility section
 4. Look for **"Electron"** in the list (this is your app)
@@ -52,9 +52,9 @@ When running the app with `npm start`, it will appear as **"Electron"** in Syste
 3. Go to **Privacy & Security**
 4. Click on **Accessibility**
 5. Click the lock icon (🔒) at the bottom to make changes (enter password)
-6. **Look for "Electron" in the list** - this is your GrammrFix app
+6. **Look for "Electron" in the list** - this is your SnapFix app
    - The app appears as "Electron" because it's ruInstrument the app with analytics (PostHog, Mixpanel, or barebones logging).nning via the Electron framework
-   - If you build a proper macOS app, it will show as "GrammrFix"
+   - If you build a proper macOS app, it will show as "SnapFix"
 7. Toggle the switch next to **"Electron"** to enable it (switch turns blue/green)
 8. Quit and restart the app for permissions to take effect
 

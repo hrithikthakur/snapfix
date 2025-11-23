@@ -19,6 +19,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
   identifyUser: (userProperties) => ipcRenderer.invoke('analytics-identify', userProperties),
   // System settings
   openSystemSettings: () => ipcRenderer.invoke('open-system-settings'),
-  openExternal: (url) => ipcRenderer.invoke('open-external', url)
+  openExternal: (url) => ipcRenderer.invoke('open-external', url),
+  // Shortcut settings
+  getShortcut: () => ipcRenderer.invoke('get-shortcut'),
+  setShortcut: (shortcut) => ipcRenderer.invoke('set-shortcut', shortcut),
+  // Other settings
+  getSoundEnabled: () => ipcRenderer.invoke('get-sound-enabled'),
+  setSoundEnabled: (enabled) => ipcRenderer.invoke('set-sound-enabled', enabled),
+  getStartAtLogin: () => ipcRenderer.invoke('get-start-at-login'),
+  setStartAtLogin: (enabled) => ipcRenderer.invoke('set-start-at-login', enabled),
+  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+  quitApp: () => ipcRenderer.invoke('quit-app')
 });
 

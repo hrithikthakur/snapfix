@@ -24,18 +24,17 @@
       align-items: flex-start;
       justify-content: center;
       padding: 0;
-      margin: 0;
       -webkit-app-region: no-drag;
     }
 
     .status-container {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 15px;
-      padding: 12px 24px 14px 24px;
+      justify-content: center; /* Center content */
+      gap: 0;
+      padding: 12px 20px 14px 20px;
       width: 100%;
-      background: rgba(0, 0, 0, 1); /* Dark background to match notch */
+      background: rgba(0, 0, 0, 1);
       backdrop-filter: blur(60px) saturate(180%);
       -webkit-backdrop-filter: blur(60px) saturate(180%);
       border-radius: 0 0 16px 16px;
@@ -46,6 +45,21 @@
       animation: slideDown 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
       box-shadow: none;
       transform-origin: top center;
+      position: relative; /* For absolute icon */
+    }
+
+    /* Extend background up to cover hairline gaps */
+    .status-container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: inherit;
+      backdrop-filter: inherit;
+      -webkit-backdrop-filter: inherit;
+      z-index: -1;
     }
 
     @keyframes slideDown {
@@ -75,37 +89,53 @@
     }
 
     .app-icon {
-      width: 18px;
-      height: 18px;
-      border-radius: 5px;
-      background: linear-gradient(135deg, #0066ff 0%, #5856d6 100%);
+      width: 20px;
+      height: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      font-size: 9px;
-      color: white;
       flex-shrink: 0;
-      letter-spacing: -0.2px;
+      position: absolute; /* Fixed on left */
+      left: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .app-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      /* Fix jagged edges */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      image-rendering: -webkit-optimize-contrast;
     }
 
     .status-text {
+      flex: 1;
+      text-align: center; /* Centered text */
+      padding: 0 24px; /* Padding to prevent text hitting icon */
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 280px;
       letter-spacing: -0.1px;
       line-height: 1.3;
     }
 
     .spinner {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       border: 2px solid rgba(255, 255, 255, 0.25);
-      border-top-color: rgba(255, 255, 255, 0.85);
+      border-top-color: rgba(255, 255, 255, 0.95);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
       flex-shrink: 0;
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0.5); /* Slight background for visibility */
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5); /* Dark border simulation */
     }
 
     @keyframes spin {
@@ -115,8 +145,8 @@
     }
 
     .success-icon {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: #10b981;
       display: flex;
@@ -124,13 +154,18 @@
       justify-content: center;
       flex-shrink: 0;
       animation: popIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      border: 2px solid rgba(0, 0, 0, 0.5);
+      box-sizing: content-box;
     }
 
     .success-icon::after {
       content: '✓';
       color: white;
-      font-size: 10px;
-      font-weight: 600;
+      font-size: 9px;
+      font-weight: 800;
       line-height: 1;
     }
 
@@ -146,8 +181,8 @@
     }
 
     .error-icon {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: #ef4444;
       display: flex;
@@ -155,21 +190,28 @@
       justify-content: center;
       flex-shrink: 0;
       animation: popIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      border: 2px solid rgba(0, 0, 0, 0.5);
+      box-sizing: content-box;
     }
 
     .error-icon::after {
       content: '✕';
       color: white;
-      font-size: 10px;
-      font-weight: 600;
+      font-size: 9px;
+      font-weight: 800;
       line-height: 1;
     }
   </style>
 </head>
 <body>
   <div class="status-container" id="statusContainer">
-    <div class="app-icon">GF</div>
-    <div class="spinner" id="spinner"></div>
+    <div class="app-icon">
+      <img src="assets/icons/snapfix_logo_status.png" alt="SnapFix">
+      <div class="spinner" id="spinner"></div>
+    </div>
     <div class="status-text" id="statusText">Fixing typos...</div>
   </div>
 
@@ -179,20 +221,29 @@
     const statusContainer = document.getElementById('statusContainer');
     const statusText = document.getElementById('statusText');
     const spinner = document.getElementById('spinner');
+    const appIconContainer = document.querySelector('.app-icon');
 
     const successSound = new Audio('assets/sounds/success-sound-effect.mp3');
     const errorSound = new Audio('assets/sounds/error-sound-effect.mp3');
     successSound.volume = 0.5; // Adjust volume if needed
     errorSound.volume = 0.5;
 
-    // Listen for status updates
-    ipcRenderer.on('status-update', (event, data) => {
-      if (data && data.type) {
-        updateStatus(data.type, data.message);
+    // Set icon from main process (ICNS converted to Data URL)
+    ipcRenderer.on('set-icon', (event, dataUrl) => {
+      const img = document.querySelector('.app-icon img');
+      if (img) {
+        img.src = dataUrl;
       }
     });
 
-    function updateStatus(type, message) {
+    // Listen for status updates
+    ipcRenderer.on('status-update', (event, data) => {
+      if (data && data.type) {
+        updateStatus(data.type, data.message, data.soundEnabled);
+      }
+    });
+
+    function updateStatus(type, message, soundEnabled = true) {
       // Clear existing icons
       spinner.style.display = 'none';
       const existingSuccess = document.querySelector('.success-icon');
@@ -209,17 +260,21 @@
         case 'success':
           const successIcon = document.createElement('div');
           successIcon.className = 'success-icon';
-          statusContainer.insertBefore(successIcon, statusText);
-          successSound.currentTime = 0;
-          successSound.play().catch(e => console.error('Error playing sound:', e));
+          appIconContainer.appendChild(successIcon);
+          if (soundEnabled) {
+            successSound.currentTime = 0;
+            successSound.play().catch(e => console.error('Error playing sound:', e));
+          }
           setTimeout(() => hideStatus(), 2000);
           break;
         case 'error':
           const errorIcon = document.createElement('div');
           errorIcon.className = 'error-icon';
-          statusContainer.insertBefore(errorIcon, statusText);
-          errorSound.currentTime = 0;
-          errorSound.play().catch(e => console.error('Error playing sound:', e));
+          appIconContainer.appendChild(errorIcon);
+          if (soundEnabled) {
+            errorSound.currentTime = 0;
+            errorSound.play().catch(e => console.error('Error playing sound:', e));
+          }
           setTimeout(() => hideStatus(), 3000);
           break;
       }

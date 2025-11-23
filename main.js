@@ -7,6 +7,86 @@ const { promisify } = require('util');
 const execAsync = promisify(exec);
 const analytics = require('./analytics');
 
+// Config management
+let currentShortcut = 'Alt+Space';
+
+function getConfigPath() {
+  return path.join(app.getPath('userData'), 'config.json');
+}
+
+function loadConfig() {
+  try {
+    const configPath = getConfigPath();
+    if (fs.existsSync(configPath)) {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      if (config.shortcut) {
+        currentShortcut = config.shortcut;
+      }
+      if (config.soundEnabled !== undefined) {
+        soundEnabled = config.soundEnabled;
+      }
+    }
+  } catch (e) {
+    console.error('Error loading config:', e);
+  }
+}
+
+function saveConfig(updates) {
+  try {
+    const configPath = getConfigPath();
+    let currentConfig = {};
+    if (fs.existsSync(configPath)) {
+      try {
+        currentConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      } catch (e) {
+        // Ignore parse error, start fresh
+      }
+    }
+    const newConfig = { ...currentConfig, ...updates };
+    fs.writeFileSync(configPath, JSON.stringify(newConfig, null, 2));
+  } catch (e) {
+    console.error('Error saving config:', e);
+  }
+}
+
+function registerFixShortcut(shortcut) {
+  // Unregister old shortcut if it exists (we might need to track it if we want to be precise, 
+  // but for now we can just unregister the previous currentShortcut if we haven't updated it yet?
+  // simpler: unregister the specific shortcut we are about to set, to avoid duplicates, 
+  // and unregister the OLD one. 
+  // Actually, safest is to unregister all and re-register everything, OR track the old one.
+  // Let's track the old one?
+  // For now, let's assume we only have one "fix" shortcut.
+  
+  // Unregister the previous shortcut if we have one recorded or just try to unregister 'Alt+Space' as default
+  // But we don't want to clear Cmd+R.
+  
+  // Best approach: Unregister the *current* shortcut before updating the variable, then register new.
+  // But here `shortcut` is the NEW one. `currentShortcut` holds the OLD one (if called before update).
+  
+  if (globalShortcut.isRegistered(currentShortcut)) {
+    globalShortcut.unregister(currentShortcut);
+  }
+  
+  // Also unregister the new one just in case
+  if (globalShortcut.isRegistered(shortcut)) {
+     globalShortcut.unregister(shortcut);
+  }
+
+  const ret = globalShortcut.register(shortcut, () => {
+    handleGlobalFix();
+  });
+
+  if (!ret) {
+    console.log('Global shortcut registration failed for:', shortcut);
+    return false;
+  }
+  
+  console.log('Global shortcut registered:', shortcut);
+  currentShortcut = shortcut;
+  return true;
+}
+
 // Load .env file from multiple possible locations
 function loadEnvFile() {
   const envPaths = [
@@ -96,10 +176,6 @@ function createWindow() {
     }
     return { action: 'deny' };
   });
-
-  // Disable cache to ensure fresh loads during development
-  mainWindow.webContents.session.clearCache();
-  mainWindow.webContents.session.clearStorageData();
   
   mainWindow.loadFile('index.html');
 
@@ -193,8 +269,8 @@ function openAccessibilitySettings() {
     // Show notification with instructions
     setTimeout(() => {
       showNotification(
-        'GrammrFix',
-        'Please enable GrammrFix in System Settings > Privacy & Security > Accessibility'
+        'SnapFix',
+        'Please enable SnapFix in System Settings > Privacy & Security > Accessibility'
       );
     }, 500);
   }
@@ -293,7 +369,7 @@ function createTray() {
   
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Show Window',
+      label: 'Settings',
       click: () => {
         if (mainWindow) {
           mainWindow.show();
@@ -334,7 +410,7 @@ function createTray() {
         // Then open settings
         openAccessibilitySettings();
         showNotification(
-          'GrammrFix',
+          'SnapFix',
           'Look for "Electron", "node", or "Terminal" in the list. If you don\'t see it, try using the shortcut (Alt+Space) first to trigger a permission request.'
         );
       }
@@ -347,7 +423,7 @@ function createTray() {
     }
   ]);
 
-  tray.setToolTip('GrammrFix - Press Alt+Space to fix grammar');
+  tray.setToolTip('SnapFix - Press Alt+Space to fix grammar');
   tray.setContextMenu(contextMenu);
 
   // Double click to show window
@@ -388,7 +464,7 @@ async function handleGlobalFix() {
       const result = await dialog.showMessageBox({
         type: 'warning',
         title: 'Accessibility Permissions Required',
-        message: 'GrammrFix needs accessibility permissions to replace text in applications.',
+        message: 'SnapFix needs accessibility permissions to replace text in applications.',
         detail: 'Please grant accessibility permissions in System Settings > Privacy & Security > Accessibility.',
         buttons: ['Open System Settings', 'Cancel'],
         defaultId: 0,
@@ -538,7 +614,7 @@ async function simulateCopy() {
       const errorMsg = error.message || error.stderr || '';
       if (errorMsg.includes('not allowed') || errorMsg.includes('not allowed assistive')) {
         showNotification(
-          'GrammrFix',
+          'SnapFix',
           'Accessibility permissions needed! A system dialog should appear. If not, go to System Settings > Privacy & Security > Accessibility and look for "Electron" or "node"'
         );
         // Try to trigger the permission request
@@ -563,7 +639,7 @@ async function simulatePaste() {
         await execAsync('xdotool key ctrl+v');
       } catch (e) {
         // xdotool not available, show notification
-        showNotification('GrammrFix', 'Text fixed! Please paste manually (Ctrl+V). Install xdotool for auto-paste.');
+        showNotification('SnapFix', 'Text fixed! Please paste manually (Ctrl+V). Install xdotool for auto-paste.');
       }
     }
   } catch (error) {
@@ -571,12 +647,12 @@ async function simulatePaste() {
     // Check if it's a permission error on macOS
     if (process.platform === 'darwin' && error.message && error.message.includes('not allowed')) {
       showNotification(
-        'GrammrFix',
+        'SnapFix',
         'Accessibility permissions required! Text is in clipboard. Click tray icon > Grant Accessibility Permissions'
       );
     } else {
       // If paste simulation fails, at least clipboard has the corrected text
-      showNotification('GrammrFix', 'Text fixed! Please paste manually (Cmd+V / Ctrl+V)');
+      showNotification('SnapFix', 'Text fixed! Please paste manually (Cmd+V / Ctrl+V)');
     }
   }
 }
@@ -652,6 +728,7 @@ async function callGeminiAPI(text, apiKey) {
 
   const modelConfigs = [
     { version: 'v1beta', model: 'gemini-2.5-flash-lite' },
+    { version: 'v1beta', model: 'gemini-3-pro-preview' },
     { version: 'v1beta', model: 'gemini-2.5-flash' },
     { version: 'v1beta', model: 'gemini-1.5-flash' },
   ];
@@ -663,6 +740,7 @@ async function callGeminiAPI(text, apiKey) {
     try {
       const url = `https://generativelanguage.googleapis.com/${config.version}/models/${config.model}:generateContent?key=${apiKey}`;
       
+      let timeoutId = null;
       try {
         const estimatedOutputTokens = Math.ceil(text.length * 1.1 / 4);
         const maxTokens = Math.min(Math.max(estimatedOutputTokens, 50), 512);
@@ -671,7 +749,6 @@ async function callGeminiAPI(text, apiKey) {
         const fetch = require('node-fetch');
         
         // Create timeout promise
-        let timeoutId = null;
         const timeoutPromise = new Promise((_, reject) => {
           timeoutId = setTimeout(() => {
             reject(new Error(`Request timeout after ${REQUEST_TIMEOUT / 1000}s`));
@@ -737,7 +814,17 @@ async function callGeminiAPI(text, apiKey) {
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
-        lastError = fetchError;
+        
+        // Handle network errors and timeouts
+        if (fetchError.code === 'ENOTFOUND' || 
+            fetchError.code === 'EAI_AGAIN' || 
+            fetchError.code === 'ETIMEDOUT' || 
+            fetchError.message.includes('timeout') ||
+            fetchError.message.includes('network')) {
+          lastError = new Error('Network error');
+        } else {
+          lastError = fetchError;
+        }
         continue;
       }
     } catch (error) {
@@ -757,24 +844,24 @@ function createStatusOverlay() {
   const workArea = primaryDisplay.workArea;
 
   // Calculate Y position to extend from notch/menu bar
-  let overlayY;
+  let overlayY = -10;
   let overlayHeight = 56;
   let overlayWidth = 400;
   
   if (process.platform === 'darwin') {
     if (workArea.y > 0) {
-      overlayY = 0;
-      overlayHeight = workArea.y + 44;
-      overlayWidth = 210;
+      overlayY = -10; // Force up slightly to cover hairline gap
+      overlayHeight = workArea.y + 46; // Increase height to compensate
+      overlayWidth = 260;
     } else {
-      overlayY = 0;
+      overlayY = -10;
       overlayHeight = 50;
-      overlayWidth = 240;
+      overlayWidth = 280;
     }
   } else {
-    overlayY = 10;
+    overlayY = -10;
     overlayHeight = 56;
-    overlayWidth = 240;
+    overlayWidth = 280;
   }
 
   statusOverlay = new BrowserWindow({
@@ -800,7 +887,7 @@ function createStatusOverlay() {
     ...(process.platform === 'darwin' && {
       vibrancy: 'ultra-dark',
       visualEffectState: 'active',
-      titleBarStyle: 'hidden',
+      // titleBarStyle: 'hidden', // Removed to prevent potential layout shift
       backgroundColor: '#00000000',
       roundedCorners: false,
       opacity: 1.0
@@ -808,6 +895,18 @@ function createStatusOverlay() {
   });
 
   statusOverlay.loadFile('statusOverlay.html');
+  
+  statusOverlay.webContents.once('did-finish-load', () => {
+    // Load ICNS icon and send to renderer
+    const iconPath = path.join(__dirname, 'assets/icons/snapfix_logo.icns');
+    if (fs.existsSync(iconPath)) {
+      const image = nativeImage.createFromPath(iconPath);
+      if (!image.isEmpty()) {
+        const dataUrl = image.toDataURL();
+        statusOverlay.webContents.send('set-icon', dataUrl);
+      }
+    }
+  });
   
   statusOverlay.on('closed', () => {
     statusOverlay = null;
@@ -831,6 +930,15 @@ function showStatusOverlay(type, message) {
 
     // Send update
     statusOverlay.webContents.send('status-update', { type, message, soundEnabled });
+
+    // Ensure icon is set (resend to be safe)
+    const iconPath = path.join(__dirname, 'assets/icons/snapfix_logo.icns');
+    if (fs.existsSync(iconPath)) {
+      const image = nativeImage.createFromPath(iconPath);
+      if (!image.isEmpty()) {
+        statusOverlay.webContents.send('set-icon', image.toDataURL());
+      }
+    }
   }
 }
 
@@ -954,6 +1062,78 @@ ipcMain.handle('make-window-focusable', () => {
   return false;
 });
 
+// Handle getting current shortcut
+ipcMain.handle('get-shortcut', () => {
+  return currentShortcut;
+});
+
+// Handle setting new shortcut
+ipcMain.handle('set-shortcut', (event, shortcut) => {
+  if (!shortcut) return { success: false, error: 'Invalid shortcut' };
+  
+  // Register new shortcut
+  const success = registerFixShortcut(shortcut);
+  
+  if (success) {
+    saveConfig({ shortcut });
+    
+    // Update tray tooltip
+    if (tray && !tray.isDestroyed()) {
+      tray.setToolTip(`SnapFix - Press ${shortcut} to fix grammar`);
+    }
+    
+    return { success: true };
+  } else {
+    // Revert to old shortcut if failed
+    registerFixShortcut(currentShortcut);
+    return { success: false, error: 'Failed to register shortcut' };
+  }
+});
+
+// Handle sound settings
+ipcMain.handle('get-sound-enabled', () => {
+  return soundEnabled;
+});
+
+ipcMain.handle('set-sound-enabled', (event, enabled) => {
+  soundEnabled = enabled;
+  saveConfig({ soundEnabled: enabled });
+  return true;
+});
+
+// Handle start at login
+ipcMain.handle('get-start-at-login', () => {
+  try {
+    return app.getLoginItemSettings().openAtLogin;
+  } catch (e) {
+    console.error('Error getting login settings:', e);
+    return false;
+  }
+});
+
+ipcMain.handle('set-start-at-login', (event, enabled) => {
+  try {
+    app.setLoginItemSettings({
+      openAtLogin: enabled,
+      path: app.getPath('exe')
+    });
+    return true;
+  } catch (e) {
+    console.error('Error setting login settings:', e);
+    return false;
+  }
+});
+
+// Handle app version
+ipcMain.handle('get-app-version', () => {
+  return app.getVersion();
+});
+
+// Handle quit app
+ipcMain.handle('quit-app', () => {
+  app.quit();
+});
+
 // Handle status overlay close message
 ipcMain.on('status-overlay-close', () => {
   if (statusOverlay && !statusOverlay.isDestroyed()) {
@@ -982,6 +1162,9 @@ app.whenReady().then(async () => {
   createTray();
   createStatusOverlay(); // Pre-create hidden overlay
   
+  // Load config
+  loadConfig();
+
   // Check if API key is configured (proxy for onboarding completion)
   const hasApiKey = !!process.env.GEMINI_API_KEY;
 
@@ -1020,16 +1203,8 @@ app.whenReady().then(async () => {
     }
   }
 
-  // Register global shortcut for grammar fix (Alt+Space)
-  const ret = globalShortcut.register('Alt+Space', () => {
-    handleGlobalFix();
-  });
-
-  if (!ret) {
-    console.log('Global shortcut registration failed');
-  } else {
-    console.log('Global shortcut registered: Alt+Space');
-  }
+  // Register global shortcut for grammar fix
+  registerFixShortcut(currentShortcut);
 
   // Hide window on close (keep app running in tray)
   if (mainWindow) {
