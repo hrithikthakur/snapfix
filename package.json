@@ -1,5 +1,5 @@
 {
-  "name": "grammrfix",
+  "name": "snapfix",
   "version": "0.1.0",
   "description": "Simple Electron grammar fixer prototype",
   "main": "main.js",
@@ -20,8 +20,8 @@
   "author": "",
   "license": "MIT",
   "build": {
-    "appId": "com.grammrfix.app",
-    "productName": "GrammrFix",
+    "appId": "com.snapfix.app",
+    "productName": "SnapFix",
     "icon": "assets/icons/snapfix_logo.icns",
     "mac": {
       "icon": "assets/icons/snapfix_logo.icns",
@@ -51,6 +51,11 @@
         "NSSupportsAutomaticGraphicsSwitching": true,
         "LSMinimumSystemVersion": "10.13.0"
       }
+    },
+    "mas": {
+      "entitlements": "build/entitlements.mas.plist",
+      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+      "category": "public.app-category.productivity"
     },
     "files": [
       "**/*",

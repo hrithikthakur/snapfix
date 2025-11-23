@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   trackEvent: (eventName, properties) => ipcRenderer.invoke('analytics-track', eventName, properties),
   identifyUser: (userProperties) => ipcRenderer.invoke('analytics-identify', userProperties),
   // System settings
-  openSystemSettings: () => ipcRenderer.invoke('open-system-settings')
+  openSystemSettings: () => ipcRenderer.invoke('open-system-settings'),
+  openExternal: (url) => ipcRenderer.invoke('open-external', url)
 });
 

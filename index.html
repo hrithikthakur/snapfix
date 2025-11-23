@@ -57,7 +57,7 @@
         width: 100%;
         max-width: 800px;
         margin: 0 auto;
-        padding: clamp(20px, 3vh, 32px) clamp(24px, 5vw, 40px) clamp(20px, 3vh, 28px);
+        padding: clamp(12px, 2vh, 20px) clamp(16px, 3vw, 24px) clamp(12px, 2vh, 20px);
         opacity: 0;
         visibility: hidden;
         height: 100vh;
@@ -78,9 +78,9 @@
         justify-content: center;
         align-items: center;
         gap: 10px;
-        margin-bottom: clamp(16px, 2.5vh, 24px);
+        margin-bottom: clamp(8px, 1.5vh, 16px);
         position: relative;
-        padding: 8px 0;
+        padding: 4px 0;
         flex-shrink: 0;
       }
 
@@ -147,36 +147,60 @@
 
       .onboarding-content {
         width: 100%;
-        max-width: 640px;
+        max-width: 900px;
         margin: 0 auto;
-        text-align: center;
+        text-align: left;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
-        gap: 0;
+        gap: 80px;
         flex: 1;
         justify-content: center;
         min-height: 0;
         overflow-y: auto;
-        padding: 0;
+        padding: 0 4px;
+      }
+
+      .onboarding-content.centered {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+      }
+
+      .onboarding-content-left,
+      .onboarding-content-right {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .onboarding-content-left {
+        max-width: 400px;
+      }
+
+      .onboarding-content-right {
+        max-width: 420px;
       }
 
       .step-title {
-        font-size: clamp(26px, 4vw, 32px);
+        font-size: clamp(28px, 4.5vw, 36px);
         font-weight: 700;
         color: #1d1d1f;
         margin: 0 0 8px 0;
-        letter-spacing: -0.6px;
+        letter-spacing: -0.5px;
         line-height: 1.2;
         max-width: 100%;
+        text-align: left;
       }
 
       .step-description {
-        font-size: clamp(15px, 2.5vw, 17px);
-        color: rgba(0, 0, 0, 0.65);
-        margin: 0 0 20px 0;
-        line-height: 1.6;
-        max-width: 520px;
+        font-size: clamp(16px, 2.5vw, 18px);
+        color: rgba(0, 0, 0, 0.6);
+        margin: 0;
+        line-height: 1.65;
+        max-width: 100%;
+        text-align: left;
       }
 
       @keyframes fadeInUp {
@@ -191,10 +215,10 @@
       }
 
       .onboarding-info {
-        background: rgba(0, 0, 0, 0.02);
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 14px;
-        padding: 20px 24px;
+        background: rgba(0, 0, 0, 0.015);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        padding: 16px 18px;
         margin: 0;
         text-align: left;
         width: 100%;
@@ -208,15 +232,15 @@
       }
 
       .onboarding-info ol {
-        color: rgba(0, 0, 0, 0.7);
-        padding-left: 28px;
+        color: rgba(0, 0, 0, 0.6);
+        padding-left: 24px;
         margin: 0;
         line-height: 1.75;
         list-style-position: outside;
       }
 
       .onboarding-info li {
-        margin-bottom: 12px;
+        margin-bottom: 8px;
       }
 
       .onboarding-info li:last-child {
@@ -230,17 +254,24 @@
 
 
       .logo-container {
-        margin-bottom: 16px;
+        margin-bottom: 12px;
         margin-top: 0;
+        text-align: left;
       }
 
       .logo-glow {
-        font-size: clamp(40px, 7vw, 56px);
-        animation: logoGlow 4s ease-in-out infinite;
-        filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.2));
-        position: relative;
+        width: 48px; /* Decreased dimension */
+        height: 48px;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
+        border-radius: 12px; /* Rounded corners */
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
         margin-bottom: 0;
-        line-height: 1;
+        animation: none; /* Removed glow animation for cleaner look */
       }
 
       @keyframes logoGlow {
@@ -249,28 +280,30 @@
           opacity: 1;
         }
         50% {
-          transform: scale(1.05);
-          opacity: 0.9;
+          transform: scale(1.03);
+          opacity: 0.95;
         }
       }
 
       .hero-title {
-        font-size: clamp(28px, 4.5vw, 40px);
+        font-size: clamp(32px, 5vw, 44px);
         font-weight: 700;
         color: #1d1d1f;
         margin: 0 0 8px 0;
-        letter-spacing: -0.8px;
+        letter-spacing: -0.5px;
         line-height: 1.15;
         max-width: 100%;
+        text-align: left;
       }
 
       .hero-subtitle {
-        font-size: clamp(15px, 2.5vw, 18px);
-        color: rgba(0, 0, 0, 0.65);
-        margin: 0 0 20px 0;
+        font-size: clamp(16px, 2.5vw, 19px);
+        color: rgba(0, 0, 0, 0.6);
+        margin: 0 0 8px 0;
         font-weight: 400;
-        line-height: 1.5;
-        max-width: 520px;
+        line-height: 1.65;
+        max-width: 100%;
+        text-align: left;
       }
 
       .step-indicator {
@@ -437,33 +470,35 @@
       }
 
       .keyboard-shortcut {
-        background: rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.015);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
         padding: 16px 20px;
-        margin: 0 0 16px 0;
+        margin: 0;
         text-align: center;
         font-family: 'SF Mono', Monaco, monospace;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        width: 100%;
       }
 
       .keyboard-shortcut kbd {
         background: rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(0, 0, 0, 0.12);
+        border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 8px;
-        padding: 10px 16px;
+        padding: 8px 14px;
         margin: 0 4px;
         font-size: 16px;
         font-weight: 600;
         color: #1d1d1f;
-        transition: all 0.2s ease;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         display: inline-block;
       }
 
       .keyboard-shortcut kbd:hover {
         background: rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
       }
 
       .keyboard-shortcut .plus {
@@ -482,36 +517,38 @@
         flex-wrap: wrap;
         margin-top: auto;
         width: 100%;
-        max-width: 640px;
+        max-width: 900px;
         margin-left: auto;
         margin-right: auto;
         flex-shrink: 0;
-        padding-top: 24px;
+        padding-top: 8px;
       }
 
       .onboarding-button {
-        padding: 14px 28px;
+        padding: 13px 26px;
+        margin-bottom: 50px;
         font-size: 16px;
         font-weight: 600;
         border: none;
-        border-radius: 12px;
+        border-radius: 13px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
         letter-spacing: -0.2px;
       }
 
       .onboarding-button.primary {
-        background: #007aff;
+        background: #0066ff;
         color: white;
         flex: 1;
-        box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+        box-shadow: 0 2px 6px rgba(0, 102, 255, 0.2);
       }
 
       .onboarding-button.primary:hover {
         background: #0051d5;
-        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        box-shadow: 0 4px 10px rgba(0, 102, 255, 0.25);
+        transform: scale(1.01);
       }
 
       .onboarding-button.primary:active {
@@ -527,6 +564,7 @@
       .onboarding-button.secondary:hover {
         background: #e5e5ea;
         border-color: #d2d2d7;
+        transform: scale(1.01);
       }
 
       .onboarding-button:disabled {
@@ -604,21 +642,23 @@
         width: 100%;
         max-width: 520px;
         margin: 0;
-        padding: 14px 24px;
+        padding: 13px 20px;
         font-size: 16px;
         font-weight: 600;
-        background: rgba(0, 0, 0, 0.04);
+        background: rgba(0, 0, 0, 0.015);
         color: #1d1d1f;
-        border: 1.5px solid rgba(0, 0, 0, 0.12);
-        border-radius: 12px;
+        border: 1.5px solid rgba(0, 0, 0, 0.1);
+        border-radius: 13px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         letter-spacing: -0.2px;
       }
 
       .permission-button:hover {
         background: rgba(0, 0, 0, 0.08);
         border-color: rgba(0, 0, 0, 0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
       }
 
       /* API Key Section Styles */
@@ -626,6 +666,17 @@
         width: 100%;
         max-width: 520px;
         margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .api-key-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.6);
+        margin: 0 0 8px 0;
+        text-align: left;
       }
 
       .api-key-input-container {
@@ -636,22 +687,27 @@
 
       .api-key-input {
         width: 100%;
-        padding: 14px 50px 14px 18px;
+        padding: 15px 50px 15px 18px;
         font-size: 15px;
         font-family: 'SF Mono', Monaco, monospace;
-        background: rgba(0, 0, 0, 0.03);
+        background: #ffffff;
         border: 1.5px solid rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
+        border-radius: 13px;
         color: #1d1d1f;
-        transition: all 0.2s ease;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         box-sizing: border-box;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
       }
 
       .api-key-input:focus {
         outline: none;
-        border-color: #007aff;
-        background: rgba(0, 0, 0, 0.06);
-        box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.15);
+        border-color: #0066ff;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
+      }
+
+      .api-key-input:hover:not(:focus) {
+        border-color: rgba(0, 0, 0, 0.15);
       }
 
       .api-key-input::placeholder {
@@ -660,37 +716,48 @@
 
       .toggle-visibility {
         position: absolute;
-        right: 12px;
+        right: 10px;
         top: 50%;
         transform: translateY(-50%);
         background: transparent;
         border: none;
         color: rgba(0, 0, 0, 0.5);
-        font-size: 18px;
+        font-size: 20px;
         cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 6px;
-        transition: all 0.2s ease;
+        padding: 6px 10px;
+        border-radius: 8px;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
       }
 
       .toggle-visibility:hover {
-        background: rgba(0, 0, 0, 0.05);
+        background: rgba(0, 0, 0, 0.06);
         color: rgba(0, 0, 0, 0.8);
+        transform: translateY(-50%) scale(1.05);
+      }
+
+      .toggle-visibility:active {
+        background: rgba(0, 0, 0, 0.1);
+        transform: translateY(-50%) scale(0.95);
       }
 
       .api-key-help {
         font-size: 14px;
-        color: rgba(0, 0, 0, 0.55);
-        margin: 12px 0 0 0;
-        text-align: center;
-        line-height: 1.5;
+        color: rgba(0, 0, 0, 0.6);
+        margin: 0;
+        text-align: left;
+        line-height: 1.65;
       }
 
       .api-key-link {
-        color: #007aff;
+        color: #0066ff;
         text-decoration: none;
         font-weight: 600;
-        transition: color 0.2s ease;
+        transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .api-key-link:hover {
@@ -699,34 +766,49 @@
       }
 
       .api-key-status {
-        margin-top: 12px;
-        padding: 10px 16px;
-        border-radius: 8px;
+        margin: 8px 0 0 0;
+        padding: 14px 18px;
+        border-radius: 13px;
         font-size: 14px;
         font-weight: 500;
         text-align: center;
         display: none;
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .api-key-status.success {
         display: block;
-        background: rgba(16, 185, 129, 0.15);
-        color: #10b981;
-        border: 1px solid rgba(16, 185, 129, 0.3);
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1.5px solid #86efac;
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.08);
       }
 
       .api-key-status.error {
         display: block;
-        background: rgba(239, 68, 68, 0.15);
-        color: #fca5a5;
-        border: 1px solid rgba(239, 68, 68, 0.3);
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1.5px solid #fca5a5;
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.08);
       }
 
       .api-key-status.loading {
         display: block;
-        background: rgba(59, 130, 246, 0.15);
-        color: #93c5fd;
-        border: 1px solid rgba(59, 130, 246, 0.3);
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1.5px solid #93c5fd;
+        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.08);
       }
 
       /* Demo Section Styles */
@@ -868,19 +950,19 @@
       /* Permissions Visual */
       .permissions-visual {
         text-align: center;
-        margin: 0 0 20px 0;
-        padding: 24px 20px;
-        background: rgba(0, 0, 0, 0.02);
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 16px;
+        margin: 0;
+        padding: 16px 16px;
+        background: rgba(0, 0, 0, 0.015);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
         max-width: 520px;
         width: 100%;
       }
 
       .settings-icon {
         font-size: 48px;
-        margin-bottom: 12px;
-        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+        margin-bottom: 10px;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
         animation: rotate 20s linear infinite;
         opacity: 0.8;
       }
@@ -969,6 +1051,25 @@
         background: rgba(59, 130, 246, 0.15);
         color: #93c5fd;
         border-color: rgba(59, 130, 246, 0.3);
+      }
+
+      .onboarding-footer {
+        margin-top: auto;
+        padding-top: 16px;
+        text-align: center;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.4);
+      }
+
+      .onboarding-footer a {
+        color: rgba(0, 0, 0, 0.6);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
+      .onboarding-footer a:hover {
+        color: #007aff;
+        text-decoration: underline;
       }
 
       /* Main App Styling */
@@ -1206,6 +1307,34 @@
         box-shadow: 0 1px 2px rgba(0,0,0,0.1);
       }
 
+      @media (max-width: 768px) {
+        .onboarding-content {
+          flex-direction: column !important;
+          text-align: center;
+          gap: 32px;
+        }
+
+        .onboarding-content-left,
+        .onboarding-content-right {
+          max-width: 100%;
+          text-align: center;
+        }
+
+        .hero-title,
+        .step-title {
+          text-align: center;
+        }
+
+        .hero-subtitle,
+        .step-description {
+          text-align: center;
+        }
+
+        .logo-container {
+          text-align: center;
+        }
+      }
+
       @media (max-height: 640px) {
         #onboarding {
           padding: 20px 16px 16px;
@@ -1213,6 +1342,10 @@
 
         .step-indicator {
           margin-bottom: 16px;
+        }
+
+        .onboarding-content {
+          gap: 24px;
         }
 
         .step-content {
@@ -1272,10 +1405,6 @@
           font-size: 15px;
         }
 
-        .logo-glow {
-          font-size: clamp(40px, 10vw, 56px);
-        }
-
         .demo-section {
           margin: 16px 0;
         }
@@ -1324,59 +1453,63 @@
       <!-- Screen 1: Intro with Shortcut -->
       <section class="onboarding-step active" data-step="0">
         <div class="onboarding-content">
-          <div class="logo-container">
-            <div class="logo-glow">⚡</div>
+          <div class="onboarding-content-left">
+            <div class="logo-container">
+              <div class="logo-glow">⚡</div>
+            </div>
+            <h1 class="hero-title">Welcome to SnapFix</h1>
+            <p class="hero-subtitle">Fix your text anywhere with one simple shortcut</p>
           </div>
-          <h1 class="hero-title">Welcome to SnapFix</h1>
-          <p class="hero-subtitle">Fix your text anywhere with one simple shortcut</p>
-          
-          <div class="keyboard-shortcut">
-            <kbd>⌥</kbd>
-            <span class="plus">+</span>
-            <kbd>Space</kbd>
-          </div>
-          
-          <p style="margin: 0 0 20px 0; font-size: 15px; color: rgba(0, 0, 0, 0.6); text-align: center; max-width: 520px; line-height: 1.6;">
-            Press <strong style="color: #1d1d1f;">⌥ Space</strong> (Alt+Space) to fix selected text instantly in any app.
-          </p>
-          
-          <div class="onboarding-info" style="margin: 0;">
-            <ol>
-              <li>Select any text in any app</li>
-              <li>Press <strong>⌥ Space</strong> (Alt+Space)</li>
-              <li>Your text is fixed instantly!</li>
-            </ol>
+          <div class="onboarding-content-right">
+            <div class="keyboard-shortcut" style="margin: 0 0 16px 0;">
+              <kbd>⌥</kbd>
+              <span class="plus">+</span>
+              <kbd>Space</kbd>
+            </div>
+            <div class="onboarding-info" style="margin-top: 30px;">
+              <ol>
+                <li>Select any text in any app</li>
+                <li>Press <strong>⌥ Space</strong> (Opt+Space)</li>
+                <li>Your text is fixed instantly!</li>
+              </ol>
+            </div>
           </div>
         </div>
         <div class="onboarding-actions">
           <button class="onboarding-button primary" onclick="goToNextStep()">Continue</button>
-        </div∫>
+        </div>
       </section>
 
       <!-- Screen 2: API Key -->
       <section class="onboarding-step" data-step="1">
         <div class="onboarding-content">
-          <h2 class="step-title">Enter your Gemini API Key</h2>
-          <p class="step-description">SnapFix uses Google's Gemini API to fix your text. You'll need a free API key to get started.</p>
-          
-          <div class="api-key-section">
-            <div class="api-key-input-container">
-              <input 
-                type="password" 
-                id="apiKeyInput" 
-                class="api-key-input" 
-                placeholder="Enter your Gemini API key"
-                autocomplete="off"
-                onkeypress="if(event.key === 'Enter') saveApiKey()"
-              />
-              <button class="toggle-visibility" id="toggleVisibility" onclick="toggleApiKeyVisibility()">
-                👁️
-              </button>
+          <div class="onboarding-content-left">
+            <h2 class="step-title">Enter your Gemini API Key</h2>
+            <p class="step-description">SnapFix uses Google's Gemini API to fix your text.</p>
+            <a href="#" onclick="openExternalLink('https://makersuite.google.com/app/apikey')" class="api-key-link" style="display: inline-block; margin-top: 12px;">Get your free API Key &rarr;</a>
+          </div>
+          <div class="onboarding-content-right">
+            <div class="api-key-section">
+              <label for="apiKeyInput" class="api-key-label">API Key</label>
+              <div class="api-key-input-container">
+                <input 
+                  type="password" 
+                  id="apiKeyInput" 
+                  class="api-key-input" 
+                  placeholder="AIza..."
+                  autocomplete="off"
+                  onkeypress="if(event.key === 'Enter') saveApiKey()"
+                />
+                <button class="toggle-visibility" id="toggleVisibility" onclick="toggleApiKeyVisibility()" type="button" aria-label="Toggle API key visibility">
+                  👁️
+                </button>
+              </div>
+              <div id="apiKeyStatus" class="api-key-status"></div>
+              <p style="margin: 0; text-align: left; font-size: 13px; color: rgba(0, 0, 0, 0.5); line-height: 1.5; display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 14px;">🔒</span>
+                <span>Your API key is stored locally and never shared</span>
+              </p>
             </div>
-            <p class="api-key-help">
-              Get your free API key from <a href="https://aistudio.google.com/apikey" target="_blank" class="api-key-link">Google AI Studio</a>
-            </p>
-            <div id="apiKeyStatus" class="api-key-status"></div>
           </div>
         </div>
         <div class="onboarding-actions">
@@ -1388,15 +1521,17 @@
       <!-- Screen 3: Permissions -->
       <section class="onboarding-step" data-step="2">
         <div class="onboarding-content">
-          <h2 class="step-title">Enable permissions</h2>
-          <p class="step-description">SnapFix needs Accessibility permissions to replace text in other apps.</p>
-          
-          <div class="permissions-visual">
-            <div class="settings-icon">⚙️</div>
-            <div class="settings-path">System Settings → Privacy & Security → Accessibility</div>
+          <div class="onboarding-content-left">
+            <h2 class="step-title">Enable permissions</h2>
+            <p class="step-description">SnapFix needs Accessibility permissions to replace text in other apps.</p>
+            <button class="permission-button" onclick="openSystemSettings()" style="margin-top: 16px; max-width: 100%;">Open System Settings</button>
           </div>
-          
-          <button class="permission-button" onclick="openSystemSettings()">Open System Settings</button>
+          <div class="onboarding-content-right">
+            <div class="permissions-visual" style="margin: 0;">
+              <div class="settings-icon">⚙️</div>
+              <div class="settings-path">System Settings → Privacy & Security → Accessibility</div>
+            </div>
+          </div>
         </div>
         <div class="onboarding-actions">
           <button class="onboarding-button secondary" onclick="goToPrevStep()">Previous</button>
@@ -1404,13 +1539,10 @@
         </div>
       </section>
 
+      <div class="onboarding-footer">
+        By continuing, you agree to our <a href="#" onclick="openExternalLink('https://snapfix-app-2025.web.app/docs/terms.html')">Terms of Service</a> and <a href="#" onclick="openExternalLink('https://snapfix-app-2025.web.app/docs/privacy.html')">Privacy Policy</a>
+      </div>
       <div class="snackbar" id="snackbar"></div>
-    </div>
-
-    <div class="background-info">
-      SnapFix runs quietly in the background. Select text anywhere and press 
-      <strong>Alt + Space (⌥ Space on macOS)</strong> to fix it instantly. Use the tray icon to manage
-      permissions or quit the app.
     </div>
 
     <script>
@@ -1523,7 +1655,7 @@
               } else {
                 lastError = fetchError;
               }
-              continue;
+              continue; 
             }
           } catch (error) {
             lastError = error;
@@ -1765,6 +1897,14 @@
           setTimeout(() => {
             snackbar.style.display = 'none';
           }, 5000);
+        }
+      }
+
+      function openExternalLink(url) {
+        if (window.electronAPI?.openExternal) {
+          window.electronAPI.openExternal(url);
+        } else {
+          window.open(url, '_blank');
         }
       }
     </script>

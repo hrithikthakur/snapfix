@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, clipboard, nativeImage, Notification, screen, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, clipboard, nativeImage, Notification, screen, dialog, shell } = require('electron');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
@@ -47,6 +47,7 @@ let mainWindow = null;
 let tray = null;
 let popupWindow = null;
 let statusOverlay = null;
+let soundEnabled = true;
 
 // Undo stack for text corrections
 const undoStack = [];
@@ -86,6 +87,14 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: true
     }
+  });
+
+  // Open external links in default browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('http:') || url.startsWith('https:')) {
+      shell.openExternal(url);
+    }
+    return { action: 'deny' };
   });
 
   // Disable cache to ensure fresh loads during development
@@ -306,6 +315,15 @@ function createTray() {
         handleUndo();
       },
       enabled: undoStack.length > 0
+    },
+    { type: 'separator' },
+    {
+      label: 'Play Sound Effects',
+      type: 'checkbox',
+      checked: soundEnabled,
+      click: (item) => {
+        soundEnabled = item.checked;
+      }
     },
     { type: 'separator' },
     ...(process.platform === 'darwin' ? [{
@@ -731,60 +749,39 @@ async function callGeminiAPI(text, apiKey) {
   throw lastError || new Error('Failed to call Gemini API');
 }
 
-function showStatusOverlay(type, message) {
-  // If overlay exists and is ready, just update it
-  if (statusOverlay && !statusOverlay.isDestroyed()) {
-    try {
-      // Check if webContents is ready
-      if (statusOverlay.webContents && !statusOverlay.webContents.isDestroyed()) {
-        statusOverlay.webContents.send('status-update', { type, message });
-        return;
-      }
-    } catch (error) {
-      // If send fails, close and recreate
-      console.error('Error updating overlay:', error);
-    }
-  }
+function createStatusOverlay() {
+  if (statusOverlay && !statusOverlay.isDestroyed()) return;
 
-  // Get primary display bounds
   const primaryDisplay = screen.getPrimaryDisplay();
-  const { width, height } = primaryDisplay.workAreaSize;
+  const { width } = primaryDisplay.workAreaSize;
   const workArea = primaryDisplay.workArea;
 
-  // Close existing overlay if any
-  if (statusOverlay && !statusOverlay.isDestroyed()) {
-    statusOverlay.close();
-  }
-
-  // Calculate Y position below the notch/menu bar
-  // workArea.y gives us the top of the safe area (below notch/menu bar on MacBooks)
-  // On MacBooks with notch: workArea.y is typically 28-32px (height of menu bar + notch area)
-  // On MacBooks without notch: workArea.y is typically 25-28px (height of menu bar)
-  // Add a small margin below that (20px) to position the overlay nicely
-  const topMargin = 20;
+  // Calculate Y position to extend from notch/menu bar
   let overlayY;
+  let overlayHeight = 56;
+  let overlayWidth = 400;
   
   if (process.platform === 'darwin') {
-    // macOS: Position below the notch area
-    // workArea.y is the top of the usable area (below menu bar/notch)
     if (workArea.y > 0) {
-      // Has notch or menu bar offset - position below it
-      overlayY = workArea.y + topMargin;
+      overlayY = 0;
+      overlayHeight = workArea.y + 44;
+      overlayWidth = 210;
     } else {
-      // Fallback: Use a safe default position (typically 50px covers menu bar + margin)
-      overlayY = 50;
+      overlayY = 0;
+      overlayHeight = 50;
+      overlayWidth = 240;
     }
   } else {
-    // Windows/Linux: Use small margin from top
-    overlayY = topMargin;
+    overlayY = 10;
+    overlayHeight = 56;
+    overlayWidth = 240;
   }
 
-  // Create status overlay window
   statusOverlay = new BrowserWindow({
-    width: 280,
-    height: 56,
-    x: Math.round((width - 280) / 2), // Center horizontally
-    y: overlayY, // Position below notch/menu bar
+    width: overlayWidth,
+    height: overlayHeight,
+    x: Math.round((width - overlayWidth) / 2),
+    y: overlayY,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -792,7 +789,7 @@ function showStatusOverlay(type, message) {
     resizable: false,
     movable: false,
     focusable: false,
-    hasShadow: true,
+    hasShadow: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -800,47 +797,59 @@ function showStatusOverlay(type, message) {
     },
     show: false,
     acceptFirstMouse: true,
-    // macOS specific options for better appearance
     ...(process.platform === 'darwin' && {
       vibrancy: 'ultra-dark',
       visualEffectState: 'active',
-      titleBarStyle: 'hidden'
+      titleBarStyle: 'hidden',
+      backgroundColor: '#00000000',
+      roundedCorners: false,
+      opacity: 1.0
     })
   });
 
-  // Load status overlay HTML
   statusOverlay.loadFile('statusOverlay.html');
-
-  // Wait for DOM to be ready before sending status update and showing
-  statusOverlay.webContents.once('did-finish-load', () => {
-    // Send status update
-    if (statusOverlay && !statusOverlay.isDestroyed()) {
-      statusOverlay.webContents.send('status-update', { type, message });
-      
-      // Show window after a brief delay to ensure render
-      setTimeout(() => {
-        if (statusOverlay && !statusOverlay.isDestroyed()) {
-          if (process.platform === 'darwin') {
-            // macOS: Show without activating
-            statusOverlay.showInactive();
-          } else {
-            statusOverlay.show();
-          }
-          statusOverlay.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-        }
-      }, 50);
-    }
-  });
-
-  // Handle overlay close
+  
   statusOverlay.on('closed', () => {
     statusOverlay = null;
   });
 }
 
+function showStatusOverlay(type, message) {
+  if (!statusOverlay || statusOverlay.isDestroyed()) {
+    createStatusOverlay();
+  }
+
+  if (statusOverlay && !statusOverlay.isDestroyed()) {
+    // Ensure window is visible immediately
+    if (process.platform === 'darwin') {
+      statusOverlay.showInactive();
+    } else {
+      statusOverlay.show();
+    }
+    statusOverlay.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    statusOverlay.setAlwaysOnTop(true, 'screen-saver'); // Ensure it's on top of full screen apps
+
+    // Send update
+    statusOverlay.webContents.send('status-update', { type, message, soundEnabled });
+  }
+}
+
 function hideStatusOverlay() {
   if (statusOverlay && !statusOverlay.isDestroyed()) {
-    statusOverlay.webContents.send('close-overlay');
+    try {
+      if (statusOverlay.webContents && !statusOverlay.webContents.isDestroyed()) {
+        statusOverlay.webContents.send('close-overlay');
+      } else {
+        statusOverlay.hide();
+      }
+    } catch (error) {
+      console.error('Error hiding overlay:', error);
+      try {
+        statusOverlay.hide();
+      } catch (e) {
+        // Ignore
+      }
+    }
   }
 }
 
@@ -907,6 +916,11 @@ ipcMain.handle('open-system-settings', async () => {
   return true;
 });
 
+// Handle opening external links
+ipcMain.handle('open-external', async (event, url) => {
+  await shell.openExternal(url);
+});
+
 // Handle setting clipboard with corrected text (for popup window if needed)
 ipcMain.handle('set-clipboard', (event, text) => {
   clipboard.writeText(text);
@@ -943,12 +957,12 @@ ipcMain.handle('make-window-focusable', () => {
 // Handle status overlay close message
 ipcMain.on('status-overlay-close', () => {
   if (statusOverlay && !statusOverlay.isDestroyed()) {
-    statusOverlay.close();
+    statusOverlay.hide();
   }
 });
 
 // Set app name for better identification in System Settings
-app.setName('GrammrFix');
+app.setName('SnapFix');
 
 app.whenReady().then(async () => {
   // On macOS, use accessory activation policy to prevent app activation
@@ -961,8 +975,30 @@ app.whenReady().then(async () => {
       // Fallback if setActivationPolicy fails
       console.log('Could not set activation policy:', e);
     }
+  }
 
-    // Check accessibility permissions using native bridge
+  // Initialize UI immediately
+  createWindow();
+  createTray();
+  createStatusOverlay(); // Pre-create hidden overlay
+  
+  // Check if API key is configured (proxy for onboarding completion)
+  const hasApiKey = !!process.env.GEMINI_API_KEY;
+
+  if (mainWindow) {
+    if (hasApiKey) {
+      console.log('API key found, starting in background');
+      mainWindow.hide();
+    } else {
+      console.log('No API key found, showing onboarding');
+      // Ensure window is visible and focused for onboarding
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  }
+
+  // Check accessibility permissions using native bridge
+  if (process.platform === 'darwin') {
     if (textBridge) {
       try {
         const hasPermissions = await textBridge.hasAccessibilityPermissions();
@@ -975,25 +1011,13 @@ app.whenReady().then(async () => {
       }
     } else {
       // Fallback: Trigger permission request using old method
-      triggerPermissionRequest();
-      const hasPermissions = await checkAccessibilityPermissions();
-      if (!hasPermissions) {
-        setTimeout(() => {
-          showNotification(
-            'GrammrFix',
-              'Accessibility permissions needed! Try using the shortcut (Alt+Space) - this will trigger a permission dialog.'
-          );
-        }, 2000);
-      }
+      // Don't await here to avoid blocking startup
+      checkAccessibilityPermissions().then(hasPermissions => {
+        if (!hasPermissions) {
+          // Optional: notify user, but maybe too intrusive on startup
+        }
+      });
     }
-  }
-
-  createWindow();
-  createTray();
-  
-  // Hide main window initially so it doesn't show when app starts
-  if (mainWindow) {
-    mainWindow.hide();
   }
 
   // Register global shortcut for grammar fix (Alt+Space)
