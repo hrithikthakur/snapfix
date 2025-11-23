@@ -270,6 +270,7 @@
       .logo-container {
         margin-bottom: 12px;
         margin-top: 0;
+        display: flex;
         text-align: left;
       }
 
@@ -1107,7 +1108,7 @@
 
       .app-header {
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 24px; /* Reduced from 40px */
       }
 
       .app-header h1 {
@@ -1130,7 +1131,7 @@
       .app-container {
         background: white;
         border-radius: 16px;
-        padding: 32px;
+        padding: 24px; /* Reduced from 32px */
         box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
@@ -1458,7 +1459,7 @@
         display: none;
         max-width: 700px;
         margin: 0 auto;
-        padding: 40px 20px;
+        padding: 20px; /* Reduced from 40px 20px */
         animation: fadeInUp 0.6s ease;
       }
 
@@ -1667,8 +1668,8 @@
       <div class="app-header">
         <div class="logo-container" style="justify-content: center; margin-bottom: 16px;">
           <img src="assets/icons/snapfix_logo_onboarding.png" class="logo-image" style="width: 64px; height: 64px; object-fit: contain;">
+          <h1>SnapFix</h1>
         </div>
-        <h1>SnapFix Settings</h1>
         <p class="subtitle">Configure your experience</p>
       </div>
 
@@ -1683,7 +1684,7 @@
           <p style="font-size: 13px; color: #86868b; margin-top: 8px; text-align: center;">Click to record a new shortcut</p>
         </div>
 
-        <div style="margin-top: 32px;">
+        <div style="margin-top: 24px;"> <!-- Reduced from 32px -->
           <span class="input-label" style="margin-bottom: 12px;">Preferences</span>
           
           <div class="setting-row">
@@ -1703,7 +1704,7 @@
           </div>
         </div>
 
-        <div class="input-section" style="margin-top: 32px;">
+        <div class="input-section" style="margin-top: 24px;"> <!-- Reduced from 32px -->
           <span class="input-label">API Key</span>
           <div style="display: flex; gap: 10px; align-items: center;">
              <div style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e5e5ea; background: #f5f5f7; font-family: monospace; color: #86868b;">•••• •••• ••••</div>
@@ -1712,10 +1713,10 @@
           <p style="font-size: 13px; color: #86868b; margin-top: 8px;">Stored locally on your device</p>
         </div>
 
-        <div style="margin-top: 40px; text-align: center;">
+        <div style="margin-top: 24px; text-align: center;"> <!-- Reduced from 40px -->
           <button class="fix-button" onclick="closeSettings()">Done</button>
           
-          <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; color: #86868b; font-size: 13px;">
+          <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; color: #86868b; font-size: 13px;"> <!-- Reduced from 24px -->
             <span id="appVersion">v0.1.0</span>
             <button class="secondary-button destructive" onclick="quitApp()">Quit App</button>
           </div>
