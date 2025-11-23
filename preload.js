@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getStartAtLogin: () => ipcRenderer.invoke('get-start-at-login'),
   setStartAtLogin: (enabled) => ipcRenderer.invoke('set-start-at-login', enabled),
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
-  quitApp: () => ipcRenderer.invoke('quit-app')
+  quitApp: () => ipcRenderer.invoke('quit-app'),
+  showConfirmDialog: (options) => ipcRenderer.invoke('show-confirm-dialog', options)
 });
 

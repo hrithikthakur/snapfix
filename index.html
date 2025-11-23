@@ -1536,25 +1536,29 @@
 
       .secondary-button {
         background: transparent;
-        color: #007aff;
+        border: none;
+        color: #86868b;
         font-weight: 500;
-        font-size: 15px;
+        font-size: 14px; /* Increased from 13px */
         cursor: pointer;
-        padding: 8px 16px;
+        padding: 10px 16px; /* Increased from 8px 12px */
         border-radius: 8px;
-        transition: background 0.2s;
+        transition: all 0.2s;
       }
 
       .secondary-button:hover {
-        background: rgba(0, 122, 255, 0.1);
+        background: rgba(0, 0, 0, 0.05);
+        color: #1d1d1f;
       }
 
       .secondary-button.destructive {
         color: #ff3b30;
+        background: rgba(255, 59, 48, 0.05);
       }
 
       .secondary-button.destructive:hover {
-        background: rgba(255, 59, 48, 0.1);
+        background: rgba(255, 59, 48, 0.15);
+        color: #ff3b30;
       }
     </style>
   </head>
@@ -1666,11 +1670,11 @@
     <!-- Settings View -->
     <div id="settings-view">
       <div class="app-header">
-        <div class="logo-container" style="justify-content: center; margin-bottom: 16px;">
-          <img src="assets/icons/snapfix_logo_onboarding.png" class="logo-image" style="width: 64px; height: 64px; object-fit: contain;">
-          <h1>SnapFix</h1>
+        <div class="logo-container" style="justify-content: center; align-items: center; gap: 16px; margin-bottom: 8px;">
+          <img src="assets/icons/snapfix_logo_onboarding.png" class="logo-image" style="width: 52px; height: 52px; object-fit: contain;">
+          <h1 style="margin: 0; font-size: 32px;">SnapFix</h1>
         </div>
-        <p class="subtitle">Configure your experience</p>
+        <p class="subtitle" style="margin-top: 0;">Configure your experience</p>
       </div>
 
       <div class="app-container">
@@ -1706,11 +1710,23 @@
 
         <div class="input-section" style="margin-top: 24px;"> <!-- Reduced from 32px -->
           <span class="input-label">API Key</span>
-          <div style="display: flex; gap: 10px; align-items: center;">
-             <div style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e5e5ea; background: #f5f5f7; font-family: monospace; color: #86868b;">•••• •••• ••••</div>
-             <button class="onboarding-button secondary" style="margin: 0; padding: 10px 20px; min-width: auto;" onclick="resetOnboarding()">Change</button>
+          <div class="api-key-input-container">
+            <input 
+              type="password" 
+              id="settingsApiKeyInput" 
+              class="api-key-input" 
+              placeholder="Enter API Key"
+              autocomplete="off"
+            />
+            <button class="toggle-visibility" onclick="toggleSettingsApiKeyVisibility()" type="button">
+              👁️
+            </button>
           </div>
-          <p style="font-size: 13px; color: #86868b; margin-top: 8px;">Stored locally on your device</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+             <p style="font-size: 13px; color: #86868b; margin: 0;">Stored locally</p>
+             <button id="saveSettingsApiKeyBtn" class="secondary-button" onclick="saveSettingsApiKey()" style="display: none; color: #007aff;">Save</button>
+          </div>
+          <div id="settingsApiKeyStatus" class="api-key-status" style="margin-top: 8px;"></div>
         </div>
 
         <div style="margin-top: 24px; text-align: center;"> <!-- Reduced from 40px -->
@@ -1856,6 +1872,7 @@
       let currentStep = 0;
       const TOTAL_STEPS = 3;
       let apiKeyVisible = false;
+      let settingsApiKeyVisible = false;
       let isRecording = false;
       let currentRecordingId = null;
 
@@ -1887,6 +1904,9 @@
           const versionEl = document.getElementById('appVersion');
           if (versionEl) versionEl.textContent = `v${version}`;
         }
+
+        // Initialize settings API Key
+        loadSettingsApiKey();
 
         // Check state
         const onboardingCompleted = localStorage.getItem('onboardingCompleted');
@@ -2049,8 +2069,93 @@
         }
       }
 
-      function resetOnboarding() {
-        if (confirm('Reset setup? You will need to enter your API key again.')) {
+      async function loadSettingsApiKey() {
+        if (window.electronAPI?.getApiKey) {
+          try {
+            const apiKey = await window.electronAPI.getApiKey();
+            const input = document.getElementById('settingsApiKeyInput');
+            if (input) {
+              input.value = apiKey;
+              
+              // Add event listener for changes
+              input.addEventListener('input', () => {
+                const saveBtn = document.getElementById('saveSettingsApiKeyBtn');
+                if (saveBtn) saveBtn.style.display = 'block';
+              });
+            }
+          } catch (error) {
+            console.error('Error loading API key:', error);
+          }
+        }
+      }
+
+      function toggleSettingsApiKeyVisibility() {
+        const input = document.getElementById('settingsApiKeyInput');
+        if (input) {
+          settingsApiKeyVisible = !settingsApiKeyVisible;
+          input.type = settingsApiKeyVisible ? 'text' : 'password';
+        }
+      }
+
+      async function saveSettingsApiKey() {
+        const input = document.getElementById('settingsApiKeyInput');
+        const saveBtn = document.getElementById('saveSettingsApiKeyBtn');
+        const statusEl = document.getElementById('settingsApiKeyStatus');
+        
+        if (!input) return;
+        const apiKey = input.value.trim();
+        
+        if (!apiKey) {
+          if (statusEl) {
+            statusEl.className = 'api-key-status error';
+            statusEl.textContent = 'API key cannot be empty';
+            statusEl.style.display = 'block';
+          }
+          return;
+        }
+
+        if (saveBtn) saveBtn.textContent = 'Saving...';
+
+        try {
+          if (window.electronAPI?.saveApiKey) {
+            const result = await window.electronAPI.saveApiKey(apiKey);
+            if (result.success) {
+              if (statusEl) {
+                statusEl.className = 'api-key-status success';
+                statusEl.textContent = 'Saved!';
+                statusEl.style.display = 'block';
+                setTimeout(() => { statusEl.style.display = 'none'; }, 2000);
+              }
+              if (saveBtn) {
+                saveBtn.textContent = 'Save';
+                saveBtn.style.display = 'none';
+              }
+            } else {
+              throw new Error(result.error);
+            }
+          }
+        } catch (error) {
+          if (statusEl) {
+            statusEl.className = 'api-key-status error';
+            statusEl.textContent = error.message || 'Failed to save';
+            statusEl.style.display = 'block';
+          }
+          if (saveBtn) saveBtn.textContent = 'Save';
+        }
+      }
+
+      async function resetOnboarding() {
+        let confirmed = false;
+        if (window.electronAPI?.showConfirmDialog) {
+          confirmed = await window.electronAPI.showConfirmDialog({
+            message: 'Reset Setup?',
+            detail: 'You will need to enter your API key again.'
+          });
+        } else {
+          confirmed = confirm('Reset setup? You will need to enter your API key again.');
+        }
+
+        if (confirmed) {
           localStorage.removeItem('onboardingCompleted');
           window.location.reload();
         }
@@ -2084,8 +2189,18 @@
         }
       }
 
-      function quitApp() {
-        if (confirm('Are you sure you want to quit SnapFix? The global shortcut will stop working.')) {
+      async function quitApp() {
+        if (window.electronAPI?.showConfirmDialog) {
+          const confirmed = await window.electronAPI.showConfirmDialog({
+            message: 'Quit SnapFix?',
+            detail: 'The global shortcut will stop working.'
+          });
+          
+          if (confirmed && window.electronAPI?.quitApp) {
+            window.electronAPI.quitApp();
+          }
+        } else if (confirm('Are you sure you want to quit SnapFix? The global shortcut will stop working.')) {
+          // Fallback
           if (window.electronAPI?.quitApp) {
             window.electronAPI.quitApp();
           }

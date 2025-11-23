@@ -136,7 +136,7 @@ const MAX_UNDO_ITEMS = 10;
 function createWindow() {
   // Try to load app icon
   const iconPaths = [
-    path.join(__dirname, 'assets', 'icons', 'snapfix_logo.png'),
+    path.join(__dirname, 'assets', 'icons', 'snapfix_logo-onboarding.png'),
     // path.join(__dirname, 'snapfix_logo.png'),
     // path.join(__dirname, 'snapfix-logo.png'),
     // path.join(__dirname, 'snapfix-icon.png'),
@@ -391,15 +391,6 @@ function createTray() {
         handleUndo();
       },
       enabled: undoStack.length > 0
-    },
-    { type: 'separator' },
-    {
-      label: 'Play Sound Effects',
-      type: 'checkbox',
-      checked: soundEnabled,
-      click: (item) => {
-        soundEnabled = item.checked;
-      }
     },
     { type: 'separator' },
     ...(process.platform === 'darwin' ? [{
@@ -898,7 +889,7 @@ function createStatusOverlay() {
   
   statusOverlay.webContents.once('did-finish-load', () => {
     // Load ICNS icon and send to renderer
-    const iconPath = path.join(__dirname, 'assets/icons/snapfix_logo.icns');
+    const iconPath = path.join(__dirname, 'assets/icons/snapfix_logo_onboarding.png');
     if (fs.existsSync(iconPath)) {
       const image = nativeImage.createFromPath(iconPath);
       if (!image.isEmpty()) {
@@ -932,7 +923,7 @@ function showStatusOverlay(type, message) {
     statusOverlay.webContents.send('status-update', { type, message, soundEnabled });
 
     // Ensure icon is set (resend to be safe)
-    const iconPath = path.join(__dirname, 'assets/icons/snapfix_logo.icns');
+    const iconPath = path.join(__dirname, 'assets/icons/snapfix_logo_onboarding.png');
     if (fs.existsSync(iconPath)) {
       const image = nativeImage.createFromPath(iconPath);
       if (!image.isEmpty()) {
@@ -1132,6 +1123,37 @@ ipcMain.handle('get-app-version', () => {
 // Handle quit app
 ipcMain.handle('quit-app', () => {
   app.quit();
+});
+
+// Handle confirmation dialog
+ipcMain.handle('show-confirm-dialog', async (event, options) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  
+  // Resolve icon path more robustly
+  // In production (asar), __dirname is inside the archive.
+  // But dialog icon often expects an unpacked path or native image.
+  const iconPath = path.join(__dirname, 'assets', 'icons', 'snapfix_logo_onboarding.png');
+  let iconImage = null;
+  
+  try {
+    if (fs.existsSync(iconPath)) {
+      iconImage = nativeImage.createFromPath(iconPath);
+    }
+  } catch (e) {
+    // If loading fails, iconImage remains null
+  }
+
+  const result = await dialog.showMessageBox(win, {
+    type: 'question',
+    buttons: ['Cancel', 'OK'],
+    defaultId: 1,
+    cancelId: 0,
+    title: options.title || 'SnapFix',
+    message: options.message,
+    detail: options.detail,
+    icon: iconImage || undefined
+  });
+  return result.response === 1;
 });
 
 // Handle status overlay close message
