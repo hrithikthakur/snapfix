@@ -90,12 +90,22 @@ landing/
 
 ## Customization
 
-### Update Download Links
+### Update Download Links / DMG
 
-Edit the download buttons in `index.html`:
-```html
-<a href="YOUR_DOWNLOAD_URL" class="btn-primary">Download for Mac</a>
-```
+Firebase Hosting’s Spark plan blocks executable files, so the DMG is hosted on a separate GitHub Pages site (`snapfix-downloads` repo) at `https://downloads.snapfix.app/SnapFix.dmg`.
+
+1. Build a new DMG from the root project: `npm run build:mac`.
+2. Replace the file in `~/Library/Mobile Documents/com~apple~CloudDocs/Codes/snapfix-downloads/SnapFix.dmg`.
+3. From that repo run:
+   ```bash
+   git add SnapFix.dmg
+   git commit -m "Update SnapFix DMG"
+   git push origin gh-pages
+   ```
+   (The repo is already configured with Git LFS + CNAME.)
+4. Deploy the landing site from `landing/`: `firebase deploy --only hosting`.
+
+If you ever move the host, update both download buttons in `index.html` to the new URL.
 
 ### Change Colors
 

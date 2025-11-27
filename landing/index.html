@@ -301,7 +301,7 @@
         </div>
 
         <div class="hero-cta">
-          <a href="#download" class="btn-primary download-btn">Download for macOS</a>
+          <a href="https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg" class="btn-primary download-btn" download>Download for macOS</a>
           <span class="meta-text">Free to use with your own <a href="https://aistudio.google.com/app/apikey" target="_blank" style="text-decoration: underline; color: inherit;">Gemini API Key</a></span>
         </div>
       </div>
@@ -330,7 +330,7 @@
       <div class="download-card">
         <h2>Ready to clear the squiggles?</h2>
         <div class="download-actions">
-          <a href="SnapFix.dmg" class="btn-primary large download-btn">Download for macOS</a>
+          <a href="https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg" class="btn-primary large download-btn" download>Download for macOS</a>
         </div>
             
         <div class="links">
@@ -379,6 +379,7 @@
             // Generic mailto or placeholder link since no waitlist URL exists yet
             btn.href = "mailto:?subject=SnapFix Waitlist Request&body=I'm interested in SnapFix for " + os;
             btn.style.background = "#666"; // De-emphasize
+            btn.removeAttribute('download');
           });
           
           const reqText = document.querySelector('.os-req');
