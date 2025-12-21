@@ -14,7 +14,7 @@
     "build:dir": "electron-builder --dir",
     "dist": "electron-builder --publish=never",
     "build:mas": "electron-builder --mac --config.mac.target=mas",
-    "build:direct": "electron-builder --mac --config.mac.target=dmg",
+    "build:direct": "electron-builder --mac --x64 --arm64",
     "notarize": "node scripts/notarize.js"
   },
   "author": "",
@@ -23,19 +23,13 @@
     "appId": "com.snapfix.app",
     "productName": "SnapFix",
     "icon": "assets/icons/snapfix_logo.icns",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
     "mac": {
       "icon": "assets/icons/snapfix_logo.icns",
       "category": "public.app-category.productivity",
       "target": [
         {
           "target": "dmg",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        },
-        {
-          "target": "zip",
           "arch": [
             "x64",
             "arm64"

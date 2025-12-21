@@ -15,5 +15,6 @@ native/macOS/build/
 native/Windows/bin/
 native/Windows/obj/
 *.dmg
+!landing/downloads/*.dmg
 *.zip
 *.app
