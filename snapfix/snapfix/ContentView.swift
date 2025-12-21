@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  snapfix
 //
-//  Created by Hrithik Thakur on 21/12/2025.
+//  Crated by Hrithik Thakur on 21/12/2025.
 //
 
 import SwiftUI
