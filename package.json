@@ -46,12 +46,12 @@
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
-      "identity": null,
       "extendInfo": {
         "NSHighResolutionCapable": true,
         "NSSupportsAutomaticGraphicsSwitching": true,
         "LSMinimumSystemVersion": "10.13.0"
-      }
+      },
+      "notarize": false
     },
     "mas": {
       "entitlements": "build/entitlements.mas.plist",
@@ -62,9 +62,6 @@
       "type": "distribution"
     },
     "afterSign": "scripts/notarize.js",
-    "notarize": {
-      "teamId": "YOUR_TEAM_ID"
-    },
     "files": [
       "**/*",
       "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
