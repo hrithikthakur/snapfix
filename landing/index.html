@@ -301,7 +301,7 @@
         </div>
 
         <div class="hero-cta">
-          <a href="https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg" class="btn-primary download-btn" download>Download for macOS</a>
+          <a href="https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0-arm64.dmg" class="btn-primary download-btn" download>Download for macOS</a>
           <span class="meta-text">Free to use with your own <a href="https://aistudio.google.com/app/apikey" target="_blank" style="text-decoration: underline; color: inherit;">Gemini API Key</a></span>
           <div style="margin-top: 16px; font-size: 0.85rem; color: var(--text-light);">
             <a href="#" id="app-store-link" style="text-decoration: none; color: inherit; opacity: 0.7;" onclick="return false;">
@@ -379,7 +379,41 @@
         return 'other';
       };
 
-      const updateForOS = () => {
+      // Architecture Detection for macOS (Apple Silicon vs Intel)
+      const detectArchitecture = async () => {
+        // Check for newer User-Agent Client Hints API
+        if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+          try {
+            const highEntropyValues = await navigator.userAgentData.getHighEntropyValues(['architecture']);
+            if (highEntropyValues.architecture === 'arm') {
+              return 'arm64';
+            } else if (highEntropyValues.architecture === 'x86') {
+              return 'x64';
+            }
+          } catch (e) {
+            // Fallback to user agent parsing
+          }
+        }
+        
+        // Fallback: Check user agent string for architecture hints
+        const userAgent = navigator.userAgent.toLowerCase();
+        // Safari on Apple Silicon often includes platform-specific info
+        if (userAgent.includes('arm') || userAgent.includes('aarch64')) {
+          return 'arm64';
+        }
+        
+        // Check platform architecture (works in some browsers)
+        if (navigator.platform && navigator.platform.includes('Mac')) {
+          // Modern browsers may expose this, but it's not always reliable
+          // Default to x64 if we can't determine (Intel is still common)
+          // We'll default to a universal build or let user choose
+          return 'x64'; // Default fallback
+        }
+        
+        return 'x64'; // Default to Intel/x64 if unknown
+      };
+
+      const updateForOS = async () => {
         const os = detectOS();
         if (os !== 'mac') {
           const btns = document.querySelectorAll('.download-btn');
@@ -395,6 +429,18 @@
           if (reqText) {
             reqText.textContent = `Currently available for macOS. ${os.charAt(0).toUpperCase() + os.slice(1)} support coming soon.`;
           }
+        } else {
+          // On macOS, detect architecture and update download URLs
+          const arch = await detectArchitecture();
+          const baseUrl = 'https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0';
+          const downloadUrl = arch === 'arm64' 
+            ? `${baseUrl}-arm64.dmg`
+            : `${baseUrl}-x64.dmg`;
+          
+          const btns = document.querySelectorAll('.download-btn');
+          btns.forEach(btn => {
+            btn.href = downloadUrl;
+          });
         }
       };
 

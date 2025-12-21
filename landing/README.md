@@ -60,21 +60,57 @@ To preview the landing page locally:
 
 ### Deploy
 
-1. **Deploy to Firebase:**
+1. **Create custom Firebase site (first time only):**
+   ```bash
+   # Create a custom site ID for a cleaner URL (e.g., snapfix.web.app)
+   firebase hosting:sites:create snapfix --project snapfix-app-2025
+   ```
+   
+   Or create it via [Firebase Console](https://console.firebase.google.com) → Hosting → Add another site
+
+2. **Deploy to Firebase:**
    ```bash
    firebase deploy --only hosting
    ```
 
-2. Your site will be live at: `https://your-project-id.web.app` or `https://your-project-id.firebaseapp.com`
+3. Your site will be live at:
+   - Custom site: `https://snapfix.web.app` (after creating the custom site)
+   - Default: `https://snapfix-app-2025.web.app` or `https://snapfix-app-2025.firebaseapp.com`
 
 ### Custom Domain
 
-To use a custom domain:
+To use a custom domain (e.g., `snapfix.app`), you can use either the Firebase Console or CLI:
+
+#### Option 1: Using Firebase Console (Recommended)
 
 1. Go to [Firebase Console](https://console.firebase.google.com)
-2. Select your project
-3. Go to Hosting → Add custom domain
-4. Follow the instructions to verify your domain
+2. Select your project (`snapfix-app-2025`)
+3. Navigate to **Hosting** → **Add custom domain**
+4. Enter your domain (e.g., `snapfix.app` or `www.snapfix.app`)
+5. Firebase will provide DNS records to add:
+   - For apex domain: Add A records pointing to Firebase IPs
+   - For subdomain: Add CNAME record pointing to Firebase
+6. Add the DNS records at your domain registrar
+7. Firebase will automatically provision SSL certificate (may take a few hours)
+
+#### Option 2: Using Firebase CLI
+
+```bash
+# List existing domains
+firebase hosting:sites:list
+
+# Add a custom domain (you'll need to verify via DNS)
+firebase hosting:sites:create your-site-id
+
+# Then add domain via Console or use:
+firebase hosting:channel:deploy preview --only hosting
+```
+
+**Important Notes:**
+- SSL certificate provisioning takes 24-48 hours
+- Make sure DNS records are properly configured before Firebase can verify
+- You can add both apex domain (`snapfix.app`) and subdomain (`www.snapfix.app`)
+- After verification, both will serve your Firebase Hosting site
 
 ## File Structure
 
