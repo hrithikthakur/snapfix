@@ -12,7 +12,10 @@
     "build": "electron-builder",
     "build:mac": "electron-builder --mac",
     "build:dir": "electron-builder --dir",
-    "dist": "electron-builder --publish=never"
+    "dist": "electron-builder --publish=never",
+    "build:mas": "electron-builder --mac --config.mac.target=mas",
+    "build:direct": "electron-builder --mac --config.mac.target=dmg",
+    "notarize": "node scripts/notarize.js"
   },
   "author": "",
   "license": "MIT",
@@ -43,6 +46,7 @@
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
+      "identity": null,
       "extendInfo": {
         "NSHighResolutionCapable": true,
         "NSSupportsAutomaticGraphicsSwitching": true,
@@ -52,7 +56,14 @@
     "mas": {
       "entitlements": "build/entitlements.mas.plist",
       "entitlementsInherit": "build/entitlements.mas.inherit.plist",
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "type": "distribution"
+    },
+    "afterSign": "scripts/notarize.js",
+    "notarize": {
+      "teamId": "YOUR_TEAM_ID"
     },
     "files": [
       "**/*",
@@ -86,6 +97,7 @@
     "posthog-node": "^5.11.2"
   },
   "devDependencies": {
+    "@electron/notarize": "^2.3.1",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "electron": "^30.0.0",
