@@ -381,7 +381,7 @@
 
       // Architecture Detection for macOS (Apple Silicon vs Intel)
       const detectArchitecture = async () => {
-        // Check for newer User-Agent Client Hints API
+        // Method 1: Check for newer User-Agent Client Hints API (most reliable when available)
         if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
           try {
             const highEntropyValues = await navigator.userAgentData.getHighEntropyValues(['architecture']);
@@ -391,26 +391,32 @@
               return 'x64';
             }
           } catch (e) {
-            // Fallback to user agent parsing
+            // API not available or blocked, continue to fallback methods
           }
         }
         
-        // Fallback: Check user agent string for architecture hints
+        // Method 2: Check user agent string for architecture hints
         const userAgent = navigator.userAgent.toLowerCase();
-        // Safari on Apple Silicon often includes platform-specific info
-        if (userAgent.includes('arm') || userAgent.includes('aarch64')) {
+        // Some browsers include architecture in the user agent
+        if (userAgent.includes('arm') || userAgent.includes('aarch64') || userAgent.includes('apple silicon')) {
           return 'arm64';
         }
         
-        // Check platform architecture (works in some browsers)
-        if (navigator.platform && navigator.platform.includes('Mac')) {
-          // Modern browsers may expose this, but it's not always reliable
-          // Default to x64 if we can't determine (Intel is still common)
-          // We'll default to a universal build or let user choose
-          return 'x64'; // Default fallback
+        // Method 3: Platform-specific heuristics
+        // On Apple Silicon Macs, certain APIs behave differently, but this is hard to detect
+        // We'll use a conservative approach: check if it's definitely Intel
+        if (userAgent.includes('intel') || userAgent.includes('x86_64') || userAgent.includes('x64')) {
+          return 'x64';
         }
         
-        return 'x64'; // Default to Intel/x64 if unknown
+        // Method 4: Check hardware concurrency (Apple Silicon often has different core counts)
+        // This is not reliable, but can be a hint
+        // M1/M2 typically have 8 cores, but so do some Intel Macs, so this isn't definitive
+        
+        // Default: Since we can't reliably detect, we'll default to arm64 (Apple Silicon)
+        // as it's more common in newer Macs. Users can manually download the correct version
+        // if this doesn't work. Alternatively, we could default to x64 for compatibility.
+        return 'arm64'; // Default to Apple Silicon (more common in recent Macs)
       };
 
       const updateForOS = async () => {
@@ -433,13 +439,18 @@
           // On macOS, detect architecture and update download URLs
           const arch = await detectArchitecture();
           const baseUrl = 'https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0';
+          // Use architecture-specific filename if detected, otherwise use generic
           const downloadUrl = arch === 'arm64' 
             ? `${baseUrl}-arm64.dmg`
-            : `${baseUrl}-x64.dmg`;
+            : arch === 'x64'
+            ? `${baseUrl}-x64.dmg`
+            : `${baseUrl}-arm64.dmg`; // Default fallback
           
           const btns = document.querySelectorAll('.download-btn');
           btns.forEach(btn => {
             btn.href = downloadUrl;
+            // Optionally add a data attribute to show which arch was detected (for debugging)
+            btn.setAttribute('data-detected-arch', arch);
           });
         }
       };
