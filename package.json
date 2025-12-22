@@ -60,7 +60,9 @@
       "extendInfo": {
         "ElectronTeamID": "68G57WN635",
         "LSMinimumSystemVersion": "12.0"
-      }
+      },
+      "provisioningProfile": "build/SnapFix_macOS_App_Store_Distribution.provisionprofile"
+
     },
     "afterSign": "scripts/notarize.js",
     "files": [
