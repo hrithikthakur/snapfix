@@ -13,14 +13,15 @@
     "build:mac": "electron-builder --mac",
     "build:dir": "electron-builder --dir",
     "dist": "electron-builder --publish=never",
-    "build:mas": "electron-builder --mac --config.mac.target=mas",
+    "build:mas": "CSC_TEAM_ID=68G57WN635 APPLE_TEAM_ID=68G57WN635 electron-builder --mac --config.mac.target=mas",
+    "build:mas-dir": "CSC_TEAM_ID=68G57WN635 APPLE_TEAM_ID=68G57WN635 electron-builder --mac --config.mac.target=mas --dir",
     "build:direct": "electron-builder --mac --x64 --arm64",
     "notarize": "node scripts/notarize.js"
   },
   "author": "",
   "license": "MIT",
   "build": {
-    "appId": "com.snapfix.app",
+    "appId": "com.parallex-tech.app",
     "productName": "SnapFix",
     "icon": "assets/icons/snapfix_logo.icns",
     "artifactName": "${productName}-${version}-${arch}.${ext}",
@@ -43,7 +44,8 @@
       "extendInfo": {
         "NSHighResolutionCapable": true,
         "NSSupportsAutomaticGraphicsSwitching": true,
-        "LSMinimumSystemVersion": "10.13.0"
+        "LSMinimumSystemVersion": "12.0",
+        "ElectronTeamID": "68G57WN635"
       },
       "notarize": false
     },
@@ -53,7 +55,12 @@
       "category": "public.app-category.productivity",
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
-      "type": "distribution"
+      "type": "distribution",
+      "minimumSystemVersion": "12.0",
+      "extendInfo": {
+        "ElectronTeamID": "68G57WN635",
+        "LSMinimumSystemVersion": "12.0"
+      }
     },
     "afterSign": "scripts/notarize.js",
     "files": [
