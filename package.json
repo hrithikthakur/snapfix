@@ -24,10 +24,10 @@
   "build": {
     "appId": "com.parallex-tech.app",
     "productName": "FlickFix",
-    "icon": "assets/icons/flickfix_logo.icns",
+    "icon": "assets/icons/flickfix_logo_onboarding.png",
     "artifactName": "FlickFix-${version}-${arch}.${ext}",
     "mac": {
-      "icon": "assets/icons/flickfix_logo.icns",
+      "icon": "assets/icons/flickfix_logo_onboarding.png",
       "category": "public.app-category.productivity",
       "target": [
         {
