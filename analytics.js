@@ -1,5 +1,5 @@
 /**
- * Analytics Module for SnapFix
+ * Analytics Module for FlickFix
  * Supports PostHog, Mixpanel, and barebones file logging
  */
 

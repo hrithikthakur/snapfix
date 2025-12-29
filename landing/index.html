@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SnapFix</title>
+  <title>FlickFix</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Fix typos in any app on macOS with a single shortcut. Powered by your own Gemini API key.">
   
@@ -272,10 +272,10 @@
     <!-- Minimal Header -->
     <header class="header">
       <a href="index.html" class="logo-container" style="text-decoration: none; color: inherit;">
-        <img src="./assets/snapfix_logo_onboarding.png" alt="SnapFix Logo" class="logo-img">
-        <div class="logo">SnapFix</div>
+        <img src="./assets/snapfix_logo_onboarding.png" alt="FlickFix Logo" class="logo-img">
+        <div class="logo">FlickFix</div>
       </a>
-      <a href="#download" class="btn-download">Get SnapFix</a>
+      <a href="#download" class="btn-download">Get FlickFix</a>
     </header>
 
     <!-- Hero Section -->
@@ -301,13 +301,13 @@
         </div>
 
         <div class="hero-cta">
-          <a href="https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0-arm64.dmg" class="btn-primary download-btn" download>Download for macOS</a>
+          <a href="https://storage.googleapis.com/flickfix-downloads/FlickFix-0.1.1-arm64.dmg" class="btn-primary download-btn" download>Download for macOS</a>
           <span class="meta-text">Free to use with your own <a href="https://aistudio.google.com/app/apikey" target="_blank" style="text-decoration: underline; color: inherit;">Gemini API Key</a></span>
-          <div style="margin-top: 16px; font-size: 0.85rem; color: var(--text-light);">
-            <a href="#" id="app-store-link" style="text-decoration: none; color: inherit; opacity: 0.7;" onclick="return false;">
-              Also available on the <span style="text-decoration: underline;">Mac App Store</span> (coming soon)
-            </a>
+          <div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-light); opacity: 0.8;">
+            <span>⚠️ Early Access</span> • 
+            <a href="docs/early-access.html" style="text-decoration: underline; color: inherit;">Learn more</a>
           </div>
+          
         </div>
       </div>
     </section>
@@ -335,15 +335,24 @@
       <div class="download-card">
         <h2>Ready to clear the squiggles?</h2>
         <div class="download-actions">
-          <a href="https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg" class="btn-primary large download-btn" download>Download for macOS</a>
+          <a href="https://storage.googleapis.com/flickfix-downloads/FlickFix-0.1.1-arm64.dmg" class="btn-primary large download-btn" download>Download for macOS</a>
         </div>
-        
+        <div style="margin-top: 16px; font-size: 0.85rem; color: var(--text-light);">
+          <a href="#" id="app-store-link" style="text-decoration: none; color: inherit; opacity: 0.7; cursor: default;" onclick="event.preventDefault(); return false;" title="Mac App Store version coming soon">
+            Also available on the <span style="text-decoration: underline;">Mac App Store</span> (coming soon)
+          </a>
+        </div>
         <div class="links">
            <a href="https://aistudio.google.com/app/api-keys" target="_blank">Get Gemini API Key</a> •
+           <a href="docs/features.html">Features</a> •
+           <a href="docs/early-access.html">Early Access</a> •
+           <a href="docs/waitlist.html">Waitlist</a> •
            <a href="docs/terms.html">Terms</a> •
            <a href="docs/privacy.html">Privacy</a> •
            <a href="https://buymeacoffee.com/hrithik.loves.eng" target="_blank">Patreon</a>
         </div>
+
+       
       </div>
     </section>
 
@@ -421,8 +430,7 @@
           const btns = document.querySelectorAll('.download-btn');
           btns.forEach(btn => {
             btn.textContent = "Join Waitlist (macOS Only)";
-            // Generic mailto or placeholder link since no waitlist URL exists yet
-            btn.href = "mailto:?subject=SnapFix Waitlist Request&body=I'm interested in SnapFix for " + os;
+            btn.href = "docs/waitlist.html";
             btn.style.background = "#666"; // De-emphasize
             btn.removeAttribute('download');
           });
@@ -434,7 +442,7 @@
         } else {
           // On macOS, detect architecture and update download URLs
           const arch = await detectArchitecture();
-          const baseUrl = 'https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0';
+          const baseUrl = 'https://storage.googleapis.com/flickfix-downloads/FlickFix-0.1.1';
           // Use architecture-specific filename if detected, otherwise use generic
           const downloadUrl = arch === 'arm64' 
             ? `${baseUrl}-arm64.dmg`

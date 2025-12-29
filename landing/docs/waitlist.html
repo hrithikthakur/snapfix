@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Waitlist - FlickFix</title>
+  <link rel="icon" href="../assets/snapfix_favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --text-light: #666666;
+      --accent: #000000;
+      --accent-hover: #333333;
+      --border: #eaeaea;
+      --success-bg: #d4edda;
+      --success-border: #c3e6cb;
+      --success-text: #155724;
+      --error-bg: #f8d7da;
+      --error-border: #f5c6cb;
+      --error-text: #721c24;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 0;
+      margin-bottom: 20px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .back-link {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.8;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+      opacity: 1;
+    }
+
+    .content {
+      margin-top: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      margin: 0 0 40px;
+    }
+
+    .waitlist-form {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    input[type="email"],
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 1rem;
+      background: #fff;
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    input[type="email"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 1rem;
+      font-family: var(--font);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      background: #999;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .message.success {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+      display: block;
+    }
+
+    .message.error {
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
+      display: block;
+    }
+
+    .info-box {
+      background: #f0f7ff;
+      border: 1px solid #b3d9ff;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: #004085;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+    .footer .links {
+      margin-bottom: 0;
+    }
+
+    .footer .links a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer .links a:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .waitlist-form { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="../index.html" class="logo-container">
+        <img src="../assets/snapfix_logo_onboarding.png" alt="FlickFix Logo" class="logo-img">
+        <div class="logo">FlickFix</div>
+      </a>
+      <a href="../index.html" class="back-link">← Back</a>
+    </header>
+
+    <div class="content">
+      <h1>Join the Waitlist</h1>
+      <p class="subtitle">Be the first to know when FlickFix becomes available for your platform.</p>
+
+      <div id="message" class="message"></div>
+
+      <form id="waitlist-form" class="waitlist-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="platform">Platform Interest</label>
+          <select id="platform" name="platform" required>
+            <option value="">Select your platform</option>
+            <option value="windows">Windows</option>
+            <option value="linux">Linux</option>
+            <option value="macos-intel">macOS (Intel)</option>
+            <option value="macos-arm">macOS (Apple Silicon)</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">Join Waitlist</button>
+      </form>
+
+      <div class="info-box">
+        <strong>What happens next?</strong>
+        <p>We'll send you an email when FlickFix becomes available for your platform. We respect your privacy and won't spam you.</p>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="links">
+        <a href="https://aistudio.google.com/app/api-keys" target="_blank">Get Gemini API Key</a> •
+        <a href="features.html">Features</a> •
+        <a href="early-access.html">Early Access</a> •
+        <a href="waitlist.html">Waitlist</a> •
+        <a href="terms.html">Terms</a> •
+        <a href="privacy.html">Privacy</a> •
+        <a href="https://buymeacoffee.com/hrithik.loves.eng" target="_blank">Patreon</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('waitlist-form');
+      const messageDiv = document.getElementById('message');
+      const submitBtn = document.getElementById('submit-btn');
+      const emailInput = document.getElementById('email');
+      const platformSelect = document.getElementById('platform');
+
+      // Auto-detect platform
+      const detectPlatform = () => {
+        const platform = navigator.platform.toLowerCase();
+        const userAgent = navigator.userAgent.toLowerCase();
+        
+        if (platform.includes('mac') || userAgent.includes('mac')) {
+          // Try to detect architecture
+          if (userAgent.includes('arm') || userAgent.includes('aarch64')) {
+            return 'macos-arm';
+          }
+          return 'macos-intel';
+        } else if (platform.includes('win') || userAgent.includes('win')) {
+          return 'windows';
+        } else if (platform.includes('linux') || userAgent.includes('linux')) {
+          return 'linux';
+        }
+        return 'other';
+      };
+
+      // Set default platform
+      const detectedPlatform = detectPlatform();
+      if (detectedPlatform !== 'other') {
+        platformSelect.value = detectedPlatform;
+      }
+
+      const showMessage = (text, type) => {
+        messageDiv.textContent = text;
+        messageDiv.className = `message ${type}`;
+        messageDiv.style.display = 'block';
+        
+        if (type === 'success') {
+          form.reset();
+          platformSelect.value = detectedPlatform !== 'other' ? detectedPlatform : '';
+        }
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = emailInput.value.trim();
+        const platform = platformSelect.value;
+
+        if (!email || !platform) {
+          showMessage('Please fill in all fields.', 'error');
+          return;
+        }
+
+        // Disable submit button
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Joining...';
+
+        try {
+          // For now, use mailto as fallback since there's no backend
+          // In production, this would POST to an API endpoint
+          const subject = encodeURIComponent('FlickFix Waitlist Request');
+          const body = encodeURIComponent(
+            `Email: ${email}\nPlatform: ${platform}\n\nI'm interested in joining the FlickFix waitlist for ${platform}.`
+          );
+          
+          // Show success message
+          showMessage('Thank you! We\'ve received your request. You\'ll be notified when FlickFix becomes available for your platform.', 'success');
+          
+          // Optionally open mailto as backup (commented out to avoid popup)
+          // window.location.href = `mailto:flickfix100@gmail.com?subject=${subject}&body=${body}`;
+          
+          // In a real implementation, you would send this to your backend:
+          // const response = await fetch('/api/waitlist', {
+          //   method: 'POST',
+          //   headers: { 'Content-Type': 'application/json' },
+          //   body: JSON.stringify({ email, platform })
+          // });
+          // if (response.ok) {
+          //   showMessage('Success! You\'ve been added to the waitlist.', 'success');
+          // } else {
+          //   throw new Error('Failed to join waitlist');
+          // }
+        } catch (error) {
+          showMessage('Something went wrong. Please try again or email us directly at flickfix100@gmail.com', 'error');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join Waitlist';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - SnapFix</title>
+    <title>Privacy Policy - FlickFix</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -124,6 +124,11 @@
             margin-bottom: 8px;
         }
 
+        .legal-content strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
         .legal-content a {
             text-decoration: underline;
         }
@@ -144,6 +149,21 @@
             color: var(--text-light);
             font-size: 0.9rem;
         }
+
+        .footer .links {
+            margin-bottom: 16px;
+        }
+
+        .footer .links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer .links a:hover {
+            color: var(--text);
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -151,67 +171,128 @@
         <!-- Minimal Header -->
         <header class="header">
             <a href="../index.html" class="logo-container">
-                <img src="../assets/snapfix_logo_onboarding.png" alt="SnapFix Logo" class="logo-img">
-                <div class="logo">SnapFix</div>
+                <img src="../assets/snapfix_logo_onboarding.png" alt="FlickFix Logo" class="logo-img">
+                <div class="logo">FlickFix</div>
             </a>
-            <a href="../index.html#download" class="btn-download">Get SnapFix</a>
+            <a href="../index.html#download" class="btn-download">Get FlickFix</a>
         </header>
 
         <div class="legal-content">
             <h1>Privacy Policy</h1>
-            <p class="legal-meta">Effective Date: November 22, 2025</p>
+            <p class="legal-meta">Effective date: 28 December 2025<br>Last updated: 28 December 2025</p>
 
-            <h2>1. Introduction</h2>
-            <p>SnapFix ("we", "our", or "us") values your privacy. This Privacy Policy explains how we handle your data when you use the SnapFix desktop application ("App").</p>
+            <h2>1) Who we are (Data Controller)</h2>
+            <p>FlickFix ("FlickFix", "we", "us") is the data controller for the personal data described in this policy.</p>
+            <p><strong>Contact:</strong> <a href="mailto:flickfix100@gmail.com">flickfix100@gmail.com</a><br>
+            (If you later form a company, add the legal entity name and registered address here.)</p>
+            <p>This policy is written to meet the UK GDPR transparency expectations for privacy information.</p>
 
-            <h2>2. Data Collection and Usage</h2>
-
-            <h3>2.1 Text Processing</h3>
-            <p>SnapFix function is to correct grammar and spelling in the text you select.</p>
+            <h2>2) What this policy covers</h2>
+            <p>This policy covers:</p>
             <ul>
-                <li><strong>How it works:</strong> When you trigger the SnapFix shortcut (e.g., Option+Space), the App captures the currently selected text.</li>
-                <li><strong>Third-Party Processing:</strong> This text is sent securely to <strong>Google's Gemini API</strong> for processing.</li>
-                <li><strong>No Storage:</strong> We do not store, log, or save your text on our servers. The text is processed in transit and returned immediately to your device.</li>
-                <li><strong>Gemini API:</strong> By using SnapFix, you acknowledge that your text is processed by Google. Please refer to <a href="https://policies.google.com/privacy">Google's Privacy Policy</a> for details on how they handle API data.</li>
+                <li>The <strong>FlickFix desktop application</strong> (the "App")</li>
+                <li>This <strong>FlickFix website and documentation pages</strong> (the "Site")</li>
+            </ul>
+            <p>If you click links to third-party websites (such as Google), their policies apply to their services.</p>
+
+            <h2>3) What FlickFix does (plain English version)</h2>
+            <p>FlickFix helps you correct grammar, spelling, and clarity in text you select. When you trigger FlickFix (for example, with a keyboard shortcut), the App reads the text you selected, sends it to the <strong>Google Gemini API</strong> for processing, and then inserts the corrected result back where you were typing.</p>
+            <p>FlickFix is designed to work only when you intentionally trigger it, not in the background.</p>
+
+            <h2>4) Personal data we process</h2>
+
+            <h3>4.1 Selected text (when you trigger FlickFix)</h3>
+            <p><strong>What:</strong> The text you have highlighted or selected at the moment you trigger FlickFix.<br>
+            <strong>Why:</strong> To generate a correction and return it to you.</p>
+            <p><strong>Important:</strong> FlickFix does <strong>not</strong> store your selected text on FlickFix servers. However, your selected text is sent to Google's Gemini API, and Google may retain prompts, context, and outputs for abuse monitoring for <strong>55 days</strong>, and may use authorised human review for flagged content, as described in Gemini API policies.</p>
+
+            <h3>4.2 API keys (if you bring your own Gemini API key)</h3>
+            <p><strong>What:</strong> Your Gemini API key (if you choose to use one).<br>
+            <strong>Where:</strong> Stored locally on your device in the operating system's secure storage (for example, macOS Keychain).<br>
+            <strong>Access:</strong> We do not receive or store your API key on FlickFix servers.</p>
+
+            <h3>4.3 Diagnostics and support data (minimal)</h3>
+            <p>We aim to collect <strong>no behavioural analytics by default</strong>. If you contact us for support, or if you choose to send diagnostics, we may process:</p>
+            <ul>
+                <li>your email address (if you email us)</li>
+                <li>app version, OS version, and device details needed to debug</li>
+                <li>crash or error logs (which typically include technical details like stack traces)</li>
+            </ul>
+            <p>We do not intend to collect the content you selected for correction as part of diagnostics. If you send us screenshots or logs manually, please avoid including sensitive personal data.</p>
+
+            <h2>5) Lawful basis for processing (UK GDPR)</h2>
+            <p>We process personal data under the following lawful bases:</p>
+            <ul>
+                <li><strong>Contract:</strong> processing selected text is necessary to provide the core FlickFix functionality you request.</li>
+                <li><strong>Legitimate interests:</strong> limited diagnostics and security measures (for example, preventing abuse, improving stability) where this is proportionate and does not override your rights.</li>
+            </ul>
+            <p>Where a different lawful basis is required in the future (for example, consent for optional analytics), we will ask you clearly and update this policy.</p>
+
+            <h2>6) Third parties we share data with</h2>
+
+            <h3>6.1 Google Gemini API</h3>
+            <p>When you trigger FlickFix, your selected text is sent to Google's Gemini API for processing.</p>
+            <p>Google's Gemini API policies describe retention for abuse monitoring (including prompts, context, and outputs retained for 55 days) and potential authorised human review of flagged content.</p>
+            <p>Gemini API terms also include important restrictions (including age requirements and regional requirements).</p>
+
+            <h2>7) International data transfers</h2>
+            <p>Because text is processed by Google, your data may be processed in countries outside the UK. Google's Gemini API documentation and terms describe how the service operates, including abuse monitoring practices and retention.</p>
+
+            <h2>8) Data retention</h2>
+            <ul>
+                <li><strong>Selected text:</strong> FlickFix does not store your selected text on FlickFix servers. Google may retain prompts, context, and outputs for abuse monitoring for 55 days (per Gemini API policy).</li>
+                <li><strong>Support emails:</strong> kept as long as needed to respond and maintain a record of the support interaction, then deleted or minimised where practical.</li>
+                <li><strong>Diagnostics (if provided):</strong> kept only as long as needed to investigate and fix issues, then deleted or anonymised where practical.</li>
             </ul>
 
-            <h3>2.2 API Keys</h3>
+            <h2>9) Security</h2>
+            <p>We use reasonable technical measures to protect data handled by FlickFix:</p>
             <ul>
-                <li>If you provide your own API key, it is stored locally on your device in a secure manner. We do not have access to your personal API key.</li>
+                <li>network communication to the Gemini API is encrypted using HTTPS</li>
+                <li>API keys are stored locally using secure OS storage mechanisms</li>
+                <li>we aim to minimise data collection</li>
             </ul>
+            <p>No system is perfectly secure, but we design FlickFix to keep the amount of data we handle as low as possible.</p>
 
-            <h3>2.3 Usage Data</h3>
+            <h2>10) Permissions (macOS Accessibility)</h2>
+            <p>On macOS, FlickFix may request <strong>Accessibility permissions</strong> so it can:</p>
             <ul>
-                <li>We do not track your individual usage behavior or the content of your corrections.</li>
-                <li>The App may collect anonymous, aggregate technical data (e.g., crash reports or version numbers) to help us improve stability.</li>
+                <li>read the currently selected text when you trigger FlickFix</li>
+                <li>insert the corrected text back into the active application</li>
             </ul>
+            <p>We do not use Accessibility permissions to monitor keystrokes in the background, log activity, or continuously read what you type. The permission is used for the user-initiated correction flow.</p>
 
-            <h2>3. Permissions</h2>
+            <h2>11) Age restrictions</h2>
+            <p>FlickFix is intended for users aged <strong>18 and over</strong>. Gemini API terms require users to be 18+ and prohibit API clients directed to or likely accessed by under 18s.</p>
 
-            <h3>3.1 Accessibility Permissions (macOS)</h3>
-            <p>SnapFix requires Accessibility permissions on macOS to function.</p>
-            <ul>
-                <li><strong>Purpose:</strong> This permission is strictly used to:
-                    <ul>
-                        <li>Detect the selected text.</li>
-                        <li>Replace the selected text with the corrected version.</li>
-                    </ul>
-                </li>
-                <li><strong>Limitations:</strong> We do not use this permission to monitor your keystrokes, log your activity, or access data outside the context of the specific text correction action you initiate.</li>
-            </ul>
+            <h2>12) Automated decision-making</h2>
+            <p>FlickFix uses an AI model (via Gemini API) to generate text corrections. FlickFix does not perform automated decision-making that produces legal effects or similarly significant effects about you. You remain in control of what text you select and whether you apply the result.</p>
 
-            <h2>4. Data Security</h2>
-            <p>We prioritize the security of your data. Communication between the App and the Gemini API is encrypted using standard HTTPS protocols. Your API key (if applicable) is stored locally on your machine.</p>
+            <h2>13) Website cookies and tracking</h2>
+            <p>We do <strong>not</strong> use cookies, analytics scripts, or tracking technologies on the FlickFix website. The website is static and does not collect personal data through cookies or similar technologies.</p>
 
-            <h2>5. Changes to This Policy</h2>
-            <p>We may update this Privacy Policy from time to time. Any changes will be reflected in the updated version distributed with the App or posted on our website.</p>
+            <h2>14) Your data protection rights (UK)</h2>
+            <p>Depending on your circumstances, you may have rights including access, correction, deletion, restriction, and objection.</p>
+            <p>To exercise your rights, contact us at: <a href="mailto:flickfix100@gmail.com">flickfix100@gmail.com</a>.</p>
+            <p>You also have the right to complain to the UK supervisory authority, the <strong>Information Commissioner's Office (ICO)</strong>. ICO guidance highlights that people should be told they can complain to the ICO and given clear privacy information.</p>
 
-            <h2>6. Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:hrithikthakur17@gmail.com">hrithikthakur17@gmail.com</a>.</p>
+            <h2>15) Changes to this policy</h2>
+            <p>We may update this policy to reflect product changes, legal requirements, or improvements in how we explain things. We will update the "Last updated" date at the top, and publish the new version on our website.</p>
+
+            <h2>16) Contact</h2>
+            <p>Questions about privacy or this policy: <a href="mailto:flickfix100@gmail.com">flickfix100@gmail.com</a></p>
         </div>
 
         <footer class="footer">
-            <p>&copy; 2025 SnapFix. All rights reserved.</p>
+            <div class="links">
+                <a href="https://aistudio.google.com/app/api-keys" target="_blank">Get Gemini API Key</a> •
+                <a href="features.html">Features</a> •
+                <a href="early-access.html">Early Access</a> •
+                <a href="waitlist.html">Waitlist</a> •
+                <a href="terms.html">Terms</a> •
+                <a href="privacy.html">Privacy</a> •
+                <a href="https://buymeacoffee.com/hrithik.loves.eng" target="_blank">Patreon</a>
+            </div>
         </footer>
     </main>
 </body>

@@ -1,7 +1,7 @@
 # Firebase Deployment Setup
 
 ## Issue
-The Firebase project `snapfix-app-2025` doesn't exist or you don't have access to it.
+The Firebase project `snapfix` doesn't exist or you don't have access to it.
 
 ## Solution Options
 

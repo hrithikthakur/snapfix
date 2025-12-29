@@ -179,6 +179,14 @@ function createWindow() {
   
   mainWindow.loadFile('index.html');
 
+  // Hide window on close (keep app running in tray)
+  mainWindow.on('close', (event) => {
+    if (!app.isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  });
+
   // Register keyboard shortcuts for reload
   globalShortcut.register('CommandOrControl+R', () => {
     if (mainWindow) {
@@ -190,6 +198,17 @@ function createWindow() {
   globalShortcut.register('F5', () => {
     if (mainWindow) {
       mainWindow.reload();
+    }
+  });
+
+  // Register Cmd+Shift+R to reset onboarding (for testing)
+  globalShortcut.register('CommandOrControl+Shift+R', () => {
+    if (mainWindow) {
+      mainWindow.webContents.executeJavaScript(`
+        localStorage.removeItem('onboardingCompleted');
+        localStorage.removeItem('onboardingCompletedDate');
+        window.location.reload();
+      `);
     }
   });
 }
@@ -269,8 +288,8 @@ function openAccessibilitySettings() {
     // Show notification with instructions
     setTimeout(() => {
       showNotification(
-        'SnapFix',
-        'Please enable SnapFix in System Settings > Privacy & Security > Accessibility'
+        'FlickFix',
+        'Please enable FlickFix in System Settings > Privacy & Security > Accessibility'
       );
     }, 500);
   }
@@ -359,7 +378,7 @@ function createTray() {
     
     // Make sure tray is visible
     if (tray) {
-      tray.setToolTip('SnapFix - Press Alt+Space to fix grammar');
+      tray.setToolTip('FlickFix - Press Alt+Space to fix grammar');
       console.log('Tray tooltip set');
     }
   } catch (e) {
@@ -371,11 +390,15 @@ function createTray() {
     {
       label: 'Settings',
       click: () => {
-        if (mainWindow) {
+        if (mainWindow && !mainWindow.isDestroyed()) {
           mainWindow.show();
           mainWindow.focus();
         } else {
           createWindow();
+          if (mainWindow) {
+            mainWindow.show();
+            mainWindow.focus();
+          }
         }
       }
     },
@@ -401,7 +424,7 @@ function createTray() {
         // Then open settings
         openAccessibilitySettings();
         showNotification(
-          'SnapFix',
+          'FlickFix',
           'Look for "Electron", "node", or "Terminal" in the list. If you don\'t see it, try using the shortcut (Alt+Space) first to trigger a permission request.'
         );
       }
@@ -414,16 +437,20 @@ function createTray() {
     }
   ]);
 
-  tray.setToolTip('SnapFix - Press Alt+Space to fix grammar');
+  tray.setToolTip('FlickFix - Press Alt+Space to fix grammar');
   tray.setContextMenu(contextMenu);
 
   // Double click to show window
   tray.on('double-click', () => {
-    if (mainWindow) {
+    if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.show();
       mainWindow.focus();
     } else {
       createWindow();
+      if (mainWindow) {
+        mainWindow.show();
+        mainWindow.focus();
+      }
     }
   });
 }
@@ -455,7 +482,7 @@ async function handleGlobalFix() {
       const result = await dialog.showMessageBox({
         type: 'warning',
         title: 'Accessibility Permissions Required',
-        message: 'SnapFix needs accessibility permissions to replace text in applications.',
+        message: 'FlickFix needs accessibility permissions to replace text in applications.',
         detail: 'Please grant accessibility permissions in System Settings > Privacy & Security > Accessibility.',
         buttons: ['Open System Settings', 'Cancel'],
         defaultId: 0,
@@ -605,7 +632,7 @@ async function simulateCopy() {
       const errorMsg = error.message || error.stderr || '';
       if (errorMsg.includes('not allowed') || errorMsg.includes('not allowed assistive')) {
         showNotification(
-          'SnapFix',
+          'FlickFix',
           'Accessibility permissions needed! A system dialog should appear. If not, go to System Settings > Privacy & Security > Accessibility and look for "Electron" or "node"'
         );
         // Try to trigger the permission request
@@ -630,7 +657,7 @@ async function simulatePaste() {
         await execAsync('xdotool key ctrl+v');
       } catch (e) {
         // xdotool not available, show notification
-        showNotification('SnapFix', 'Text fixed! Please paste manually (Ctrl+V). Install xdotool for auto-paste.');
+        showNotification('FlickFix', 'Text fixed! Please paste manually (Ctrl+V). Install xdotool for auto-paste.');
       }
     }
   } catch (error) {
@@ -638,12 +665,12 @@ async function simulatePaste() {
     // Check if it's a permission error on macOS
     if (process.platform === 'darwin' && error.message && error.message.includes('not allowed')) {
       showNotification(
-        'SnapFix',
+        'FlickFix',
         'Accessibility permissions required! Text is in clipboard. Click tray icon > Grant Accessibility Permissions'
       );
     } else {
       // If paste simulation fails, at least clipboard has the corrected text
-      showNotification('SnapFix', 'Text fixed! Please paste manually (Cmd+V / Ctrl+V)');
+      showNotification('FlickFix', 'Text fixed! Please paste manually (Cmd+V / Ctrl+V)');
     }
   }
 }
@@ -1070,7 +1097,7 @@ ipcMain.handle('set-shortcut', (event, shortcut) => {
     
     // Update tray tooltip
     if (tray && !tray.isDestroyed()) {
-      tray.setToolTip(`SnapFix - Press ${shortcut} to fix grammar`);
+      tray.setToolTip(`FlickFix - Press ${shortcut} to fix grammar`);
     }
     
     return { success: true };
@@ -1148,7 +1175,7 @@ ipcMain.handle('show-confirm-dialog', async (event, options) => {
     buttons: ['Cancel', 'OK'],
     defaultId: 1,
     cancelId: 0,
-    title: options.title || 'SnapFix',
+    title: options.title || 'FlickFix',
     message: options.message,
     detail: options.detail,
     icon: iconImage || undefined
@@ -1164,7 +1191,7 @@ ipcMain.on('status-overlay-close', () => {
 });
 
 // Set app name for better identification in System Settings
-app.setName('SnapFix');
+app.setName('FlickFix');
 
 app.whenReady().then(async () => {
   // On macOS, use accessory activation policy to prevent app activation
@@ -1228,22 +1255,22 @@ app.whenReady().then(async () => {
   // Register global shortcut for grammar fix
   registerFixShortcut(currentShortcut);
 
-  // Hide window on close (keep app running in tray)
-  if (mainWindow) {
-    mainWindow.on('close', (event) => {
-      if (!app.isQuitting) {
-        event.preventDefault();
-        mainWindow.hide();
-      }
-    });
-  }
-
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
-    } else if (mainWindow) {
+      if (mainWindow) {
+        mainWindow.show();
+        mainWindow.focus();
+      }
+    } else if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.show();
       mainWindow.focus();
+    } else {
+      createWindow();
+      if (mainWindow) {
+        mainWindow.show();
+        mainWindow.focus();
+      }
     }
   });
 });

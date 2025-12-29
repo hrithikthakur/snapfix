@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Early Access - FlickFix</title>
+  <link rel="icon" href="../assets/snapfix_favicon.ico">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --text-light: #666666;
+      --accent: #000000;
+      --border: #eaeaea;
+      --warning-bg: #fff3cd;
+      --warning-border: #ffc107;
+      --warning-text: #856404;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 0;
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .btn-download {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      opacity: 0.8;
+      transition: opacity 0.2s;
+      text-decoration: none;
+    }
+    .btn-download:hover { 
+      opacity: 1; 
+      text-decoration: none;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin: 0 0 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      margin: 0 0 32px;
+    }
+
+    .warning-box {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 32px 0;
+    }
+
+    .warning-box h3 {
+      margin: 0 0 12px;
+      color: var(--warning-text);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .warning-box p {
+      margin: 0;
+      color: var(--warning-text);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 40px 0 16px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 24px 0 12px;
+    }
+
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin: 8px 0;
+      color: var(--text);
+    }
+
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .checklist li {
+      padding-left: 28px;
+      position: relative;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    .warning-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .warning-list li {
+      padding-left: 28px;
+      position: relative;
+    }
+
+    .warning-list li::before {
+      content: "⚠️";
+      position: absolute;
+      left: 0;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s;
+      margin: 8px 8px 8px 0;
+    }
+
+    .btn:hover {
+      background: #333;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .info-box {
+      background: #f5f5f7;
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      margin: 24px 0;
+      border-radius: 4px;
+    }
+
+    .info-box p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    code {
+      background: #f5f5f7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.9em;
+    }
+
+    .footer {
+      margin-top: 60px;
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text-light);
+      text-align: center;
+    }
+
+    .footer .links {
+      margin-bottom: 16px;
+    }
+
+    .footer .links a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer .links a:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .container { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="../index.html" class="logo-container">
+        <img src="../assets/snapfix_logo_onboarding.png" alt="FlickFix Logo" class="logo-img">
+        <div class="logo">FlickFix</div>
+      </a>
+      <a href="../index.html#download" class="btn-download">Get FlickFix</a>
+    </header>
+
+    <h1>Early Access</h1>
+    <p class="subtitle">FlickFix is in active development. Here's what you should know.</p>
+
+    <div class="warning-box">
+      <h3>⚠️ Early Access Status</h3>
+      <p>
+        FlickFix is currently in <strong>early access</strong> and is actively being developed. 
+        While we've worked hard to make it reliable, you may occasionally encounter bugs or unexpected behavior.
+      </p>
+    </div>
+
+    <h2>What to Expect</h2>
+
+    <h3>✅ What Works Well</h3>
+    <ul class="checklist">
+      <li>Core grammar and spelling correction functionality</li>
+      <li>Works across most macOS applications</li>
+      <li>Fast response times with Gemini API</li>
+      <li>Privacy-first design (your data never leaves your control)</li>
+    </ul>
+
+    <h3>⚠️ Known Limitations</h3>
+    <ul class="warning-list">
+      <li><strong>Accessibility Permissions</strong>: FlickFix requires Accessibility permissions to replace text in other apps. Some apps may not fully support text replacement.</li>
+      <li><strong>App Compatibility</strong>: While FlickFix works in most apps, some applications with custom text input methods may not be fully compatible.</li>
+      <li><strong>Network Dependencies</strong>: FlickFix requires an active internet connection to use the Gemini API.</li>
+      <li><strong>Occasional Bugs</strong>: As an early access product, you may encounter occasional bugs or crashes. We're working to fix these as quickly as possible.</li>
+    </ul>
+
+    <h2>Reporting Issues</h2>
+    <p>Your feedback is invaluable in helping us improve FlickFix! If you encounter any issues or have suggestions:</p>
+
+    <h3>Option 1: In-App Feedback</h3>
+    <ol>
+      <li>Open FlickFix Settings (click the tray icon → Settings)</li>
+      <li>Click the <strong>"Send Feedback"</strong> button</li>
+      <li>A pre-filled email will open with your app version and system information</li>
+    </ol>
+
+    <h3>Option 2: Direct Email</h3>
+    <p>Send an email to <a href="mailto:flickfix100@gmail.com"><strong>flickfix100@gmail.com</strong></a> with:</p>
+    <ul>
+      <li>Description of the issue or suggestion</li>
+      <li>Steps to reproduce (if applicable)</li>
+      <li>Your macOS version</li>
+      <li>FlickFix version (shown in Settings)</li>
+    </ul>
+
+    <div class="info-box">
+      <p><strong>What to Include in Feedback:</strong></p>
+      <ul style="margin-top: 8px;">
+        <li><strong>Description</strong>: What happened or what you'd like to see improved</li>
+        <li><strong>Steps to Reproduce</strong>: If it's a bug, how can we recreate it?</li>
+        <li><strong>Expected Behavior</strong>: What should have happened?</li>
+        <li><strong>Actual Behavior</strong>: What actually happened?</li>
+        <li><strong>System Info</strong>: macOS version, FlickFix version (found in Settings)</li>
+      </ul>
+    </div>
+
+    <h2>Updates & Roadmap</h2>
+    <p>We're actively working on:</p>
+    <ul>
+      <li>Improved compatibility with more applications</li>
+      <li>Better error handling and user feedback</li>
+      <li>Performance optimizations</li>
+      <li>Additional features based on user feedback</li>
+    </ul>
+
+    <h2>Thank You!</h2>
+    <p>Thank you for being an early adopter of FlickFix! Your patience and feedback help us build a better product for everyone.</p>
+
+    <div class="footer">
+      <div class="links">
+        <a href="https://aistudio.google.com/app/api-keys" target="_blank">Get Gemini API Key</a> •
+        <a href="features.html">Features</a> •
+        <a href="early-access.html">Early Access</a> •
+        <a href="waitlist.html">Waitlist</a> •
+        <a href="terms.html">Terms</a> •
+        <a href="privacy.html">Privacy</a> •
+        <a href="https://buymeacoffee.com/hrithik.loves.eng" target="_blank">Patreon</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

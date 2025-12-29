@@ -16,7 +16,7 @@
    - Select **"Request a Certificate from a Certificate Authority..."**
 
 2. **Fill in the form:**
-   - **User Email Address:** Your email (e.g., `hrithikthakur17@gmail.com`)
+   - **User Email Address:** Your email (e.g., `flickfix100@gmail.com`)
    - **Common Name:** Your name (e.g., `Hrithik Thakur`)
    - **CA Email Address:** Leave this **blank**
    - **Request is:** Select **"Saved to disk"** (important!)

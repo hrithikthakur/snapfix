@@ -30,5 +30,5 @@ Notwithstanding any damages that you might incur, the entire liability of the De
 The laws of the jurisdiction in which the Developer operates, excluding its conflicts of law rules, shall govern this Agreement and your use of the Software.
 
 ## 9. Contact Information
-If you have any questions about this Agreement, please contact us at [hrithikthakur17@gmail.com].
+If you have any questions about this Agreement, please contact us at [flickfix100@gmail.com].
 

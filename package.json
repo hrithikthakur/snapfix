@@ -1,6 +1,6 @@
 {
   "name": "snapfix",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple Electron grammar fixer prototype",
   "main": "main.js",
   "scripts": {
@@ -16,15 +16,16 @@
     "build:mas": "CSC_TEAM_ID=68G57WN635 APPLE_TEAM_ID=68G57WN635 electron-builder --mac --config.mac.target=mas",
     "build:mas-dir": "CSC_TEAM_ID=68G57WN635 APPLE_TEAM_ID=68G57WN635 electron-builder --mac --config.mac.target=mas --dir",
     "build:direct": "electron-builder --mac --x64 --arm64",
+    "build:notarized": "./scripts/build-with-notarization.sh",
     "notarize": "node scripts/notarize.js"
   },
   "author": "",
   "license": "MIT",
   "build": {
     "appId": "com.parallex-tech.app",
-    "productName": "SnapFix",
+    "productName": "FlickFix",
     "icon": "assets/icons/snapfix_logo.icns",
-    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "artifactName": "FlickFix-${version}-${arch}.${ext}",
     "mac": {
       "icon": "assets/icons/snapfix_logo.icns",
       "category": "public.app-category.productivity",

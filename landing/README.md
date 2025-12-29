@@ -63,7 +63,7 @@ To preview the landing page locally:
 1. **Create custom Firebase site (first time only):**
    ```bash
    # Create a custom site ID for a cleaner URL (e.g., snapfix.web.app)
-   firebase hosting:sites:create snapfix --project snapfix-app-2025
+   firebase hosting:sites:create snapfix --project snapfix
    ```
    
    Or create it via [Firebase Console](https://console.firebase.google.com) → Hosting → Add another site
@@ -75,7 +75,7 @@ To preview the landing page locally:
 
 3. Your site will be live at:
    - Custom site: `https://snapfix.web.app` (after creating the custom site)
-   - Default: `https://snapfix-app-2025.web.app` or `https://snapfix-app-2025.firebaseapp.com`
+   - Default: `https://snapfix.web.app` or `https://snapfix.firebaseapp.com`
 
 ### Custom Domain
 
@@ -84,7 +84,7 @@ To use a custom domain (e.g., `snapfix.app`), you can use either the Firebase Co
 #### Option 1: Using Firebase Console (Recommended)
 
 1. Go to [Firebase Console](https://console.firebase.google.com)
-2. Select your project (`snapfix-app-2025`)
+2. Select your project (`snapfix`)
 3. Navigate to **Hosting** → **Add custom domain**
 4. Enter your domain (e.g., `snapfix.app` or `www.snapfix.app`)
 5. Firebase will provide DNS records to add:

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SnapFix</title>
+    <title>FlickFix</title>
     <style>
       * {
         box-sizing: border-box;
@@ -1576,9 +1576,9 @@
         <div class="onboarding-content">
           <div class="onboarding-content-left">
              <div class="logo-container">
-              <img src="assets/icons/snapfix_logo_onboarding.png" alt="SnapFix Logo" class="logo-image" style="width: 48px; height: 48px; object-fit: contain;">
+              <img src="assets/icons/snapfix_logo_onboarding.png" alt="FlickFix Logo" class="logo-image" style="width: 48px; height: 48px; object-fit: contain;">
             </div>
-            <h1 class="hero-title">Welcome to SnapFix</h1>
+            <h1 class="hero-title">Welcome to FlickFix</h1>
             <p class="hero-subtitle">Fix your text anywhere with one simple shortcut. No sign up required.</p>
           </div>
           <div class="onboarding-content-right">
@@ -1607,7 +1607,7 @@
         <div class="onboarding-content">
           <div class="onboarding-content-left">
             <h2 class="step-title">Enter your Gemini API Key</h2>
-            <p class="step-description">SnapFix uses Google's Gemini API to fix your text.</p>
+            <p class="step-description">FlickFix uses Google's Gemini API to fix your text.</p>
             <a href="#" onclick="openExternalLink('https://makersuite.google.com/app/apikey')" class="api-key-link" style="display: inline-block; margin-top: 12px;">Get your free API Key &rarr;</a>
           </div>
           <div class="onboarding-content-right">
@@ -1645,7 +1645,7 @@
         <div class="onboarding-content">
           <div class="onboarding-content-left">
             <h2 class="step-title">Enable permissions</h2>
-            <p class="step-description">SnapFix needs Accessibility permissions to replace text in other apps.</p>
+            <p class="step-description">FlickFix needs Accessibility permissions to replace text in other apps.</p>
             <button class="permission-button" onclick="openSystemSettings()" style="margin-top: 16px; max-width: 100%;">Open System Settings</button>
           </div>
           <div class="onboarding-content-right">
@@ -1662,7 +1662,9 @@
       </section>
 
       <div class="onboarding-footer">
-        By continuing, you agree to our <a href="#" onclick="openExternalLink('https://snapfix-app-2025.web.app/docs/terms.html')">Terms of Service</a> and <a href="#" onclick="openExternalLink('https://snapfix-app-2025.web.app/docs/privacy.html')">Privacy Policy</a>
+        By continuing, you agree to our <a href="#" onclick="openExternalLink('https://snapfix.web.app/docs/terms.html')">Terms of Service</a> and <a href="#" onclick="openExternalLink('https://snapfix.web.app/docs/privacy.html')">Privacy Policy</a>
+        <br>
+        <span style="font-size: 11px; opacity: 0.7;">FlickFix is in early access and may have occasional bugs. Your feedback helps us improve!</span>
       </div>
       <div class="snackbar" id="snackbar"></div>
     </div>
@@ -1672,9 +1674,9 @@
       <div class="app-header">
         <div class="logo-container" style="justify-content: center; align-items: center; gap: 16px; margin-bottom: 8px;">
           <img src="assets/icons/snapfix_logo_onboarding.png" class="logo-image" style="width: 52px; height: 52px; object-fit: contain;">
-          <h1 style="margin: 0; font-size: 32px;">SnapFix</h1>
+          <h1 style="margin: 0; font-size: 32px;">FlickFix</h1>
         </div>
-        <p class="subtitle" style="margin-top: 0;">Configure your experience</p>
+        <p class="subtitle" style="margin-top: 0;">Configure your preferences</p>
       </div>
 
       <div class="app-container">
@@ -1727,6 +1729,30 @@
              <button id="saveSettingsApiKeyBtn" class="secondary-button" onclick="saveSettingsApiKey()" style="display: none; color: #007aff;">Save</button>
           </div>
           <div id="settingsApiKeyStatus" class="api-key-status" style="margin-top: 8px;"></div>
+        </div>
+
+        <!-- Disclaimer & Feedback Section -->
+        <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e5ea;">
+          <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <span style="font-size: 20px; flex-shrink: 0;">⚠️</span>
+              <div style="flex: 1;">
+                <div style="font-weight: 600; color: #856404; margin-bottom: 6px; font-size: 14px;">Early Access</div>
+                <div style="font-size: 13px; color: #856404; line-height: 1.5;">
+                  FlickFix is in early development and may occasionally have bugs or unexpected behavior. If you encounter issues, please report them using the feedback button below.
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+            <button class="secondary-button" onclick="openFeedback()" style="flex: 1; color: #007aff; border: 1.5px solid #007aff;">
+              💬 Send Feedback
+            </button>
+            <button class="secondary-button" onclick="openExternalLink('https://snapfix.web.app/docs/terms.html')" style="flex: 1;">
+              📄 Terms & Privacy
+            </button>
+          </div>
         </div>
 
         <div style="margin-top: 24px; text-align: center;"> <!-- Reduced from 40px -->
@@ -2192,14 +2218,14 @@
       async function quitApp() {
         if (window.electronAPI?.showConfirmDialog) {
           const confirmed = await window.electronAPI.showConfirmDialog({
-            message: 'Quit SnapFix?',
+            message: 'Quit FlickFix?',
             detail: 'The global shortcut will stop working.'
           });
           
           if (confirmed && window.electronAPI?.quitApp) {
             window.electronAPI.quitApp();
           }
-        } else if (confirm('Are you sure you want to quit SnapFix? The global shortcut will stop working.')) {
+        } else if (confirm('Are you sure you want to quit FlickFix? The global shortcut will stop working.')) {
           // Fallback
           if (window.electronAPI?.quitApp) {
             window.electronAPI.quitApp();
@@ -2406,6 +2432,25 @@
           window.electronAPI.openExternal(url);
         } else {
           window.open(url, '_blank');
+        }
+      }
+
+      function openFeedback() {
+        // Create a feedback email with pre-filled subject and body
+        const version = document.getElementById('appVersion')?.textContent || 'v0.1.0';
+        const subject = encodeURIComponent(`FlickFix Feedback - ${version}`);
+        const body = encodeURIComponent(`Hi FlickFix team,\n\n[Describe your issue, suggestion, or feedback here]\n\n---\nApp Version: ${version}\nOS: ${navigator.platform}\n`);
+        const mailtoLink = `mailto:flickfix100@gmail.com?subject=${subject}&body=${body}`;
+        
+        if (window.electronAPI?.openExternal) {
+          window.electronAPI.openExternal(mailtoLink);
+        } else {
+          window.location.href = mailtoLink;
+        }
+        
+        // Track feedback event
+        if (window.electronAPI?.trackEvent) {
+          window.electronAPI.trackEvent('feedback_opened');
         }
       }
     </script>

@@ -1,7 +1,7 @@
 # Fix Firebase Project Reference
 
 ## Problem
-Your `.firebaserc` references `snapfix-app-2025` which doesn't exist.
+Your `.firebaserc` references `snapfix` which doesn't exist.
 
 ## Solution
 
