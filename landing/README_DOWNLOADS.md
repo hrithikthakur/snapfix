@@ -10,15 +10,15 @@
 
 You need both DMG files in the `downloads/` folder:
 
-1. `SnapFix-0.1.0-arm64.dmg` - For Apple Silicon Macs (M1, M2, M3, etc.)
-2. `SnapFix-0.1.0.dmg` - For Intel Macs
+1. `flickfix-0.1.0-arm64.dmg` - For Apple Silicon Macs (M1, M2, M3, etc.)
+2. `flickfix-0.1.0.dmg` - For Intel Macs
 
 ## Building Both Versions
 
 ### Option 1: Build Both at Once (Recommended)
 
 ```bash
-cd /Users/hrithikthakur/Code/snapfix
+cd /Users/hrithikthakur/Code/flickfix
 source .env
 npm run build:direct
 ```
@@ -47,10 +47,10 @@ After building, copy both DMG files:
 
 ```bash
 # Copy ARM64 version (already done)
-cp dist/SnapFix-0.1.0-arm64.dmg landing/downloads/
+cp dist/flickfix-0.1.0-arm64.dmg landing/downloads/
 
 # Copy Intel version (when available)
-cp dist/SnapFix-0.1.0.dmg landing/downloads/
+cp dist/flickfix-0.1.0.dmg landing/downloads/
 ```
 
 ## How Auto-Detection Works

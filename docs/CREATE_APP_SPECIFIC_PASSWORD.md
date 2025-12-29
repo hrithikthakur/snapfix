@@ -21,7 +21,7 @@ An app-specific password is required for notarization. It's different from your 
 1. Click the **"Generate an app-specific password"** button (or "+" button)
 2. You'll be prompted to enter a label/name for this password
 3. Enter a descriptive name like:
-   - `SnapFix Notarization`
+   - `flickfix Notarization`
    - `macOS App Notarization`
    - `Developer Notarization`
 4. Click **"Create"** or **"Generate"**

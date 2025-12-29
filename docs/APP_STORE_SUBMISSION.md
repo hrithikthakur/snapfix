@@ -5,7 +5,7 @@
 ### Step 1: Build for App Store
 
 ```bash
-cd /Users/hrithikthakur/Code/snapfix
+cd /Users/hrithikthakur/Code/flickfix
 
 # Load your credentials
 source .env
@@ -14,7 +14,7 @@ source .env
 npm run build:mas
 ```
 
-This creates: `dist/mac/SnapFix-0.1.0.pkg`
+This creates: `dist/mac/flickfix-0.1.0.pkg`
 
 **Note:** You'll need a "Mac App Distribution" certificate (not just "Developer ID Application").
 
@@ -27,10 +27,10 @@ This creates: `dist/mac/SnapFix-0.1.0.pkg`
 2. **Create New App:**
    - Click "+" → "New App"
    - Platform: macOS
-   - Name: SnapFix
+   - Name: flickfix
    - Primary Language: English
-   - Bundle ID: `com.snapfix.app`
-   - SKU: `snapfix-001` (or any unique identifier)
+   - Bundle ID: `com.flickfix.app`
+   - SKU: `flickfix-001` (or any unique identifier)
 
 3. **Fill in App Information:**
    - Category: Productivity
@@ -48,7 +48,7 @@ This creates: `dist/mac/SnapFix-0.1.0.pkg`
 2. **Upload:**
    ```bash
    # Your build is at:
-   dist/mac/SnapFix-0.1.0.pkg
+   dist/mac/flickfix-0.1.0.pkg
    ```
    - Open Transporter
    - Drag the `.pkg` file into Transporter
@@ -66,7 +66,7 @@ This creates: `dist/mac/SnapFix-0.1.0.pkg`
 ### Step 4: Complete App Store Listing
 
 1. **App Information:**
-   - Name: SnapFix
+   - Name: flickfix
    - Subtitle (optional): Fix typos instantly
    - Description: Write your app description (up to 4000 characters)
    - Keywords: grammar, spelling, typos, fix (up to 100 characters)
@@ -95,7 +95,7 @@ This creates: `dist/mac/SnapFix-0.1.0.pkg`
 5. **App Icon:**
    - 1024 x 1024 PNG
    - No transparency
-   - Use: `assets/icons/snapfix_logo.png` (resize to 1024x1024)
+   - Use: `assets/icons/flickfix_logo.png` (resize to 1024x1024)
 
 ### Step 5: Submit for Review
 

@@ -1,6 +1,6 @@
 # App Store Submission Checklist
 
-Use this checklist when preparing SnapFix for App Store submission.
+Use this checklist when preparing flickfix for App Store submission.
 
 ## Pre-Submission
 
@@ -36,8 +36,8 @@ Use this checklist when preparing SnapFix for App Store submission.
 
 ### App Store Connect Setup
 - [ ] App created in App Store Connect
-- [ ] Bundle ID matches: `com.snapfix.app`
-- [ ] App name: "SnapFix"
+- [ ] Bundle ID matches: `com.flickfix.app`
+- [ ] App name: "flickfix"
 - [ ] Category: Productivity
 - [ ] Age rating completed
 - [ ] Pricing set (Free or Paid)

@@ -8,7 +8,7 @@ This will create a signed and notarized DMG file:
 
 ```bash
 # Make sure you're in the project directory
-cd /Users/hrithikthakur/Code/snapfix
+cd /Users/hrithikthakur/Code/flickfix
 
 # Source your .env file to load credentials
 source .env
@@ -26,13 +26,13 @@ npm run build:direct
 4. You'll see progress messages
 
 ### Build Output:
-- `dist/SnapFix-0.1.0.dmg` - Main DMG file
-- `dist/SnapFix-0.1.0-arm64.dmg` - ARM64 version (if building universal)
-- `dist/mac/SnapFix.app` - The actual app bundle
+- `dist/flickfix-0.1.0.dmg` - Main DMG file
+- `dist/flickfix-0.1.0-arm64.dmg` - ARM64 version (if building universal)
+- `dist/mac/flickfix.app` - The actual app bundle
 
 ### Notarization Process:
 - Takes 5-15 minutes typically
-- You'll see: "📦 Notarizing SnapFix..."
+- You'll see: "📦 Notarizing flickfix..."
 - Then: "✅ Notarization successful!" (if successful)
 
 ## Troubleshooting
@@ -72,20 +72,20 @@ After successful build:
 
 1. **Open the DMG:**
    ```bash
-   open dist/SnapFix-0.1.0.dmg
+   open dist/flickfix-0.1.0.dmg
    ```
 
 2. **Install the app:**
-   - Drag SnapFix.app to Applications folder
+   - Drag flickfix.app to Applications folder
 
 3. **Verify notarization:**
    ```bash
-   spctl --assess --verbose --type install dist/SnapFix-0.1.0.dmg
+   spctl --assess --verbose --type install dist/flickfix-0.1.0.dmg
    ```
    Should say: "accepted" or "source=Notarized Developer ID"
 
 4. **Test the app:**
-   - Open SnapFix from Applications
+   - Open flickfix from Applications
    - Grant accessibility permissions if prompted
    - Test the functionality
 
@@ -133,6 +133,6 @@ npm run build:mac
 security find-identity -v -p codesigning
 
 # Verify notarization
-spctl --assess --verbose --type install dist/SnapFix-0.1.0.dmg
+spctl --assess --verbose --type install dist/flickfix-0.1.0.dmg
 ```
 

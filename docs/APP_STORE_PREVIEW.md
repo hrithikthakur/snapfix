@@ -13,7 +13,7 @@
 ### Option 1: Screen Recording (Recommended)
 
 1. **Prepare your app:**
-   - Open SnapFix
+   - Open flickfix
    - Set up a demo scenario
    - Close unnecessary windows
    - Make sure everything looks clean
@@ -57,19 +57,19 @@ ffmpeg -i input.mov \
   -c:a aac \
   -b:a 128k \
   -movflags +faststart \
-  snapfix-preview.mp4
+  flickfix-preview.mp4
 
 # Trim to 30 seconds
-ffmpeg -i snapfix-preview.mp4 -t 30 -c copy snapfix-preview-30s.mp4
+ffmpeg -i flickfix-preview.mp4 -t 30 -c copy flickfix-preview-30s.mp4
 
 # Compress if file is too large
-ffmpeg -i snapfix-preview.mp4 \
+ffmpeg -i flickfix-preview.mp4 \
   -c:v libx264 \
   -preset slow \
   -crf 28 \
   -c:a aac \
   -b:a 96k \
-  snapfix-preview-compressed.mp4
+  flickfix-preview-compressed.mp4
 ```
 
 ### Option 3: Using ScreenFlow or Camtasia
@@ -104,18 +104,18 @@ Professional screen recording tools:
 Select text, press Alt+Space, done.
 Works in every app.
 Your API key, your privacy.
-SnapFix - Fix typos. Instantly."
+flickfix - Fix typos. Instantly."
 ```
 
 ### 30-Second Version:
 ```
-"Tired of typos? SnapFix fixes them instantly.
+"Tired of typos? flickfix fixes them instantly.
 Select any text, press Alt+Space, and watch it correct.
 Works in Notes, Mail, Slack, everywhere you type.
 Powered by your own Gemini API key.
 Your data stays private.
 No subscriptions, no tracking.
-SnapFix - Fix typos. Instantly."
+flickfix - Fix typos. Instantly."
 ```
 
 ## Video Production Tips
@@ -159,7 +159,7 @@ If your video is too large (>500MB):
 
 ```bash
 # Compress video
-ffmpeg -i snapfix-preview.mp4 \
+ffmpeg -i flickfix-preview.mp4 \
   -c:v libx264 \
   -preset slow \
   -crf 28 \
@@ -168,7 +168,7 @@ ffmpeg -i snapfix-preview.mp4 \
   -c:a aac \
   -b:a 128k \
   -movflags +faststart \
-  snapfix-preview-compressed.mp4
+  flickfix-preview-compressed.mp4
 ```
 
 ## Upload to App Store Connect

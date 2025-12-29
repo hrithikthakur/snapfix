@@ -1,11 +1,11 @@
-# SnapFix Privacy Policy
+# flickfix Privacy Policy
 
 **Effective date:** 22 November 2025  
 **Last updated:** 28 December 2025
 
 ## 1) Who we are (Data Controller)
 
-SnapFix ("SnapFix", "we", "us") is the data controller for the personal data described in this policy.
+flickfix ("flickfix", "we", "us") is the data controller for the personal data described in this policy.
 
 **Contact:** [flickfix100@gmail.com](mailto:flickfix100@gmail.com)  
 (If you later form a company, add the legal entity name and registered address here.)
@@ -18,35 +18,35 @@ This policy is written to meet the UK GDPR transparency expectations for privacy
 
 This policy covers:
 
-* The **SnapFix desktop application** (the "App")
-* This **SnapFix website and documentation pages** (the "Site")
+* The **flickfix desktop application** (the "App")
+* This **flickfix website and documentation pages** (the "Site")
 
 If you click links to third-party websites (such as Google), their policies apply to their services.
 
 ---
 
-## 3) What SnapFix does (plain English version)
+## 3) What flickfix does (plain English version)
 
-SnapFix helps you correct grammar, spelling, and clarity in text you select. When you trigger SnapFix (for example, with a keyboard shortcut), the App reads the text you selected, sends it to the **Google Gemini API** for processing, and then inserts the corrected result back where you were typing.
+flickfix helps you correct grammar, spelling, and clarity in text you select. When you trigger flickfix (for example, with a keyboard shortcut), the App reads the text you selected, sends it to the **Google Gemini API** for processing, and then inserts the corrected result back where you were typing.
 
-SnapFix is designed to work only when you intentionally trigger it, not in the background.
+flickfix is designed to work only when you intentionally trigger it, not in the background.
 
 ---
 
 ## 4) Personal data we process
 
-### 4.1 Selected text (when you trigger SnapFix)
+### 4.1 Selected text (when you trigger flickfix)
 
-**What:** The text you have highlighted or selected at the moment you trigger SnapFix.  
+**What:** The text you have highlighted or selected at the moment you trigger flickfix.  
 **Why:** To generate a correction and return it to you.
 
-**Important:** SnapFix does **not** store your selected text on SnapFix servers. However, your selected text is sent to Google's Gemini API, and Google may retain prompts, context, and outputs for abuse monitoring for **55 days**, and may use authorised human review for flagged content, as described in Gemini API policies.
+**Important:** flickfix does **not** store your selected text on flickfix servers. However, your selected text is sent to Google's Gemini API, and Google may retain prompts, context, and outputs for abuse monitoring for **55 days**, and may use authorised human review for flagged content, as described in Gemini API policies.
 
 ### 4.2 API keys (if you bring your own Gemini API key)
 
 **What:** Your Gemini API key (if you choose to use one).  
 **Where:** Stored locally on your device in the operating system's secure storage (for example, macOS Keychain).  
-**Access:** We do not receive or store your API key on SnapFix servers.
+**Access:** We do not receive or store your API key on flickfix servers.
 
 ### 4.3 Diagnostics and support data (minimal)
 
@@ -64,7 +64,7 @@ We do not intend to collect the content you selected for correction as part of d
 
 We process personal data under the following lawful bases:
 
-* **Contract:** processing selected text is necessary to provide the core SnapFix functionality you request.
+* **Contract:** processing selected text is necessary to provide the core flickfix functionality you request.
 * **Legitimate interests:** limited diagnostics and security measures (for example, preventing abuse, improving stability) where this is proportionate and does not override your rights.
 
 Where a different lawful basis is required in the future (for example, consent for optional analytics), we will ask you clearly and update this policy.
@@ -75,7 +75,7 @@ Where a different lawful basis is required in the future (for example, consent f
 
 ### 6.1 Google Gemini API
 
-When you trigger SnapFix, your selected text is sent to Google's Gemini API for processing.
+When you trigger flickfix, your selected text is sent to Google's Gemini API for processing.
 
 Google's Gemini API policies describe retention for abuse monitoring (including prompts, context, and outputs retained for 55 days) and potential authorised human review of flagged content.
 
@@ -91,7 +91,7 @@ Because text is processed by Google, your data may be processed in countries out
 
 ## 8) Data retention
 
-* **Selected text:** SnapFix does not store your selected text on SnapFix servers. Google may retain prompts, context, and outputs for abuse monitoring for 55 days (per Gemini API policy).
+* **Selected text:** flickfix does not store your selected text on flickfix servers. Google may retain prompts, context, and outputs for abuse monitoring for 55 days (per Gemini API policy).
 * **Support emails:** kept as long as needed to respond and maintain a record of the support interaction, then deleted or minimised where practical.
 * **Diagnostics (if provided):** kept only as long as needed to investigate and fix issues, then deleted or anonymised where practical.
 
@@ -99,21 +99,21 @@ Because text is processed by Google, your data may be processed in countries out
 
 ## 9) Security
 
-We use reasonable technical measures to protect data handled by SnapFix:
+We use reasonable technical measures to protect data handled by flickfix:
 
 * network communication to the Gemini API is encrypted using HTTPS
 * API keys are stored locally using secure OS storage mechanisms
 * we aim to minimise data collection
 
-No system is perfectly secure, but we design SnapFix to keep the amount of data we handle as low as possible.
+No system is perfectly secure, but we design flickfix to keep the amount of data we handle as low as possible.
 
 ---
 
 ## 10) Permissions (macOS Accessibility)
 
-On macOS, SnapFix may request **Accessibility permissions** so it can:
+On macOS, flickfix may request **Accessibility permissions** so it can:
 
-* read the currently selected text when you trigger SnapFix
+* read the currently selected text when you trigger flickfix
 * insert the corrected text back into the active application
 
 We do not use Accessibility permissions to monitor keystrokes in the background, log activity, or continuously read what you type. The permission is used for the user-initiated correction flow.
@@ -122,19 +122,19 @@ We do not use Accessibility permissions to monitor keystrokes in the background,
 
 ## 11) Age restrictions
 
-SnapFix is intended for users aged **18 and over**. Gemini API terms require users to be 18+ and prohibit API clients directed to or likely accessed by under 18s.
+flickfix is intended for users aged **18 and over**. Gemini API terms require users to be 18+ and prohibit API clients directed to or likely accessed by under 18s.
 
 ---
 
 ## 12) Automated decision-making
 
-SnapFix uses an AI model (via Gemini API) to generate text corrections. SnapFix does not perform automated decision-making that produces legal effects or similarly significant effects about you. You remain in control of what text you select and whether you apply the result.
+flickfix uses an AI model (via Gemini API) to generate text corrections. flickfix does not perform automated decision-making that produces legal effects or similarly significant effects about you. You remain in control of what text you select and whether you apply the result.
 
 ---
 
 ## 13) Website cookies and tracking
 
-We do **not** use cookies, analytics scripts, or tracking technologies on the SnapFix website. The website is static and does not collect personal data through cookies or similar technologies.
+We do **not** use cookies, analytics scripts, or tracking technologies on the flickfix website. The website is static and does not collect personal data through cookies or similar technologies.
 
 ---
 

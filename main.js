@@ -136,10 +136,10 @@ const MAX_UNDO_ITEMS = 10;
 function createWindow() {
   // Try to load app icon
   const iconPaths = [
-    path.join(__dirname, 'assets', 'icons', 'snapfix_logo-onboarding.png'),
-    // path.join(__dirname, 'snapfix_logo.png'),
-    // path.join(__dirname, 'snapfix-logo.png'),
-    // path.join(__dirname, 'snapfix-icon.png'),
+    path.join(__dirname, 'assets', 'icons', 'flickfix_logo-onboarding.png'),
+    // path.join(__dirname, 'flickfix_logo.png'),
+    // path.join(__dirname, 'flickfix-logo.png'),
+    // path.join(__dirname, 'flickfix-icon.png'),
   ];
   
   let appIcon = null;
@@ -300,11 +300,11 @@ function createTray() {
   // Try multiple icon paths (PNG works better for tray icons than .icns)
   // On macOS, tray icons should be PNG files, preferably 16x16 or 22x22 for retina
   const iconPaths = [
-    path.join(__dirname, 'assets', 'icons', 'snapfix_tray_light.png'),
-    path.join(__dirname, 'snapfix_logo.png'),
-    path.join(__dirname, 'snapfix-logo.png'),
-    path.join(__dirname, 'snapfix-icon.png'),
-    path.join(__dirname, 'assets', 'icons', 'snapfix_logo.icns'),
+    path.join(__dirname, 'assets', 'icons', 'flickfix_tray_light.png'),
+    path.join(__dirname, 'flickfix_logo.png'),
+    path.join(__dirname, 'flickfix-logo.png'),
+    path.join(__dirname, 'flickfix-icon.png'),
+    path.join(__dirname, 'assets', 'icons', 'flickfix_logo.icns'),
     path.join(__dirname, 'icon.png'),
   ];
   
@@ -354,7 +354,7 @@ function createTray() {
       // we'll just use an empty icon and log a warning
       trayIcon = nativeImage.createEmpty();
       console.error('Using empty tray icon - tray will not be visible!');
-      console.error('Please ensure snapfix_tray_light.png exists in assets/icons/');
+      console.error('Please ensure flickfix_tray_light.png exists in assets/icons/');
     } catch (e) {
       trayIcon = nativeImage.createEmpty();
     }
@@ -916,7 +916,7 @@ function createStatusOverlay() {
   
   statusOverlay.webContents.once('did-finish-load', () => {
     // Load ICNS icon and send to renderer
-    const iconPath = path.join(__dirname, 'assets/icons/snapfix_logo_onboarding.png');
+    const iconPath = path.join(__dirname, 'assets/icons/flickfix_logo_onboarding.png');
     if (fs.existsSync(iconPath)) {
       const image = nativeImage.createFromPath(iconPath);
       if (!image.isEmpty()) {
@@ -950,7 +950,7 @@ function showStatusOverlay(type, message) {
     statusOverlay.webContents.send('status-update', { type, message, soundEnabled });
 
     // Ensure icon is set (resend to be safe)
-    const iconPath = path.join(__dirname, 'assets/icons/snapfix_logo_onboarding.png');
+    const iconPath = path.join(__dirname, 'assets/icons/flickfix_logo_onboarding.png');
     if (fs.existsSync(iconPath)) {
       const image = nativeImage.createFromPath(iconPath);
       if (!image.isEmpty()) {
@@ -1159,7 +1159,7 @@ ipcMain.handle('show-confirm-dialog', async (event, options) => {
   // Resolve icon path more robustly
   // In production (asar), __dirname is inside the archive.
   // But dialog icon often expects an unpacked path or native image.
-  const iconPath = path.join(__dirname, 'assets', 'icons', 'snapfix_logo_onboarding.png');
+  const iconPath = path.join(__dirname, 'assets', 'icons', 'flickfix_logo_onboarding.png');
   let iconImage = null;
   
   try {

@@ -2,7 +2,7 @@
 
 ## Overview
 
-SnapFix can be distributed in two ways:
+flickfix can be distributed in two ways:
 
 1. **Mac App Store** - Sandboxed, limited functionality
 2. **Direct Download** - Full functionality, notarized DMG

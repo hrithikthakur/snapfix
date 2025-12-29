@@ -11,7 +11,7 @@
    - Click "Add custom domain"
 
 3. **Enter your domain:**
-   - Enter your domain (e.g., `snapfix.com` or `www.snapfix.com`)
+   - Enter your domain (e.g., `flickfix.com` or `www.flickfix.com`)
    - Click "Continue"
 
 4. **Verify domain ownership:**
@@ -41,14 +41,14 @@ firebase hosting:channel:deploy live --only hosting
 
 ## DNS Records Needed
 
-### For Root Domain (snapfix.com):
+### For Root Domain (flickfix.com):
 ```
 Type: A
 Name: @
 Value: [IP addresses from Firebase]
 ```
 
-### For Subdomain (www.snapfix.com):
+### For Subdomain (www.flickfix.com):
 ```
 Type: CNAME
 Name: www

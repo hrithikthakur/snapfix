@@ -1,7 +1,7 @@
 # Firebase Deployment Setup
 
 ## Issue
-The Firebase project `snapfix` doesn't exist or you don't have access to it.
+The Firebase project `flickfix` doesn't exist or you don't have access to it.
 
 ## Solution Options
 
@@ -33,7 +33,7 @@ The Firebase project `snapfix` doesn't exist or you don't have access to it.
 
 2. **Create a new project:**
    ```bash
-   firebase projects:create snapfix-app
+   firebase projects:create flickfix-app
    ```
    
    Or create it via the Firebase Console: https://console.firebase.google.com/

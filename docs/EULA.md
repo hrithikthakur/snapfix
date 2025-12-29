@@ -3,7 +3,7 @@
 **IMPORTANT: PLEASE READ THIS LICENSE CAREFULLY BEFORE USING THIS SOFTWARE.**
 
 ## 1. License Grant
-"SnapFix" ("Software") is licensed, not sold. This End User License Agreement ("Agreement") grants you a revocable, non-exclusive, non-transferable license to install and use the Software on devices you own or control, strictly in accordance with the terms of this Agreement.
+"flickfix" ("Software") is licensed, not sold. This End User License Agreement ("Agreement") grants you a revocable, non-exclusive, non-transferable license to install and use the Software on devices you own or control, strictly in accordance with the terms of this Agreement.
 
 ## 2. Restrictions
 You agree not to, and you will not permit others to:

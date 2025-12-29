@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "snapfix",
+    "site": "flickfix",
     "public": "landing",
     "ignore": [
       "firebase.json",

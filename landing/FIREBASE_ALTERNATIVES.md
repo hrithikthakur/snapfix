@@ -10,8 +10,8 @@ Firebase project creation via CLI is failing. Here are alternative solutions:
    - Click "Add project" or "Create a project"
 
 2. **Enter project details:**
-   - Project name: `snapfix-app` (or any name you prefer)
-   - Project ID will be auto-generated (e.g., `snapfix-app-xxxxx`)
+   - Project name: `flickfix-app` (or any name you prefer)
+   - Project ID will be auto-generated (e.g., `flickfix-app-xxxxx`)
 
 3. **Complete setup:**
    - Disable Google Analytics (optional)

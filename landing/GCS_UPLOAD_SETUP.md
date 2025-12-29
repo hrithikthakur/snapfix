@@ -26,20 +26,20 @@ gcloud config set project YOUR_PROJECT_ID
 ### Step 3: Create Bucket (if it doesn't exist)
 ```bash
 # Create bucket
-gsutil mb gs://snapfix-downloads
+gsutil mb gs://flickfix-downloads
 
 # Or if bucket exists, just verify
-gsutil ls gs://snapfix-downloads
+gsutil ls gs://flickfix-downloads
 ```
 
 ### Step 4: Upload DMG
 ```bash
-gsutil cp landing/downloads/SnapFix-0.1.0-arm64.dmg gs://snapfix-downloads/
+gsutil cp landing/downloads/flickfix-0.1.0-arm64.dmg gs://flickfix-downloads/
 ```
 
 ### Step 5: Make Public
 ```bash
-gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
 ```
 
 ## Quick Commands
@@ -49,13 +49,13 @@ gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
 gcloud auth login
 
 # 2. Create bucket (if needed)
-gsutil mb gs://snapfix-downloads
+gsutil mb gs://flickfix-downloads
 
 # 3. Upload
-gsutil cp landing/downloads/SnapFix-0.1.0-arm64.dmg gs://snapfix-downloads/
+gsutil cp landing/downloads/flickfix-0.1.0-arm64.dmg gs://flickfix-downloads/
 
 # 4. Make public
-gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
 ```
 
 ## Troubleshooting
@@ -65,7 +65,7 @@ gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
 - Or use an existing project: `gcloud config set project PROJECT_ID`
 
 ### "Bucket doesn't exist"
-- Create it: `gsutil mb gs://snapfix-downloads`
+- Create it: `gsutil mb gs://flickfix-downloads`
 - Bucket names must be globally unique
 
 ### "Permission denied"

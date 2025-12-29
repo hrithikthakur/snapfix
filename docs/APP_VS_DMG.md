@@ -9,7 +9,7 @@
 - Can be run directly by double-clicking
 
 **Location:**
-- Usually in `dist/mac/SnapFix.app` or `dist/mac-arm64/SnapFix.app`
+- Usually in `dist/mac/flickfix.app` or `dist/mac-arm64/flickfix.app`
 - This is what gets installed in the Applications folder
 
 **Usage:**
@@ -55,16 +55,16 @@
 ## File Structure
 
 ```
-SnapFix-0.1.0-arm64.dmg
-└── SnapFix.app          ← The actual application
+flickfix-0.1.0-arm64.dmg
+└── flickfix.app          ← The actual application
     └── (all app files)
 ```
 
 ## For Your Project
 
 **What you're building:**
-- `dist/SnapFix-0.1.0-arm64.dmg` - Distribution file (what users download)
-- `dist/mac-arm64/SnapFix.app` - The actual app (inside the DMG)
+- `dist/flickfix-0.1.0-arm64.dmg` - Distribution file (what users download)
+- `dist/mac-arm64/flickfix.app` - The actual app (inside the DMG)
 
 **Distribution:**
 - Upload DMG files to hosting (Google Cloud Storage, etc.)
@@ -79,10 +79,10 @@ npm run build:direct
 ```
 
 You get:
-- `dist/SnapFix-0.1.0.dmg` - Contains SnapFix.app (Intel)
-- `dist/SnapFix-0.1.0-arm64.dmg` - Contains SnapFix.app (ARM64)
-- `dist/mac/SnapFix.app` - The actual app (Intel)
-- `dist/mac-arm64/SnapFix.app` - The actual app (ARM64)
+- `dist/flickfix-0.1.0.dmg` - Contains flickfix.app (Intel)
+- `dist/flickfix-0.1.0-arm64.dmg` - Contains flickfix.app (ARM64)
+- `dist/mac/flickfix.app` - The actual app (Intel)
+- `dist/mac-arm64/flickfix.app` - The actual app (ARM64)
 
 ## Summary
 

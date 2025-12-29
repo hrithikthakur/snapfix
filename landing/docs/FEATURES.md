@@ -1,6 +1,6 @@
-# SnapFix Features & Changelog
+# flickfix Features & Changelog
 
-Complete feature list and version history for SnapFix.
+Complete feature list and version history for flickfix.
 
 ## Current Version: v0.1.1
 
@@ -34,7 +34,7 @@ Complete feature list and version history for SnapFix.
 
 - ⌨️ **Customizable Shortcuts** - Change the keyboard shortcut to whatever works best for your workflow.
 
-- 🚀 **Start at Login** - Option to automatically start SnapFix when you log in to your Mac.
+- 🚀 **Start at Login** - Option to automatically start flickfix when you log in to your Mac.
 
 ### Compatibility & Reliability
 
@@ -60,7 +60,7 @@ Complete feature list and version history for SnapFix.
 ### v0.1.0 - Initial Release
 
 **Added:**
-- ✓ Initial release of SnapFix
+- ✓ Initial release of flickfix
 - ✓ System-wide grammar and spelling correction
 - ✓ Global keyboard shortcut (Alt+Space, customizable)
 - ✓ Automatic text replacement in any application

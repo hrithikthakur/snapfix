@@ -1,11 +1,11 @@
 # Deploy Landing Page
 
-Quick guide to deploy the SnapFix landing page.
+Quick guide to deploy the flickfix landing page.
 
 ## Quick Deploy (Recommended)
 
 ```bash
-cd /Users/hrithikthakur/Code/snapfix/landing
+cd /Users/hrithikthakur/Code/flickfix/landing
 ./deploy.sh
 ```
 
@@ -25,7 +25,7 @@ npm install -g firebase-tools
 ### Step 2: Login to Firebase
 
 ```bash
-cd /Users/hrithikthakur/Code/snapfix/landing
+cd /Users/hrithikthakur/Code/flickfix/landing
 firebase login
 ```
 
@@ -41,8 +41,8 @@ firebase projects:list
 firebase use <project-id>
 
 # Or create a new project
-firebase projects:create snapfix-app
-firebase use snapfix-app
+firebase projects:create flickfix-app
+firebase use flickfix-app
 ```
 
 ### Step 4: Initialize Hosting (if not already done)
@@ -66,7 +66,7 @@ firebase deploy --only hosting
 ## After Deployment
 
 Your site will be live at:
-- `https://snapfix.web.app` (if custom site created)
+- `https://flickfix.web.app` (if custom site created)
 - `https://<project-id>.web.app`
 - `https://<project-id>.firebaseapp.com`
 
@@ -88,8 +88,8 @@ firebase login
 ```bash
 # Create via console: https://console.firebase.google.com/
 # Or via CLI:
-firebase projects:create snapfix-app
-firebase use snapfix-app
+firebase projects:create flickfix-app
+firebase use flickfix-app
 ```
 
 ### "Permission denied"
@@ -147,7 +147,7 @@ firebase hosting:channel:list
 Whenever you update `index.html` or other files:
 
 ```bash
-cd /Users/hrithikthakur/Code/snapfix/landing
+cd /Users/hrithikthakur/Code/flickfix/landing
 firebase deploy --only hosting
 ```
 

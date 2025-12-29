@@ -1,4 +1,4 @@
-# Quick Start: Distributing SnapFix
+# Quick Start: Distributing flickfix
 
 This is a quick reference guide. For detailed information, see [DISTRIBUTION_GUIDE.md](./DISTRIBUTION_GUIDE.md).
 
@@ -30,13 +30,13 @@ export APPLE_TEAM_ID="XXXXXXXXXX"
 ### For App Store:
 ```bash
 npm run build:mas
-# Output: dist/mac/SnapFix-0.1.0.pkg
+# Output: dist/mac/flickfix-0.1.0.pkg
 ```
 
 ### For Direct Download:
 ```bash
 npm run build:direct
-# Output: dist/SnapFix-0.1.0.dmg (notarized)
+# Output: dist/flickfix-0.1.0.dmg (notarized)
 ```
 
 ## Step 4: Distribute

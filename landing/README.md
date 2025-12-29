@@ -1,6 +1,6 @@
-# SnapFix Landing Page
+# flickfix Landing Page
 
-A modern, responsive landing page for SnapFix, ready to deploy on Firebase Hosting.
+A modern, responsive landing page for flickfix, ready to deploy on Firebase Hosting.
 
 ## Features
 
@@ -62,8 +62,8 @@ To preview the landing page locally:
 
 1. **Create custom Firebase site (first time only):**
    ```bash
-   # Create a custom site ID for a cleaner URL (e.g., snapfix.web.app)
-   firebase hosting:sites:create snapfix --project snapfix
+   # Create a custom site ID for a cleaner URL (e.g., flickfix.web.app)
+   firebase hosting:sites:create flickfix --project flickfix
    ```
    
    Or create it via [Firebase Console](https://console.firebase.google.com) → Hosting → Add another site
@@ -74,19 +74,19 @@ To preview the landing page locally:
    ```
 
 3. Your site will be live at:
-   - Custom site: `https://snapfix.web.app` (after creating the custom site)
-   - Default: `https://snapfix.web.app` or `https://snapfix.firebaseapp.com`
+   - Custom site: `https://flickfix.web.app` (after creating the custom site)
+   - Default: `https://flickfix.web.app` or `https://flickfix.firebaseapp.com`
 
 ### Custom Domain
 
-To use a custom domain (e.g., `snapfix.app`), you can use either the Firebase Console or CLI:
+To use a custom domain (e.g., `flickfix.app`), you can use either the Firebase Console or CLI:
 
 #### Option 1: Using Firebase Console (Recommended)
 
 1. Go to [Firebase Console](https://console.firebase.google.com)
-2. Select your project (`snapfix`)
+2. Select your project (`flickfix`)
 3. Navigate to **Hosting** → **Add custom domain**
-4. Enter your domain (e.g., `snapfix.app` or `www.snapfix.app`)
+4. Enter your domain (e.g., `flickfix.app` or `www.flickfix.app`)
 5. Firebase will provide DNS records to add:
    - For apex domain: Add A records pointing to Firebase IPs
    - For subdomain: Add CNAME record pointing to Firebase
@@ -109,7 +109,7 @@ firebase hosting:channel:deploy preview --only hosting
 **Important Notes:**
 - SSL certificate provisioning takes 24-48 hours
 - Make sure DNS records are properly configured before Firebase can verify
-- You can add both apex domain (`snapfix.app`) and subdomain (`www.snapfix.app`)
+- You can add both apex domain (`flickfix.app`) and subdomain (`www.flickfix.app`)
 - After verification, both will serve your Firebase Hosting site
 
 ## File Structure
@@ -128,14 +128,14 @@ landing/
 
 ### Update Download Links / DMG
 
-Firebase Hosting’s Spark plan blocks executable files, so the DMG is hosted on a separate GitHub Pages site (`snapfix-downloads` repo) at `https://downloads.snapfix.app/SnapFix.dmg`.
+Firebase Hosting’s Spark plan blocks executable files, so the DMG is hosted on a separate GitHub Pages site (`flickfix-downloads` repo) at `https://downloads.flickfix.app/flickfix.dmg`.
 
 1. Build a new DMG from the root project: `npm run build:mac`.
-2. Replace the file in `~/Library/Mobile Documents/com~apple~CloudDocs/Codes/snapfix-downloads/SnapFix.dmg`.
+2. Replace the file in `~/Library/Mobile Documents/com~apple~CloudDocs/Codes/flickfix-downloads/flickfix.dmg`.
 3. From that repo run:
    ```bash
-   git add SnapFix.dmg
-   git commit -m "Update SnapFix DMG"
+   git add flickfix.dmg
+   git commit -m "Update flickfix DMG"
    git push origin gh-pages
    ```
    (The repo is already configured with Git LFS + CNAME.)

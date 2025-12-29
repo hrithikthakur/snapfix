@@ -53,19 +53,19 @@ gcloud config set project YOUR_PROJECT_ID
 gsutil --version
 ```
 
-## Quick Setup for SnapFix
+## Quick Setup for flickfix
 
 Once installed, you can upload your DMG:
 
 ```bash
 # Create bucket (if it doesn't exist)
-gsutil mb gs://snapfix-downloads
+gsutil mb gs://flickfix-downloads
 
 # Upload DMG
-gsutil cp landing/downloads/SnapFix-0.1.0-arm64.dmg gs://snapfix-downloads/
+gsutil cp landing/downloads/flickfix-0.1.0-arm64.dmg gs://flickfix-downloads/
 
 # Make it publicly accessible
-gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
 ```
 
 ## Troubleshooting
@@ -79,7 +79,7 @@ gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
 - Make sure you have access to the Google Cloud project
 
 ### "Bucket doesn't exist"
-- Create it first: `gsutil mb gs://snapfix-downloads`
+- Create it first: `gsutil mb gs://flickfix-downloads`
 - Or use an existing bucket
 
 

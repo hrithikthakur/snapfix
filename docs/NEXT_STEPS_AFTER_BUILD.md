@@ -18,7 +18,7 @@ Once the build completes, check that the files were created:
 ls -lh dist/*.dmg
 
 # You should see:
-# - dist/SnapFix-0.1.0-arm64.dmg (or similar)
+# - dist/flickfix-0.1.0-arm64.dmg (or similar)
 ```
 
 ## Step 2: Test the DMG Locally
@@ -27,7 +27,7 @@ ls -lh dist/*.dmg
 
 ```bash
 # Open the DMG
-open dist/SnapFix-0.1.0-arm64.dmg
+open dist/flickfix-0.1.0-arm64.dmg
 
 # Or double-click it in Finder
 ```
@@ -36,15 +36,15 @@ open dist/SnapFix-0.1.0-arm64.dmg
 
 ```bash
 # Check that notarization worked
-spctl --assess --verbose --type install dist/SnapFix-0.1.0-arm64.dmg
+spctl --assess --verbose --type install dist/flickfix-0.1.0-arm64.dmg
 
 # Should output: "accepted" or "source=Notarized Developer ID"
 ```
 
 ### Test the App:
 
-1. Drag SnapFix.app to Applications folder
-2. Open SnapFix from Applications
+1. Drag flickfix.app to Applications folder
+2. Open flickfix from Applications
 3. Grant accessibility permissions if prompted
 4. Test the functionality
 
@@ -57,17 +57,17 @@ spctl --assess --verbose --type install dist/SnapFix-0.1.0-arm64.dmg
 # brew install gcloud
 
 # Upload the DMG
-gsutil cp dist/SnapFix-0.1.0-arm64.dmg gs://snapfix-downloads/
+gsutil cp dist/flickfix-0.1.0-arm64.dmg gs://flickfix-downloads/
 
 # Set public read access
-gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
 ```
 
 ### Option B: AWS S3
 
 ```bash
-aws s3 cp dist/SnapFix-0.1.0-arm64.dmg s3://your-bucket/snapfix/
-aws s3api put-object-acl --bucket your-bucket --key snapfix/SnapFix-0.1.0-arm64.dmg --acl public-read
+aws s3 cp dist/flickfix-0.1.0-arm64.dmg s3://your-bucket/flickfix/
+aws s3api put-object-acl --bucket your-bucket --key flickfix/flickfix-0.1.0-arm64.dmg --acl public-read
 ```
 
 ### Option C: Your Own Server
@@ -80,7 +80,7 @@ Update `landing/index.html` with the new download link:
 
 ```html
 <!-- Update the download links -->
-<a href="https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0-arm64.dmg" 
+<a href="https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.0-arm64.dmg" 
    class="btn-primary download-btn" 
    download>Download for macOS</a>
 ```
@@ -131,7 +131,7 @@ For future releases, consider setting up auto-updates:
 
 ### DMG Won't Open
 
-- Check Gatekeeper: `spctl --assess --verbose dist/SnapFix-0.1.0-arm64.dmg`
+- Check Gatekeeper: `spctl --assess --verbose dist/flickfix-0.1.0-arm64.dmg`
 - If blocked, right-click → Open (first time only)
 
 ### Download Link Doesn't Work

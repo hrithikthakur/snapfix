@@ -1,7 +1,7 @@
 # Fix Firebase Project Reference
 
 ## Problem
-Your `.firebaserc` references `snapfix` which doesn't exist.
+Your `.firebaserc` references `flickfix` which doesn't exist.
 
 ## Solution
 

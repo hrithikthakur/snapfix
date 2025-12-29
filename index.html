@@ -1576,7 +1576,7 @@
         <div class="onboarding-content">
           <div class="onboarding-content-left">
              <div class="logo-container">
-              <img src="assets/icons/snapfix_logo_onboarding.png" alt="FlickFix Logo" class="logo-image" style="width: 48px; height: 48px; object-fit: contain;">
+              <img src="assets/icons/flickfix_logo_onboarding.png" alt="FlickFix Logo" class="logo-image" style="width: 48px; height: 48px; object-fit: contain;">
             </div>
             <h1 class="hero-title">Welcome to FlickFix</h1>
             <p class="hero-subtitle">Fix your text anywhere with one simple shortcut. No sign up required.</p>
@@ -1662,7 +1662,7 @@
       </section>
 
       <div class="onboarding-footer">
-        By continuing, you agree to our <a href="#" onclick="openExternalLink('https://snapfix.web.app/docs/terms.html')">Terms of Service</a> and <a href="#" onclick="openExternalLink('https://snapfix.web.app/docs/privacy.html')">Privacy Policy</a>
+        By continuing, you agree to our <a href="#" onclick="openExternalLink('https://flickfix.web.app/docs/terms.html')">Terms of Service</a> and <a href="#" onclick="openExternalLink('https://flickfix.web.app/docs/privacy.html')">Privacy Policy</a>
         <br>
         <span style="font-size: 11px; opacity: 0.7;">FlickFix is in early access and may have occasional bugs. Your feedback helps us improve!</span>
       </div>
@@ -1673,7 +1673,7 @@
     <div id="settings-view">
       <div class="app-header">
         <div class="logo-container" style="justify-content: center; align-items: center; gap: 16px; margin-bottom: 8px;">
-          <img src="assets/icons/snapfix_logo_onboarding.png" class="logo-image" style="width: 52px; height: 52px; object-fit: contain;">
+          <img src="assets/icons/flickfix_logo_onboarding.png" class="logo-image" style="width: 52px; height: 52px; object-fit: contain;">
           <h1 style="margin: 0; font-size: 32px;">FlickFix</h1>
         </div>
         <p class="subtitle" style="margin-top: 0;">Configure your preferences</p>
@@ -1749,7 +1749,7 @@
             <button class="secondary-button" onclick="openFeedback()" style="flex: 1; color: #007aff; border: 1.5px solid #007aff;">
               💬 Send Feedback
             </button>
-            <button class="secondary-button" onclick="openExternalLink('https://snapfix.web.app/docs/terms.html')" style="flex: 1;">
+            <button class="secondary-button" onclick="openExternalLink('https://flickfix.web.app/docs/terms.html')" style="flex: 1;">
               📄 Terms & Privacy
             </button>
           </div>
@@ -1888,7 +1888,7 @@
         throw lastError || new Error('Failed to call Gemini API');
       }
 
-      window.snapfixCallGemini = callGeminiAPI;
+      window.flickfixCallGemini = callGeminiAPI;
       window.addEventListener('DOMContentLoaded', () => {
         window.electronAPI?.trackEvent?.('renderer_window_opened');
       });
@@ -1953,7 +1953,7 @@
             setTimeout(() => testEl.remove(), 2000);
             
             onboardingEl.classList.add('active');
-            window.snapfixOnboardingMounted = true;
+            window.flickfixOnboardingMounted = true;
             
             // Clear any persisted flags
             localStorage.removeItem('onboardingSkipped');

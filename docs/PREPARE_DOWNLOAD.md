@@ -1,6 +1,6 @@
 # Prepare DMG Files for Website Download
 
-Complete guide to build and upload the latest SnapFix DMG files for website distribution.
+Complete guide to build and upload the latest flickfix DMG files for website distribution.
 
 ## Quick Start
 
@@ -20,15 +20,15 @@ This will:
 ### Step 1: Build DMG Files
 
 ```bash
-cd /Users/hrithikthakur/Code/snapfix
+cd /Users/hrithikthakur/Code/flickfix
 
 # Build both ARM64 and x64 versions
 npm run build:direct
 ```
 
 This creates:
-- `dist/SnapFix-0.1.1-arm64.dmg` (Apple Silicon)
-- `dist/SnapFix-0.1.1-x64.dmg` (Intel Macs)
+- `dist/flickfix-0.1.1-arm64.dmg` (Apple Silicon)
+- `dist/flickfix-0.1.1-x64.dmg` (Intel Macs)
 
 **Note:** Building x64 on Apple Silicon may fail. That's OK - ARM64 is the priority.
 
@@ -39,31 +39,31 @@ This creates:
 ls -lh dist/*.dmg
 
 # Test the DMG (optional)
-open dist/SnapFix-0.1.1-arm64.dmg
+open dist/flickfix-0.1.1-arm64.dmg
 ```
 
 ### Step 3: Upload to Google Cloud Storage
 
 ```bash
 # Upload ARM64 version
-gsutil cp dist/SnapFix-0.1.1-arm64.dmg gs://snapfix-downloads/
+gsutil cp dist/flickfix-0.1.1-arm64.dmg gs://flickfix-downloads/
 
 # Upload x64 version (if built)
-gsutil cp dist/SnapFix-0.1.1-x64.dmg gs://snapfix-downloads/
+gsutil cp dist/flickfix-0.1.1-x64.dmg gs://flickfix-downloads/
 
 # Make files publicly accessible
-gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
 ```
 
 ### Step 4: Verify Upload
 
 ```bash
 # List files in bucket
-gsutil ls gs://snapfix-downloads/
+gsutil ls gs://flickfix-downloads/
 
 # Test download URLs
-curl -I https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.1-arm64.dmg
-curl -I https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.1-x64.dmg
+curl -I https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.1-arm64.dmg
+curl -I https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.1-x64.dmg
 ```
 
 Both should return `HTTP/1.1 200 OK`.
@@ -79,8 +79,8 @@ The landing page has been updated to use version 0.1.1. The JavaScript will auto
 
 After upload, your files will be available at:
 
-- **ARM64 (Apple Silicon):** `https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.1-arm64.dmg`
-- **x64 (Intel):** `https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.1-x64.dmg`
+- **ARM64 (Apple Silicon):** `https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.1-arm64.dmg`
+- **x64 (Intel):** `https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.1-x64.dmg`
 
 ## Landing Page Auto-Detection
 
@@ -115,10 +115,10 @@ gcloud config set project YOUR_PROJECT_ID
 
 ```bash
 # Check bucket contents
-gsutil ls -lh gs://snapfix-downloads/
+gsutil ls -lh gs://flickfix-downloads/
 
 # Verify permissions
-gsutil iam get gs://snapfix-downloads
+gsutil iam get gs://flickfix-downloads
 ```
 
 ### Wrong Version in URLs
@@ -134,7 +134,7 @@ When releasing a new version:
 
 - [ ] Update `package.json` version
 - [ ] Build DMG files: `npm run build:direct`
-- [ ] Upload to GCS: `gsutil cp dist/SnapFix-X.X.X-*.dmg gs://snapfix-downloads/`
+- [ ] Upload to GCS: `gsutil cp dist/flickfix-X.X.X-*.dmg gs://flickfix-downloads/`
 - [ ] Update landing page version in JavaScript
 - [ ] Update hardcoded URLs in HTML (if any)
 - [ ] Test download links
@@ -142,12 +142,12 @@ When releasing a new version:
 
 ## File Naming Convention
 
-- ARM64: `SnapFix-{version}-arm64.dmg`
-- x64: `SnapFix-{version}-x64.dmg`
+- ARM64: `flickfix-{version}-arm64.dmg`
+- x64: `flickfix-{version}-x64.dmg`
 
 Example:
-- `SnapFix-0.1.1-arm64.dmg`
-- `SnapFix-0.1.1-x64.dmg`
+- `flickfix-0.1.1-arm64.dmg`
+- `flickfix-0.1.1-x64.dmg`
 
 ## Next Steps After Upload
 
@@ -173,12 +173,12 @@ Example:
 npm run build:direct
 
 # Upload
-gsutil cp dist/SnapFix-0.1.1-*.dmg gs://snapfix-downloads/
-gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+gsutil cp dist/flickfix-0.1.1-*.dmg gs://flickfix-downloads/
+gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
 
 # Verify
-gsutil ls gs://snapfix-downloads/
-curl -I https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.1-arm64.dmg
+gsutil ls gs://flickfix-downloads/
+curl -I https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.1-arm64.dmg
 ```
 
 Done! Your DMG files are ready for download. 🚀

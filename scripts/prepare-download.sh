@@ -14,21 +14,21 @@ echo "📦 Building DMG files..."
 npm run build:direct
 
 # Check if files were created
-ARM64_DMG="dist/SnapFix-${VERSION}-arm64.dmg"
-X64_DMG="dist/SnapFix-${VERSION}-x64.dmg"
+ARM64_DMG="dist/flickfix-${VERSION}-arm64.dmg"
+X64_DMG="dist/flickfix-${VERSION}-x64.dmg"
 
 if [ ! -f "$ARM64_DMG" ]; then
     echo "⚠️  ARM64 DMG not found. Trying alternative name..."
-    ARM64_DMG="dist/SnapFix-${VERSION}-arm64.dmg"
+    ARM64_DMG="dist/flickfix-${VERSION}-arm64.dmg"
     # Check if old naming convention exists
     if [ ! -f "$ARM64_DMG" ]; then
-        ARM64_DMG="dist/mac-arm64/SnapFix-${VERSION}-arm64.dmg"
+        ARM64_DMG="dist/mac-arm64/flickfix-${VERSION}-arm64.dmg"
     fi
 fi
 
 if [ ! -f "$X64_DMG" ]; then
     echo "⚠️  x64 DMG not found. Checking for Intel version..."
-    X64_DMG="dist/SnapFix-${VERSION}.dmg"
+    X64_DMG="dist/flickfix-${VERSION}.dmg"
     if [ ! -f "$X64_DMG" ]; then
         echo "⚠️  Intel version not built (this is OK if building on Apple Silicon)"
     fi
@@ -78,16 +78,16 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo ""
     echo "📥 Download URLs:"
     if [ -f "$ARM64_DMG" ]; then
-        echo "ARM64: https://storage.googleapis.com/flickfix-downloads/SnapFix-${VERSION}-arm64.dmg"
+        echo "ARM64: https://storage.googleapis.com/flickfix-downloads/flickfix-${VERSION}-arm64.dmg"
     fi
     if [ -f "$X64_DMG" ]; then
-        echo "x64:   https://storage.googleapis.com/flickfix-downloads/SnapFix-${VERSION}-x64.dmg"
+        echo "x64:   https://storage.googleapis.com/flickfix-downloads/flickfix-${VERSION}-x64.dmg"
     fi
 else
     echo "⏭️  Skipping upload. Files are ready in dist/ folder."
     echo ""
     echo "To upload manually:"
-    echo "  gsutil cp dist/SnapFix-${VERSION}-*.dmg ${BUCKET}/"
+    echo "  gsutil cp dist/flickfix-${VERSION}-*.dmg ${BUCKET}/"
     echo "  gsutil iam ch allUsers:objectViewer ${BUCKET}"
 fi
 

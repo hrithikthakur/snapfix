@@ -1,8 +1,8 @@
-# SnapFix Distribution Setup - Complete Guide
+# flickfix Distribution Setup - Complete Guide
 
 ## 🎯 What's Been Set Up
 
-Your SnapFix app is now configured for **both** Apple App Store and direct website distribution. Here's what's ready:
+Your flickfix app is now configured for **both** Apple App Store and direct website distribution. Here's what's ready:
 
 ### ✅ Completed Setup
 
@@ -66,13 +66,13 @@ export APPLE_TEAM_ID="XXXXXXXXXX"
 **For App Store:**
 ```bash
 npm run build:mas
-# Output: dist/mac/SnapFix-0.1.0.pkg
+# Output: dist/mac/flickfix-0.1.0.pkg
 ```
 
 **For Direct Download:**
 ```bash
 npm run build:direct
-# Output: dist/SnapFix-0.1.0.dmg (notarized)
+# Output: dist/flickfix-0.1.0.dmg (notarized)
 ```
 
 ---
@@ -170,7 +170,7 @@ npm run build:direct
 security find-identity -v -p codesigning
 
 # Verify app signature
-codesign --verify --verbose --deep dist/mac/SnapFix.app
+codesign --verify --verbose --deep dist/mac/flickfix.app
 ```
 
 ---

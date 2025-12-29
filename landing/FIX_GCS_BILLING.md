@@ -24,7 +24,7 @@ Google Cloud Storage requires billing to be enabled, even for free tier usage. Y
 
 4. **Try creating bucket again:**
    ```bash
-   gsutil mb gs://snapfix-downloads
+   gsutil mb gs://flickfix-downloads
    ```
 
 ### Option 2: Use Alternative Hosting (No Billing Required)
@@ -58,7 +58,7 @@ If you already have a Google Cloud Storage bucket from before:
 gsutil ls
 
 # Use an existing bucket
-gsutil cp landing/downloads/SnapFix-0.1.0-arm64.dmg gs://your-existing-bucket/
+gsutil cp landing/downloads/flickfix-0.1.0-arm64.dmg gs://your-existing-bucket/
 ```
 
 ## Google Cloud Free Tier
@@ -77,17 +77,17 @@ gsutil cp landing/downloads/SnapFix-0.1.0-arm64.dmg gs://your-existing-bucket/
 
 2. **Create bucket:**
    ```bash
-   gsutil mb gs://snapfix-downloads
+   gsutil mb gs://flickfix-downloads
    ```
 
 3. **Upload:**
    ```bash
-   gsutil cp landing/downloads/SnapFix-0.1.0-arm64.dmg gs://snapfix-downloads/
+   gsutil cp landing/downloads/flickfix-0.1.0-arm64.dmg gs://flickfix-downloads/
    ```
 
 4. **Make public:**
    ```bash
-   gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+   gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
    ```
 
 ## Recommendation

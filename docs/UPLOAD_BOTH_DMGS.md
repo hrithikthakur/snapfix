@@ -2,8 +2,8 @@
 
 ## URLs You Want
 
-- ARM64: `https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0-arm64.dmg`
-- Intel: `https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg`
+- ARM64: `https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.0-arm64.dmg`
+- Intel: `https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.0.dmg`
 
 ## Step 1: Check What You Have
 
@@ -27,23 +27,23 @@ npm run build:direct
 
 ```bash
 # Upload ARM64 version (if not already uploaded)
-gsutil cp dist/SnapFix-0.1.0-arm64.dmg gs://snapfix-downloads/
+gsutil cp dist/flickfix-0.1.0-arm64.dmg gs://flickfix-downloads/
 
 # Upload Intel version
-gsutil cp dist/SnapFix-0.1.0.dmg gs://snapfix-downloads/
+gsutil cp dist/flickfix-0.1.0.dmg gs://flickfix-downloads/
 
 # Make both publicly accessible
-gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
 ```
 
 ## Step 4: Verify URLs Work
 
 ```bash
 # Test ARM64 URL
-curl -I https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0-arm64.dmg
+curl -I https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.0-arm64.dmg
 
 # Test Intel URL
-curl -I https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg
+curl -I https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.0.dmg
 ```
 
 Both should return `HTTP/1.1 200 OK`
@@ -52,20 +52,20 @@ Both should return `HTTP/1.1 200 OK`
 
 ```bash
 # Upload both at once
-gsutil cp dist/SnapFix-0.1.0*.dmg gs://snapfix-downloads/
+gsutil cp dist/flickfix-0.1.0*.dmg gs://flickfix-downloads/
 
 # Make public
-gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
 
 # Verify
-gsutil ls -lh gs://snapfix-downloads/
+gsutil ls -lh gs://flickfix-downloads/
 ```
 
 ## After Upload
 
 Your URLs will be:
-- ✅ `https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0-arm64.dmg`
-- ✅ `https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg`
+- ✅ `https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.0-arm64.dmg`
+- ✅ `https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.0.dmg`
 
 Both will be publicly accessible and ready to use in your landing page!
 

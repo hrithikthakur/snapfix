@@ -1,11 +1,11 @@
-# Join the SnapFix Waitlist
+# Join the flickfix Waitlist
 
-Be the first to know when SnapFix becomes available for your platform.
+Be the first to know when flickfix becomes available for your platform.
 
 ## How It Works
 
 1. Fill out the waitlist form with your email and platform interest
-2. We'll notify you when SnapFix becomes available for your platform
+2. We'll notify you when flickfix becomes available for your platform
 3. You'll be among the first to try it out
 
 ## Supported Platforms (Coming Soon)
@@ -24,5 +24,5 @@ We respect your privacy:
 
 ## Questions?
 
-If you have questions about the waitlist or SnapFix, please email us at flickfix100@gmail.com
+If you have questions about the waitlist or flickfix, please email us at flickfix100@gmail.com
 

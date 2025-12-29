@@ -8,6 +8,6 @@ ffmpeg -i input.mov \
   -crf 23 \
   -an \
   -movflags +faststart \
-  snapfix-preview.mp4
+  flickfix-preview.mp4
 
-echo "Done! Output: snapfix-preview.mp4"
+echo "Done! Output: flickfix-preview.mp4"

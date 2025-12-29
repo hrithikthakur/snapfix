@@ -14,7 +14,7 @@ The Mac App Store requires screenshots at these specific resolutions:
 ### Option 1: Using Your Mac (Recommended)
 
 1. **Set up your app window:**
-   - Open SnapFix
+   - Open flickfix
    - Make sure the window looks good (settings page, main interface, etc.)
    - Arrange UI elements nicely
 
@@ -26,7 +26,7 @@ The Mac App Store requires screenshots at these specific resolutions:
    # But this won't give you exact sizes...
    
    # Method 2: Use screencapture command
-   screencapture -T 0 -x ~/Desktop/snapfix-1280x800.png
+   screencapture -T 0 -x ~/Desktop/flickfix-1280x800.png
    ```
 
 3. **Resize to exact dimensions:**
@@ -34,16 +34,16 @@ The Mac App Store requires screenshots at these specific resolutions:
    - Or use `sips` command (built into macOS):
    ```bash
    # Resize to 1280x800
-   sips -z 800 1280 your-screenshot.png --out snapfix-1280x800.png
+   sips -z 800 1280 your-screenshot.png --out flickfix-1280x800.png
    
    # Resize to 1440x900
-   sips -z 900 1440 your-screenshot.png --out snapfix-1440x900.png
+   sips -z 900 1440 your-screenshot.png --out flickfix-1440x900.png
    
    # Resize to 2560x1600
-   sips -z 1600 2560 your-screenshot.png --out snapfix-2560x1600.png
+   sips -z 1600 2560 your-screenshot.png --out flickfix-2560x1600.png
    
    # Resize to 2880x1800
-   sips -z 1800 2880 your-screenshot.png --out snapfix-2880x1800.png
+   sips -z 1800 2880 your-screenshot.png --out flickfix-2880x1800.png
    ```
 
 ### Option 2: Using Simulator/Design Tools
@@ -130,16 +130,16 @@ sizes.forEach(({ width, height }) => {
 brew install imagemagick
 
 # Resize screenshots (using ImageMagick)
-convert input.png -resize 1280x800 snapfix-1280x800.png
-convert input.png -resize 1440x900 snapfix-1440x900.png
-convert input.png -resize 2560x1600 snapfix-2560x1600.png
-convert input.png -resize 2880x1800 snapfix-2880x1800.png
+convert input.png -resize 1280x800 flickfix-1280x800.png
+convert input.png -resize 1440x900 flickfix-1440x900.png
+convert input.png -resize 2560x1600 flickfix-2560x1600.png
+convert input.png -resize 2880x1800 flickfix-2880x1800.png
 
 # Or using sips (built-in macOS)
-sips -z 800 1280 input.png --out snapfix-1280x800.png
-sips -z 900 1440 input.png --out snapfix-1440x900.png
-sips -z 1600 2560 input.png --out snapfix-2560x1600.png
-sips -z 1800 2880 input.png --out snapfix-2880x1800.png
+sips -z 800 1280 input.png --out flickfix-1280x800.png
+sips -z 900 1440 input.png --out flickfix-1440x900.png
+sips -z 1600 2560 input.png --out flickfix-2560x1600.png
+sips -z 1800 2880 input.png --out flickfix-2880x1800.png
 ```
 
 ## Tips
@@ -152,7 +152,7 @@ sips -z 1800 2880 input.png --out snapfix-2880x1800.png
 
 ## Example Workflow
 
-1. Open SnapFix app
+1. Open flickfix app
 2. Arrange window nicely
 3. Take a screenshot at highest resolution (2880x1800)
 4. Resize to all required sizes using `sips` or ImageMagick

@@ -1,6 +1,6 @@
-# SnapFix Distribution Guide
+# flickfix Distribution Guide
 
-This guide covers how to distribute SnapFix on the Apple App Store and via direct download from your website.
+This guide covers how to distribute flickfix on the Apple App Store and via direct download from your website.
 
 ## Table of Contents
 
@@ -151,7 +151,7 @@ APPLE_TEAM_ID=XXXXXXXXXX
 
 3. **Verify notarization**:
    ```bash
-   spctl --assess --verbose --type install dist/SnapFix-0.1.0.dmg
+   spctl --assess --verbose --type install dist/flickfix-0.1.0.dmg
    ```
 
 ### Hosting Downloads
@@ -232,17 +232,17 @@ If automatic notarization fails:
 ```bash
 # 1. Create a zip file
 cd dist/mac
-zip -r SnapFix.zip SnapFix.app
+zip -r flickfix.zip flickfix.app
 
 # 2. Submit for notarization
-xcrun notarytool submit SnapFix.zip \
+xcrun notarytool submit flickfix.zip \
   --apple-id "your@email.com" \
   --password "app-specific-password" \
   --team-id "TEAM_ID" \
   --wait
 
 # 3. Staple the notarization ticket
-xcrun stapler staple SnapFix.app
+xcrun stapler staple flickfix.app
 
 # 4. Create DMG with stapled app
 ```
@@ -285,8 +285,8 @@ npm run build:dir
 
 ### Build Outputs
 
-- **App Store**: `dist/mac/SnapFix-0.1.0.pkg`
-- **Direct**: `dist/SnapFix-0.1.0.dmg` and `dist/SnapFix-0.1.0-arm64.dmg`
+- **App Store**: `dist/mac/flickfix-0.1.0.pkg`
+- **Direct**: `dist/flickfix-0.1.0.dmg` and `dist/flickfix-0.1.0-arm64.dmg`
 
 ---
 
@@ -330,10 +330,10 @@ npm run build:dir
    - Go to https://appstoreconnect.apple.com
    - My Apps > "+" > New App
    - Fill in:
-     - Name: SnapFix
+     - Name: flickfix
      - Primary Language: English
-     - Bundle ID: com.snapfix.app
-     - SKU: snapfix-001
+     - Bundle ID: com.flickfix.app
+     - SKU: flickfix-001
 
 2. **Upload build**:
    - After uploading via Transporter, wait for processing
@@ -359,7 +359,7 @@ npm run build:dir
 
 Your landing page already points to:
 ```
-https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg
+https://storage.googleapis.com/flickfix-downloads/flickfix-0.1.0.dmg
 ```
 
 ### Steps to Update
@@ -374,8 +374,8 @@ https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg
    # Install gsutil if needed
    # brew install gcloud
    
-   gsutil cp dist/SnapFix-0.1.0.dmg gs://snapfix-downloads/
-   gsutil cp dist/SnapFix-0.1.0-arm64.dmg gs://snapfix-downloads/
+   gsutil cp dist/flickfix-0.1.0.dmg gs://flickfix-downloads/
+   gsutil cp dist/flickfix-0.1.0-arm64.dmg gs://flickfix-downloads/
    ```
 
 3. **Update landing page**:
@@ -385,7 +385,7 @@ https://storage.googleapis.com/snapfix-downloads/SnapFix-0.1.0.dmg
 
 4. **Set proper permissions**:
    ```bash
-   gsutil iam ch allUsers:objectViewer gs://snapfix-downloads
+   gsutil iam ch allUsers:objectViewer gs://flickfix-downloads
    ```
 
 ### Alternative Hosting Options
@@ -431,10 +431,10 @@ Make it clear on your website which version has which features.
 security find-identity -v -p codesigning
 
 # Verify app signature
-codesign --verify --verbose --deep SnapFix.app
+codesign --verify --verbose --deep flickfix.app
 
 # Check entitlements
-codesign --display --entitlements - SnapFix.app
+codesign --display --entitlements - flickfix.app
 ```
 
 ### Notarization Issues
